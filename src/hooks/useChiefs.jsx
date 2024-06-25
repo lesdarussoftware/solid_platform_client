@@ -2,23 +2,23 @@ import { useContext } from "react";
 
 import { DataContext } from "../providers/DataProvider";
 
-import { SITE_URL } from "../helpers/urls";
+import { CHIEF_URL } from "../helpers/urls";
 
-export function useSites() {
+export function useChiefs() {
 
     const { dispatch } = useContext(DataContext)
 
-    async function getSites() {
-        const res = await fetch(SITE_URL)
+    async function getChiefs() {
+        const res = await fetch(CHIEF_URL)
         const data = await res.json()
         if (res.status === 200) {
             dispatch({
-                type: 'SITES',
+                type: 'CHIEFS',
                 payload: data
             })
-            localStorage.setItem('solid_sites_storage', JSON.stringify(data))
+            localStorage.setItem('solid_chiefs_storage', JSON.stringify(data))
         }
     }
 
-    return { getSites }
+    return { getChiefs }
 }

@@ -1,15 +1,28 @@
-import { Box, Button, FormControl, Input, InputLabel, MenuItem, Select, Typography } from "@mui/material";
+import { useContext, useEffect } from "react";
+import { Autocomplete, Box, Button, FormControl, TextField, Typography } from "@mui/material";
 
+import { DataContext } from "../providers/DataProvider";
+import { useChiefs } from "../hooks/useChiefs";
+import { useSites } from "../hooks/useSites";
 import { useForm } from "../hooks/useForm";
 
 import { QrReader } from "../components/QrReader";
 
 export function Scan() {
 
+    const { state } = useContext(DataContext)
+
+    const { getSites } = useSites()
+    const { getChiefs } = useChiefs()
     const { formData, setFormData, validate, errors, disabled, handleChange, reset } = useForm({
-        defaultData: { dni: '', site_id: '', type: null, elements: [] },
-        rules: { site_id: { required: true }, dni: { minLength: 8, maxLength: 8 } }
+        defaultData: { chief_dni: '', site_name: '', type: null },
+        rules: { site_name: { required: true }, chief_dni: { required: true } }
     })
+
+    useEffect(() => {
+        getSites()
+        getChiefs()
+    }, [])
 
     const handleSubmit = e => {
         e.preventDefault()
@@ -29,34 +42,35 @@ export function Scan() {
                     reset={reset}
                 /> :
                 <Box>
-                    <form onChange={handleChange} onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmit}>
                         <Box sx={{ width: '30%', display: 'flex', flexDirection: 'column', gap: 2, margin: '0 auto' }}>
                             <FormControl>
-                                <InputLabel htmlFor="dni">DNI Capataz</InputLabel>
-                                <Input id="dni" type="number" name="dni" value={formData.dni} />
-                                {(errors.dni?.type === 'minLength' || errors.dni?.type === 'maxLength') &&
+                                <Autocomplete
+                                    disablePortal
+                                    id="chief-autocomplete"
+                                    options={state.chiefs.map(c => ({ label: `${c.first_name} ${c.last_name} (${c.dni})`, id: c.dni }))}
+                                    noOptionsText="No hay registros disponibles."
+                                    onChange={(_, value) => handleChange({ target: { name: 'chief_dni', value: value.id } })}
+                                    renderInput={(params) => <TextField {...params} label="Capataz" />}
+                                    isOptionEqualToValue={(option, value) => option.id === value.id}
+                                />
+                                {errors.chief_dni?.type === 'required' &&
                                     <Typography variant="caption" color="red" marginTop={1}>
-                                        * El DNI debe tener 8 caracteres.
+                                        * El capataz es requerido.
                                     </Typography>
                                 }
                             </FormControl>
                             <FormControl>
-                                <InputLabel id="site-select">Obra</InputLabel>
-                                <Select
-                                    labelId="site-select"
-                                    id="site_id"
-                                    sx={{ width: '100%' }}
-                                    value={formData.site_id}
-                                    label="Obra"
-                                    name="site_id"
-                                    onChange={handleChange}
-                                >
-                                    <MenuItem value="">Seleccione</MenuItem>
-                                    <MenuItem value={1}>Obra 1</MenuItem>
-                                    <MenuItem value={2}>Obra 2</MenuItem>
-                                    <MenuItem value={3}>Obra 3</MenuItem>
-                                </Select>
-                                {errors.site_id?.type === 'required' &&
+                                <Autocomplete
+                                    disablePortal
+                                    id="site-autocomplete"
+                                    options={state.sites.map(s => ({ label: s.name, name: s.name }))}
+                                    noOptionsText="No hay registros disponibles."
+                                    onChange={(_, value) => handleChange({ target: { name: 'site_name', value: value.name } })}
+                                    renderInput={(params) => <TextField {...params} label="Obra" />}
+                                    isOptionEqualToValue={(option, value) => option.name === value.name}
+                                />
+                                {errors.site_name?.type === 'required' &&
                                     <Typography variant="caption" color="red" marginTop={1}>
                                         * La obra es requerida.
                                     </Typography>

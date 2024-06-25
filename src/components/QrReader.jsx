@@ -1,34 +1,66 @@
-import { useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
 import QrScanner from "qr-scanner"
 
+import { DataContext } from "../providers/DataProvider"
+
+import QrFrame from "../assets/qr-frame.svg";
+
 export function QrReader({ formData, reset }) {
 
+    const { state } = useContext(DataContext)
+
     const [qrOn, setQrOn] = useState(true)
+    const [isOnline, setIsOnline] = useState(true)
+    const [newMovement, setNewMovement] = useState({
+        chief_dni: formData.chief_dni,
+        site_name: formData.site_name,
+        type: formData.type,
+        lat: null,
+        lng: null
+    })
+    const [newMovementWorkerDni, setNewMovementWorkerDni] = useState(0)
     const scanner = useRef()
     const videoEl = useRef(null)
+    const qrBoxEl = useRef(null);
 
-    const handleOnline = () => {
-        console.log('Conexión restablecida');
-    };
-
-    const handleOffline = () => {
-        console.log('Conexión perdida');
-    };
+    const handleOnline = () => setIsOnline(true)
+    const handleOffline = () => setIsOnline(false)
 
     useEffect(() => {
-        window.addEventListener('online', handleOnline);
-        window.addEventListener('offline', handleOffline);
-
+        window.addEventListener('online', handleOnline)
+        window.addEventListener('offline', handleOffline)
         return () => {
-            window.removeEventListener('online', handleOnline);
-            window.removeEventListener('offline', handleOffline);
-        };
-    }, []);
+            window.removeEventListener('online', handleOnline)
+            window.removeEventListener('offline', handleOffline)
+        }
+    }, [])
+
+    useEffect(() => {
+        if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                setNewMovement({
+                    ...newMovement,
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                })
+            }, (error) => console.log(error.message))
+        }
+    }, [])
 
     const onScanSuccess = (result) => {
-        console.log(result)
+        setNewMovementWorkerDni(parseInt(result.data))
+        scanner?.current?.stop();
     }
+
+    useEffect(() => {
+        if (newMovementWorkerDni > 0) {
+            setNewMovement({
+                ...newMovement,
+                worker_dni: newMovementWorkerDni
+            })
+        }
+    }, [newMovementWorkerDni])
 
     const onScanFail = (err) => {
         console.log(err)
@@ -41,23 +73,31 @@ export function QrReader({ formData, reset }) {
                 onDecodeError: onScanFail,
                 // 📷 This is the camera facing mode. In mobile devices, "environment" means back camera and "user" means front camera.
                 preferredCamera: "environment",
+                // 🖼 This will help us position our "QrFrame.svg" so that user can only scan when qr code is put in between our QrFrame.svg.
+                highlightScanRegion: true,
                 // 🔥 This will produce a yellow (default color) outline around the qr code that we scan, showing a proof that our qr-scanner is scanning that qr code.
                 highlightCodeOutline: true,
-            })
+                // 📦 A custom div which will pair with "highlightScanRegion" option above 👆. This gives us full control over our scan region.
+                overlay: qrBoxEl?.current || undefined,
+            });
+
             // 🚀 Start QR Scanner
             scanner?.current
                 ?.start()
                 .then(() => setQrOn(true))
                 .catch((err) => {
-                    if (err) setQrOn(false)
-                })
+                    if (err) setQrOn(false);
+                });
         }
+
+        // 🧹 Clean up on unmount.
+        // 🚨 This removes the QR Scanner from rendering and using camera when it is closed or removed from the UI.
         return () => {
             if (!videoEl?.current) {
-                scanner?.current?.stop()
+                scanner?.current?.stop();
             }
-        }
-    }, [])
+        };
+    }, []);
 
     // ❌ If "camera" is not allowed in browser permissions, show an alert.
     useEffect(() => {
@@ -73,23 +113,35 @@ export function QrReader({ formData, reset }) {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell align="center">DNI Capataz</TableCell>
+                            <TableCell align="center">Capataz</TableCell>
                             <TableCell align="center">Obra</TableCell>
                             <TableCell align="center">Tipo</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         <TableRow>
-                            <TableCell align="center">{formData.dni}</TableCell>
-                            <TableCell align="center">{formData.site_id}</TableCell>
+                            <TableCell align="center">
+                                {`${state.chiefs.find(c => c.dni === formData.chief_dni).first_name} ${state.chiefs.find(c => c.dni === formData.chief_dni).last_name} (${formData.chief_dni})`}
+                            </TableCell>
+                            <TableCell align="center">{formData.site_name}</TableCell>
                             <TableCell align="center">{formData.type}</TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>
             </TableContainer>
-            <Box className="qr-reader">
+            <div className="qr-reader">
+                {/* QR */}
                 <video ref={videoEl}></video>
-            </Box>
+                <div ref={qrBoxEl} className="qr-box">
+                    <img
+                        src={QrFrame}
+                        alt="Qr Frame"
+                        width={256}
+                        height={256}
+                        className="qr-frame"
+                    />
+                </div>
+            </div>
             <Box sx={{ textAlign: 'center', margin: '0 auto', marginTop: 2, width: '35%' }}>
                 <Button
                     type="button"

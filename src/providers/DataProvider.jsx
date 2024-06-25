@@ -16,8 +16,8 @@ const reducer = (state, action) => {
 }
 
 const initialState = {
-    sites: [],
-    chiefs: [],
+    sites: JSON.parse(localStorage.getItem('solid_sites_storage') ?? '[]'),
+    chiefs: JSON.parse(localStorage.getItem('solid_chiefs_storage') ?? '[]'),
     workers: [],
     movements: []
 }
