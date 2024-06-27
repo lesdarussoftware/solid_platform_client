@@ -26,9 +26,7 @@ export function Scan() {
 
     const handleSubmit = e => {
         e.preventDefault()
-        if (validate()) {
-            console.log(formData)
-        }
+        validate()
     }
 
     return (

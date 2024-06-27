@@ -3,38 +3,28 @@ import { Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableH
 import QrScanner from "qr-scanner"
 
 import { DataContext } from "../providers/DataProvider"
+import { useMovements } from "../hooks/useMovements"
 
-import QrFrame from "../assets/qr-frame.svg";
+import QrFrame from "../assets/qr-frame.svg"
 
 export function QrReader({ formData, reset }) {
 
     const { state } = useContext(DataContext)
 
+    const {
+        handleSubmit,
+        newMovement,
+        setNewMovement,
+        newMovementWorkerDni,
+        setNewMovementWorkerDni,
+    } = useMovements(formData)
+
+    const [reScan, setReScan] = useState(false)
     const [qrOn, setQrOn] = useState(true)
-    const [isOnline, setIsOnline] = useState(true)
-    const [newMovement, setNewMovement] = useState({
-        chief_dni: formData.chief_dni,
-        site_name: formData.site_name,
-        type: formData.type,
-        lat: null,
-        lng: null
-    })
-    const [newMovementWorkerDni, setNewMovementWorkerDni] = useState(0)
+
     const scanner = useRef()
     const videoEl = useRef(null)
-    const qrBoxEl = useRef(null);
-
-    const handleOnline = () => setIsOnline(true)
-    const handleOffline = () => setIsOnline(false)
-
-    useEffect(() => {
-        window.addEventListener('online', handleOnline)
-        window.addEventListener('offline', handleOffline)
-        return () => {
-            window.removeEventListener('online', handleOnline)
-            window.removeEventListener('offline', handleOffline)
-        }
-    }, [])
+    const qrBoxEl = useRef(null)
 
     useEffect(() => {
         if ('geolocation' in navigator) {
@@ -50,20 +40,28 @@ export function QrReader({ formData, reset }) {
 
     const onScanSuccess = (result) => {
         setNewMovementWorkerDni(parseInt(result.data))
-        scanner?.current?.stop();
+        scanner?.current?.stop()
+        setReScan(true)
     }
 
     useEffect(() => {
-        if (newMovementWorkerDni > 0) {
-            setNewMovement({
-                ...newMovement,
-                worker_dni: newMovementWorkerDni
-            })
-        }
+        setNewMovement({ ...newMovement, worker_dni: newMovementWorkerDni })
     }, [newMovementWorkerDni])
 
-    const onScanFail = (err) => {
-        console.log(err)
+    useEffect(() => {
+        if (newMovement.worker_dni > 0) handleSubmit()
+    }, [newMovement.worker_dni])
+
+    const onScanFail = (err) => console.log(err)
+
+    const handleReScan = () => {
+        setReScan(false)
+        scanner?.current
+            ?.start()
+            .then(() => setQrOn(true))
+            .catch((err) => {
+                if (err) setQrOn(false)
+            })
     }
 
     useEffect(() => {
@@ -79,25 +77,25 @@ export function QrReader({ formData, reset }) {
                 highlightCodeOutline: true,
                 // 📦 A custom div which will pair with "highlightScanRegion" option above 👆. This gives us full control over our scan region.
                 overlay: qrBoxEl?.current || undefined,
-            });
+            })
 
             // 🚀 Start QR Scanner
             scanner?.current
                 ?.start()
                 .then(() => setQrOn(true))
                 .catch((err) => {
-                    if (err) setQrOn(false);
-                });
+                    if (err) setQrOn(false)
+                })
         }
 
         // 🧹 Clean up on unmount.
         // 🚨 This removes the QR Scanner from rendering and using camera when it is closed or removed from the UI.
         return () => {
             if (!videoEl?.current) {
-                scanner?.current?.stop();
+                scanner?.current?.stop()
             }
-        };
-    }, []);
+        }
+    }, [])
 
     // ❌ If "camera" is not allowed in browser permissions, show an alert.
     useEffect(() => {
@@ -129,8 +127,7 @@ export function QrReader({ formData, reset }) {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <div className="qr-reader">
-                {/* QR */}
+            <div className="qr-reader" style={{ display: reScan ? 'none' : 'block' }}>
                 <video ref={videoEl}></video>
                 <div ref={qrBoxEl} className="qr-box">
                     <img
@@ -143,10 +140,20 @@ export function QrReader({ formData, reset }) {
                 </div>
             </div>
             <Box sx={{ textAlign: 'center', margin: '0 auto', marginTop: 2, width: '35%' }}>
+                {reScan &&
+                    <Button
+                        type="button"
+                        variant="contained"
+                        sx={{ width: '100%', padding: 2, marginBottom: 1 }}
+                        onClick={handleReScan}
+                    >
+                        Escanear nuevo QR
+                    </Button>
+                }
                 <Button
                     type="button"
                     variant="contained"
-                    sx={{ width: '100%' }}
+                    sx={{ width: '100%', padding: 2 }}
                     onClick={() => reset()}
                 >
                     Volver
