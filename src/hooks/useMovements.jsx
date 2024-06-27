@@ -20,30 +20,62 @@ export function useMovements(formData) {
     const [newMovementWorkerDni, setNewMovementWorkerDni] = useState(0)
 
     async function handleSubmit() {
-        const res = await fetch(MOVEMENT_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ ...newMovement, date: setLocalDate(Date.now()) })
-        })
-        const data = await res.json()
-        if (res.status === 201) {
-            setMessage(`Registro de ${data.worker.first_name} ${data.worker.last_name} guardado.`)
-            setSeverity('success')
-            setNewMovementWorkerDni(0)
-        } else {
-            setMessage('Ocurrió un error.')
-            setSeverity('error')
+        try {
+            const res = await fetch(MOVEMENT_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ ...newMovement, date: setLocalDate(Date.now()) })
+            })
+            const data = await res.json()
+            if (res.status === 201) {
+                setMessage(`Registro de ${data.worker.first_name} ${data.worker.last_name} guardado.`)
+                setSeverity('success')
+                setNewMovementWorkerDni(0)
+            } else {
+                setMessage('Ocurrió un error.')
+                setSeverity('error')
+            }
+            setOpenMessage(true)
+        } catch (e) {
+            if (e.toString().includes('TypeError: Failed to fetch')) {
+                saveMovementInCache()
+            } else {
+                console.error(e)
+                setMessage('Ocurrió un error.')
+                setSeverity('error')
+                setOpenMessage(true)
+            }
         }
-        setOpenMessage(true)
     }
 
-    async function handleSubmitOffline() {
+    async function saveMovementInCache() {
+        const movementsCache = JSON.parse(localStorage.getItem('solid_movements_storage') ?? '[]')
+        const newMovementsCache = [...movementsCache, { ...newMovement, date: setLocalDate(Date.now()) }]
+        localStorage.setItem('solid_movements_storage', JSON.stringify(newMovementsCache))
         setMessage('Registro guardado sin conexión')
         setSeverity('success')
         setNewMovementWorkerDni(0)
         setOpenMessage(true)
+    }
+
+    async function handleSync() {
+        const movementsCache = JSON.parse(localStorage.getItem('solid_movements_storage') ?? '[]')
+        if (movementsCache.length > 0) {
+            try {
+                const res = await fetch(`${MOVEMENT_URL}/sync`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(movementsCache)
+                })
+                if (res.status === 201) localStorage.removeItem('solid_movements_storage')
+            } catch (e) {
+                console.error(e)
+            }
+        }
     }
 
     return {
@@ -51,6 +83,7 @@ export function useMovements(formData) {
         newMovement,
         setNewMovement,
         newMovementWorkerDni,
-        setNewMovementWorkerDni
+        setNewMovementWorkerDni,
+        handleSync
     }
 }

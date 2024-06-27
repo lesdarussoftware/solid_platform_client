@@ -3,21 +3,20 @@ import { Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableH
 import QrScanner from "qr-scanner"
 
 import { DataContext } from "../providers/DataProvider"
-import { useMovements } from "../hooks/useMovements"
 
 import QrFrame from "../assets/qr-frame.svg"
 
-export function QrReader({ formData, reset }) {
+export function QrReader({
+    formData,
+    reset,
+    handleSubmit,
+    newMovement,
+    setNewMovement,
+    newMovementWorkerDni,
+    setNewMovementWorkerDni
+}) {
 
     const { state } = useContext(DataContext)
-
-    const {
-        handleSubmit,
-        newMovement,
-        setNewMovement,
-        newMovementWorkerDni,
-        setNewMovementWorkerDni,
-    } = useMovements(formData)
 
     const [reScan, setReScan] = useState(false)
     const [qrOn, setQrOn] = useState(true)
