@@ -24,12 +24,13 @@ export function useMovements() {
 
     async function handleSubmit() {
         try {
+            let additionalData = { date: setLocalDate(Date.now()) }
             const res = await fetch(MOVEMENT_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ ...formData, date: setLocalDate(Date.now()) })
+                body: JSON.stringify({ ...formData, ...additionalData })
             })
             const data = await res.json()
             if (res.status === 201) {
@@ -81,6 +82,25 @@ export function useMovements() {
         }
     }
 
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    setFormData({
+                        ...formData,
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    })
+                },
+                (error) => {
+                    console.error('Error obteniendo geolocalización:', error);
+                }
+            );
+        } else {
+            console.error('La geolocalización no está soportada en este navegador.');
+        }
+    }
+
     return {
         handleSubmit,
         newMovementWorkerDni,
@@ -92,6 +112,7 @@ export function useMovements() {
         errors,
         setFormData,
         disabled,
-        reset
+        reset,
+        getLocation
     }
 }

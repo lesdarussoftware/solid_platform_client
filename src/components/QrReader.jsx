@@ -24,18 +24,6 @@ export function QrReader({
     const videoEl = useRef(null)
     const qrBoxEl = useRef(null)
 
-    useEffect(() => {
-        if ('geolocation' in navigator) {
-            navigator.geolocation.getCurrentPosition((position) => {
-                setFormData({
-                    ...formData,
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude
-                })
-            }, (error) => console.log(error.message))
-        }
-    }, [])
-
     const onScanSuccess = (result) => {
         setNewMovementWorkerDni(parseInt(result.data))
         scanner?.current?.stop()

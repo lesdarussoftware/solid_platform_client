@@ -25,7 +25,8 @@ export function Scan() {
         errors,
         setFormData,
         disabled,
-        reset
+        reset,
+        getLocation
     } = useMovements()
 
     useEffect(() => {
@@ -36,7 +37,9 @@ export function Scan() {
 
     const handleSaveMainData = e => {
         e.preventDefault()
-        validate()
+        if (validate()) {
+            getLocation()
+        }
     }
 
     return (
