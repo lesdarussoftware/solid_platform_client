@@ -4,18 +4,21 @@ import { MessageContext } from "../providers/MessageProvider"
 
 import { MOVEMENT_URL } from "../helpers/urls"
 import { setLocalDate } from "../helpers/utils"
+import { useForm } from "./useForm"
 
-export function useMovements(formData) {
+export function useMovements() {
 
     const { setSeverity, setMessage, setOpenMessage } = useContext(MessageContext)
 
-    const [newMovement, setNewMovement] = useState({
-        chief_dni: formData.chief_dni,
-        site_name: formData.site_name,
-        type: formData.type,
-        date: '',
-        lat: null,
-        lng: null
+    const { formData, setFormData, validate, errors, disabled, handleChange, reset } = useForm({
+        defaultData: {
+            chief_dni: '',
+            site_name: '',
+            type: null,
+            lat: null,
+            lng: null
+        },
+        rules: { site_name: { required: true }, chief_dni: { required: true } }
     })
     const [newMovementWorkerDni, setNewMovementWorkerDni] = useState(0)
 
@@ -26,7 +29,7 @@ export function useMovements(formData) {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ ...newMovement, date: setLocalDate(Date.now()) })
+                body: JSON.stringify({ ...formData, date: setLocalDate(Date.now()) })
             })
             const data = await res.json()
             if (res.status === 201) {
@@ -52,7 +55,7 @@ export function useMovements(formData) {
 
     async function saveMovementInCache() {
         const movementsCache = JSON.parse(localStorage.getItem('solid_movements_storage') ?? '[]')
-        const newMovementsCache = [...movementsCache, { ...newMovement, date: setLocalDate(Date.now()) }]
+        const newMovementsCache = [...movementsCache, { ...formData, date: setLocalDate(Date.now()) }]
         localStorage.setItem('solid_movements_storage', JSON.stringify(newMovementsCache))
         setMessage('Registro guardado sin conexión')
         setSeverity('success')
@@ -69,7 +72,7 @@ export function useMovements(formData) {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(movementsCache)
+                    body: JSON.stringify({ movements: movementsCache })
                 })
                 if (res.status === 201) localStorage.removeItem('solid_movements_storage')
             } catch (e) {
@@ -80,10 +83,15 @@ export function useMovements(formData) {
 
     return {
         handleSubmit,
-        newMovement,
-        setNewMovement,
         newMovementWorkerDni,
         setNewMovementWorkerDni,
-        handleSync
+        handleSync,
+        formData,
+        validate,
+        handleChange,
+        errors,
+        setFormData,
+        disabled,
+        reset
     }
 }

@@ -10,8 +10,7 @@ export function QrReader({
     formData,
     reset,
     handleSubmit,
-    newMovement,
-    setNewMovement,
+    setFormData,
     newMovementWorkerDni,
     setNewMovementWorkerDni
 }) {
@@ -28,8 +27,8 @@ export function QrReader({
     useEffect(() => {
         if ('geolocation' in navigator) {
             navigator.geolocation.getCurrentPosition((position) => {
-                setNewMovement({
-                    ...newMovement,
+                setFormData({
+                    ...formData,
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
                 })
@@ -44,12 +43,12 @@ export function QrReader({
     }
 
     useEffect(() => {
-        setNewMovement({ ...newMovement, worker_dni: newMovementWorkerDni })
+        setFormData({ ...formData, worker_dni: newMovementWorkerDni })
     }, [newMovementWorkerDni])
 
     useEffect(() => {
-        if (newMovement.worker_dni > 0) handleSubmit()
-    }, [newMovement.worker_dni])
+        if (formData.worker_dni > 0) handleSubmit()
+    }, [formData.worker_dni])
 
     const onScanFail = (err) => console.log(err)
 
