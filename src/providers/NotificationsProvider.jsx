@@ -22,7 +22,7 @@ export function NotificationsProvider({ children }) {
 
     useEffect(() => {
 
-        const socketInstance = io(BASE_URL.replace('/api', '/'))
+        const socketInstance = io(BASE_URL.replace('/api', ''))
 
         socketInstance.on('notifyQrScan', (serverMsg) => {
             if (auth.role === 'ADMIN') {
