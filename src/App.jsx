@@ -15,7 +15,7 @@ function App() {
       <DataProvider>
         <MessageProvider>
           <NotificationsProvider>
-            <BrowserRouter basename="solid">
+            <BrowserRouter basename="solid-platform">
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/dashboard" element={<Dashboard />} />
