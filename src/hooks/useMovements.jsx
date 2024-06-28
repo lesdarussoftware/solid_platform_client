@@ -6,7 +6,6 @@ import { NotificationsContext } from "../providers/NotificationsProvider"
 import { useForm } from "./useForm"
 
 import { MOVEMENT_URL } from "../helpers/urls"
-import { setLocalDate } from "../helpers/utils"
 
 export function useMovements() {
 
@@ -39,7 +38,7 @@ export function useMovements() {
 
     async function handleSubmit() {
         try {
-            let additionalData = { date: setLocalDate(Date.now()) }
+            let additionalData = { date: new Date(Date.now()) }
             const res = await fetch(MOVEMENT_URL, {
                 method: 'POST',
                 headers: {
@@ -75,7 +74,7 @@ export function useMovements() {
 
     async function saveMovementInCache() {
         const movementsCache = JSON.parse(localStorage.getItem('solid_movements_storage') ?? '[]')
-        const newMovementsCache = [...movementsCache, { ...formData, date: setLocalDate(Date.now()) }]
+        const newMovementsCache = [...movementsCache, { ...formData, date: new Date(Date.now()) }]
         localStorage.setItem('solid_movements_storage', JSON.stringify(newMovementsCache))
         setMessage('Registro guardado sin conexión')
         setSeverity('success')

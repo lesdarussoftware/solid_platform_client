@@ -1,10 +1,3 @@
-export function setLocalDate(date) {
-    const original = new Date(date)
-    let newDate = new Date(original)
-    newDate.setHours(newDate.getHours() - 3)
-    return newDate
-}
-
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
         return -1;
