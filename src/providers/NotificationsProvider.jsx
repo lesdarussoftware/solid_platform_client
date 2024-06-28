@@ -25,7 +25,7 @@ export function NotificationsProvider({ children }) {
         const socketInstance = io(BASE_URL.replace('/api', ''))
 
         socketInstance.on('notifyQrScan', (serverMsg) => {
-            if (auth.role === 'ADMIN') {
+            if (auth?.role === 'ADMIN') {
                 setSeverity('success')
                 setMessage(serverMsg.message)
                 setOpenMessage(true)
@@ -44,7 +44,7 @@ export function NotificationsProvider({ children }) {
             socketInstance.off('notifyQrScan')
             socketInstance.close()
         }
-    }, [state.movements, auth.role])
+    }, [state.movements, auth])
 
     const sendMessage = (message) => {
         if (socket) {
