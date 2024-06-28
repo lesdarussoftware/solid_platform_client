@@ -58,7 +58,7 @@ export function Scan() {
                 /> :
                 <Box>
                     <form onSubmit={handleSaveMainData}>
-                        <Box sx={{ width: '30%', display: 'flex', flexDirection: 'column', gap: 2, margin: '0 auto' }}>
+                        <Box sx={{ width: { xs: '80%', sm: '30%' }, display: 'flex', flexDirection: 'column', gap: 2, margin: '0 auto' }}>
                             <FormControl>
                                 <Autocomplete
                                     disablePortal
@@ -106,7 +106,7 @@ export function Scan() {
                             type="button"
                             disabled={!disabled}
                             variant="contained"
-                            sx={{ padding: 3, width: '30%' }}
+                            sx={{ padding: 3, width: { xs: '80%', sm: '30%' } }}
                             onClick={() => setFormData({ ...formData, type: 'INGRESO' })}
                         >
                             Escanear ingreso
@@ -115,7 +115,7 @@ export function Scan() {
                             type="button"
                             disabled={!disabled}
                             variant="contained"
-                            sx={{ padding: 3, width: '30%' }}
+                            sx={{ padding: 3, width: { xs: '80%', sm: '30%' } }}
                             onClick={() => setFormData({ ...formData, type: 'EGRESO' })}
                         >
                             Escanear egreso

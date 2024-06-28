@@ -93,7 +93,7 @@ export function QrReader({
 
     return (
         <Box>
-            <TableContainer component={Paper} sx={{ width: '35%', margin: '0 auto', marginBottom: 2 }}>
+            <TableContainer component={Paper} sx={{ width: { xs: '80%', sm: '35%' }, margin: '0 auto', marginBottom: 2 }}>
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -125,7 +125,7 @@ export function QrReader({
                     />
                 </div>
             </div>
-            <Box sx={{ textAlign: 'center', margin: '0 auto', marginTop: 2, width: '35%' }}>
+            <Box sx={{ textAlign: 'center', margin: '0 auto', marginTop: 2, width: { xs: '80%', sm: '35%' } }}>
                 {reScan &&
                     <Button
                         type="button"

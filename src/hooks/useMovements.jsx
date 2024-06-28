@@ -2,6 +2,7 @@ import { useContext, useState } from "react"
 
 import { MessageContext } from "../providers/MessageProvider"
 import { DataContext } from "../providers/DataProvider"
+import { NotificationsContext } from "../providers/NotificationsProvider"
 import { useForm } from "./useForm"
 
 import { MOVEMENT_URL } from "../helpers/urls"
@@ -11,6 +12,7 @@ export function useMovements() {
 
     const { dispatch } = useContext(DataContext)
     const { setSeverity, setMessage, setOpenMessage } = useContext(MessageContext)
+    const { sendMessage } = useContext(NotificationsContext)
 
     const { formData, setFormData, validate, errors, disabled, handleChange, reset } = useForm({
         defaultData: {
@@ -50,6 +52,10 @@ export function useMovements() {
                 setMessage(`Registro de ${data.worker.first_name} ${data.worker.last_name} guardado.`)
                 setSeverity('success')
                 setNewMovementWorkerDni(0)
+                sendMessage({
+                    data,
+                    message: `Registro de ${data.worker.first_name} ${data.worker.last_name} en ${data.site_name} guardado.`
+                })
             } else {
                 setMessage('Ocurrió un error.')
                 setSeverity('error')
@@ -88,7 +94,10 @@ export function useMovements() {
                     },
                     body: JSON.stringify({ movements: movementsCache })
                 })
-                if (res.status === 201) localStorage.removeItem('solid_movements_storage')
+                if (res.status === 201) {
+                    localStorage.removeItem('solid_movements_storage')
+                    sendMessage('Registros sin conexión sincronizados.')
+                }
             } catch (e) {
                 console.error(e)
             }

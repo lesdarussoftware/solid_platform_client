@@ -14,7 +14,7 @@ export function Home() {
     const navigate = useNavigate()
 
     const { formData, handleChange, disabled, setDisabled, validate, errors } = useForm({
-        defaultData: { username: '', password: '' },
+        defaultData: { username: '', password: '', role: 'ADMIN' },
         rules: {
             username: { required: true, maxLength: 55 },
             password: { required: true, minLength: 8, maxLength: 55 }
