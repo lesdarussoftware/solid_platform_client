@@ -11,7 +11,7 @@ export default defineConfig({
       manifest: {
         "name": "Solid Platform",
         "short_name": "Solid",
-        "start_url": "/solid-platform",
+        "start_url": "/solid-platform/",
         "display": "standalone",
         "background_color": "#ffffff",
         "theme_color": "#000000",
@@ -23,10 +23,7 @@ export default defineConfig({
           }
         ]
       },
-      registerType: 'autoUpdate',
-      workbox: {
-
-      }
+      registerType: 'autoUpdate'
     })
   ],
 })
