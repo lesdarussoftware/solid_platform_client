@@ -1,13 +1,15 @@
 import { useContext, useState } from "react"
 
 import { MessageContext } from "../providers/MessageProvider"
+import { DataContext } from "../providers/DataProvider"
+import { useForm } from "./useForm"
 
 import { MOVEMENT_URL } from "../helpers/urls"
 import { setLocalDate } from "../helpers/utils"
-import { useForm } from "./useForm"
 
 export function useMovements() {
 
+    const { dispatch } = useContext(DataContext)
     const { setSeverity, setMessage, setOpenMessage } = useContext(MessageContext)
 
     const { formData, setFormData, validate, errors, disabled, handleChange, reset } = useForm({
@@ -21,6 +23,17 @@ export function useMovements() {
         rules: { site_name: { required: true }, chief_dni: { required: true } }
     })
     const [newMovementWorkerDni, setNewMovementWorkerDni] = useState(0)
+
+    async function getMovements() {
+        const res = await fetch(MOVEMENT_URL)
+        const data = await res.json()
+        if (res.status === 200) {
+            dispatch({
+                type: 'MOVEMENTS',
+                payload: data
+            })
+        }
+    }
 
     async function handleSubmit() {
         try {
@@ -113,6 +126,7 @@ export function useMovements() {
         setFormData,
         disabled,
         reset,
-        getLocation
+        getLocation,
+        getMovements
     }
 }

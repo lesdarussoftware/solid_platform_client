@@ -4,6 +4,7 @@ import { Box, Tabs, Tab, Typography, Button } from "@mui/material"
 
 import { AuthContext } from "../providers/AuthProvider"
 
+import { MovementsAbm } from "../components/MovementsAbm"
 import { ChiefsAbm } from "../components/ChiefsAbm"
 import { WorkersAbm } from "../components/WorkersAbm"
 
@@ -67,6 +68,7 @@ export function Dashboard() {
                 </Tabs>
             </Box>
             <CustomTabPanel value={value} index={0}>
+                <MovementsAbm />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
                 <ChiefsAbm />
