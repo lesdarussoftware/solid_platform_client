@@ -44,7 +44,7 @@ export function NotificationsProvider({ children }) {
             socketInstance.off('notifyQrScan')
             socketInstance.close()
         }
-    }, [state.movements])
+    }, [state.movements, auth.role])
 
     const sendMessage = (message) => {
         if (socket) {
