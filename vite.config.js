@@ -4,14 +4,14 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/platform/',
+  base: '/solid-platform/',
   plugins: [
     react(),
     VitePWA({
       manifest: {
         "name": "Solid Platform",
         "short_name": "Solid",
-        "start_url": "/platform/",
+        "start_url": "/solid-platform/",
         "display": "standalone",
         "background_color": "#ffffff",
         "theme_color": "#000000",
