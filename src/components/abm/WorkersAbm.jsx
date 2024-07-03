@@ -3,7 +3,7 @@ import { useContext, useEffect } from "react"
 import { DataContext } from "../../providers/DataProvider"
 import { useWorkers } from "../../hooks/useWorkers"
 
-import { DataGridWithFrontendPagination } from "../datagrid/DataGridWithFrontendPagination"
+import { DataGrid } from "../datagrid/DataGrid"
 
 export function WorkersAbm() {
 
@@ -40,7 +40,7 @@ export function WorkersAbm() {
     ]
 
     return (
-        <DataGridWithFrontendPagination
+        <DataGrid
             headCells={headCells}
             rows={state.workers}
         />

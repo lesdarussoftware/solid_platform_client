@@ -3,7 +3,7 @@ import { useContext, useEffect } from "react"
 import { DataContext } from "../../providers/DataProvider"
 import { useChiefs } from "../../hooks/useChiefs"
 
-import { DataGridWithFrontendPagination } from "../datagrid/DataGridWithFrontendPagination"
+import { DataGrid} from "../datagrid/DataGrid"
 
 export function ChiefsAbm() {
 
@@ -40,7 +40,7 @@ export function ChiefsAbm() {
     ]
 
     return (
-        <DataGridWithFrontendPagination
+        <DataGrid
             headCells={headCells}
             rows={state.chiefs}
         />

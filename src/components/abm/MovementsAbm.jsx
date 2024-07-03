@@ -7,7 +7,7 @@ import { useMovements } from "../../hooks/useMovements"
 import { useForm } from "../../hooks/useForm"
 import { useSites } from "../../hooks/useSites"
 
-import { DataGridWithFrontendPagination } from "../datagrid/DataGridWithFrontendPagination"
+import { DataGrid} from "../datagrid/DataGrid"
 
 export function MovementsAbm() {
 
@@ -63,7 +63,7 @@ export function MovementsAbm() {
     ]
 
     return (
-        <DataGridWithFrontendPagination
+        <DataGrid
             headCells={headCells}
             rows={state.movements.filter(m => {
                 return (formData.worker.length === 0 && formData.site.length === 0) ||

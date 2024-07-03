@@ -13,7 +13,7 @@ import { EnhancedTableHead } from './EnhancedTableHead';
 
 import { getComparator, stableSort } from '../../helpers/utils';
 
-export function DataGridWithFrontendPagination({
+export function DataGrid({
     children,
     headCells,
     rows,
@@ -52,6 +52,7 @@ export function DataGridWithFrontendPagination({
             ),
         [order, orderBy, page, rowsPerPage, rows],
     );
+    
     return (
         <Box sx={{ width: '100%', backgroundColor: '#fff' }}>
             <Box sx={{ marginBottom: 3 }}>
