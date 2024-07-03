@@ -1,23 +1,81 @@
-import { useContext } from "react";
+import { useContext, useState } from "react"
 
-import { DataContext } from "../providers/DataProvider";
+import { MessageContext } from "../providers/MessageProvider"
+import { DataContext } from "../providers/DataProvider"
+import { useQuery } from "./useQuery"
 
-import { WORKER_URL } from "../helpers/urls";
+import { WORKER_URL } from "../helpers/urls"
+import { STATUS_CODES } from "../helpers/statusCodes"
 
 export function useWorkers() {
 
-    const { dispatch } = useContext(DataContext)
+    const { state, dispatch } = useContext(DataContext)
+    const { setMessage, setSeverity, setOpenMessage } = useContext(MessageContext)
 
-    async function getWorkers() {
-        const res = await fetch(WORKER_URL)
-        const data = await res.json()
-        if (res.status === 200) {
-            dispatch({
-                type: 'WORKERS',
-                payload: data
-            })
+    const { handleQuery } = useQuery()
+
+    const [open, setOpen] = useState(null)
+    const [count, setCount] = useState(0)
+
+    async function getWorkers(params) {
+        const { status, data } = await handleQuery({ url: `${WORKER_URL}${params ? `/${params}` : ''}` })
+        if (status === STATUS_CODES.OK) {
+            dispatch({ type: 'WORKERS', payload: data[0] })
+            setCount(data[1])
         }
     }
 
-    return { getWorkers }
+    async function handleSubmit(e, validate, formData, setDisabled, reset) {
+        e.preventDefault()
+        if (validate()) {
+            const urls = { 'NEW': WORKER_URL, 'EDIT': `${WORKER_URL}/${formData.dni}` }
+            const { status, data } = await handleQuery({
+                url: urls[open],
+                method: open === 'NEW' ? 'POST' : open === 'EDIT' ? 'PUT' : 'GET',
+                body: JSON.stringify(formData)
+            })
+            if (status === STATUS_CODES.CREATED) {
+                dispatch({ type: 'WORKERS', payload: [data, ...state.workers] })
+                setCount(count + 1)
+                setMessage('Empleado registrado correctamente.')
+            } else if (status === STATUS_CODES.OK) {
+                dispatch({
+                    type: 'WORKERS',
+                    payload: [data, ...state.workers.filter(item => item.dni !== data.dni)]
+                })
+                setMessage('Empleado editado correctamente.')
+            } else {
+                setMessage(data.message)
+                setSeverity('error')
+                setDisabled(false)
+            }
+            if (status === STATUS_CODES.CREATED || status === STATUS_CODES.OK) {
+                setSeverity('success')
+                reset(setOpen)
+            }
+            setOpenMessage(true)
+        }
+    }
+
+    async function handleDelete(formData, reset, setDisabled) {
+        const { status, data } = await handleQuery({ url: `${WORKER_URL}/${formData.dni}`, method: 'DELETE' })
+        if (status === STATUS_CODES.OK) {
+            dispatch({
+                type: 'WORKERS',
+                payload: [...state.workers.filter(item => item.dni !== data.dni)]
+            })
+            setCount(count - 1)
+            setSeverity('success')
+            setMessage('Empleado eliminado correctamente.')
+            reset(setOpen)
+        }
+        if (status === STATUS_CODES.SERVER_ERROR) {
+            setMessage(data.message)
+            setSeverity('error')
+            setDisabled(false)
+        }
+        setOpenMessage(true)
+    }
+
+    return { getWorkers, open, setOpen, handleSubmit, handleDelete, count }
 }

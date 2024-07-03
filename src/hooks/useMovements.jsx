@@ -4,8 +4,10 @@ import { MessageContext } from "../providers/MessageProvider"
 import { DataContext } from "../providers/DataProvider"
 import { NotificationsContext } from "../providers/NotificationsProvider"
 import { useForm } from "./useForm"
+import { useQuery } from "./useQuery"
 
 import { MOVEMENT_URL } from "../helpers/urls"
+import { STATUS_CODES } from "../helpers/statusCodes"
 
 export function useMovements() {
 
@@ -13,6 +15,7 @@ export function useMovements() {
     const { setSeverity, setMessage, setOpenMessage } = useContext(MessageContext)
     const { sendMessage } = useContext(NotificationsContext)
 
+    const { handleQuery } = useQuery()
     const { formData, setFormData, validate, errors, disabled, handleChange, reset } = useForm({
         defaultData: {
             chief_dni: '',
@@ -25,29 +28,20 @@ export function useMovements() {
     })
     const [newMovementWorkerDni, setNewMovementWorkerDni] = useState(0)
 
-    async function getMovements() {
-        const res = await fetch(MOVEMENT_URL)
-        const data = await res.json()
-        if (res.status === 200) {
-            dispatch({
-                type: 'MOVEMENTS',
-                payload: data
-            })
-        }
+    async function getMovements(params) {
+        const { status, data } = await handleQuery({ url: `${MOVEMENT_URL}${params ? `/${params}` : ''}` })
+        if (status === STATUS_CODES.OK) dispatch({ type: 'MOVEMENTS', payload: data })
     }
 
     async function handleSubmit() {
         try {
             let additionalData = { date: new Date(Date.now()) }
-            const res = await fetch(MOVEMENT_URL, {
+            const { status, data } = await handleQuery({
+                url: MOVEMENT_URL,
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
                 body: JSON.stringify({ ...formData, ...additionalData })
             })
-            const data = await res.json()
-            if (res.status === 201) {
+            if (status === STATUS_CODES.CREATED) {
                 setMessage(`Registro de ${data.worker.first_name} ${data.worker.last_name} guardado.`)
                 setSeverity('success')
                 setNewMovementWorkerDni(0)
@@ -86,14 +80,12 @@ export function useMovements() {
         const movementsCache = JSON.parse(localStorage.getItem('solid_movements_storage') ?? '[]')
         if (movementsCache.length > 0) {
             try {
-                const res = await fetch(`${MOVEMENT_URL}/sync`, {
+                const { status } = await handleQuery({
+                    url: `${MOVEMENT_URL}/sync`,
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
                     body: JSON.stringify({ movements: movementsCache })
                 })
-                if (res.status === 201) {
+                if (status === STATUS_CODES.CREATED) {
                     localStorage.removeItem('solid_movements_storage')
                     sendMessage('Registros sin conexión sincronizados.')
                 }

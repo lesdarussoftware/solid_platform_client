@@ -1,4 +1,5 @@
 import { createContext, useState } from "react";
+import { Typography } from "@mui/material";
 
 import { ModalComponent } from "../components/common/ModalComponent";
 import { LoginForm } from "../components/common/LoginForm";
