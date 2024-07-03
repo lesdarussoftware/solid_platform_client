@@ -2,9 +2,9 @@ import { useContext, useEffect, useRef, useState } from "react"
 import { Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
 import QrScanner from "qr-scanner"
 
-import { DataContext } from "../providers/DataProvider"
+import { DataContext } from "../../providers/DataProvider"
 
-import QrFrame from "../assets/qr-frame.svg"
+import QrFrame from "../../assets/qr-frame.svg"
 
 export function QrReader({
     formData,

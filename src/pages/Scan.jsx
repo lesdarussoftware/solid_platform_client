@@ -6,7 +6,7 @@ import { useChiefs } from "../hooks/useChiefs";
 import { useSites } from "../hooks/useSites";
 import { useMovements } from "../hooks/useMovements";
 
-import { QrReader } from "../components/QrReader";
+import { QrReader } from "../components/common/QrReader";
 
 export function Scan() {
 

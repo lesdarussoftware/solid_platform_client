@@ -11,7 +11,7 @@ import Paper from '@mui/material/Paper';
 
 import { EnhancedTableHead } from './EnhancedTableHead';
 
-import { getComparator, stableSort } from '../helpers/utils';
+import { getComparator, stableSort } from '../../helpers/utils';
 
 export function DataGridWithFrontendPagination({
     children,

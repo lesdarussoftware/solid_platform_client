@@ -2,12 +2,12 @@ import { useContext, useEffect } from "react"
 import { Box, Button, FormControl, Input, InputLabel, MenuItem, Select } from "@mui/material"
 import { format } from 'date-fns'
 
-import { DataContext } from "../providers/DataProvider"
-import { useMovements } from "../hooks/useMovements"
-import { useForm } from "../hooks/useForm"
-import { useSites } from "../hooks/useSites"
+import { DataContext } from "../../providers/DataProvider"
+import { useMovements } from "../../hooks/useMovements"
+import { useForm } from "../../hooks/useForm"
+import { useSites } from "../../hooks/useSites"
 
-import { DataGridWithFrontendPagination } from "./DataGridWithFrontendPagination"
+import { DataGridWithFrontendPagination } from "../datagrid/DataGridWithFrontendPagination"
 
 export function MovementsAbm() {
 

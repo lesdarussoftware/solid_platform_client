@@ -1,12 +1,13 @@
 import { useContext, useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { Box, Tabs, Tab, Typography, Button } from "@mui/material"
+import { Box, Tabs, Tab, Typography } from "@mui/material"
 
 import { AuthContext } from "../providers/AuthProvider"
 
-import { MovementsAbm } from "../components/MovementsAbm"
-import { ChiefsAbm } from "../components/ChiefsAbm"
-import { WorkersAbm } from "../components/WorkersAbm"
+import { MovementsAbm } from "../components/abm/MovementsAbm"
+import { ChiefsAbm } from "../components/abm/ChiefsAbm"
+import { WorkersAbm } from "../components/abm/WorkersAbm"
+import { Header } from "../components/common/Header"
+import { LoginForm } from "../components/common/LoginForm"
 
 function CustomTabPanel(props) {
 
@@ -34,9 +35,7 @@ function a11yProps(index) {
 
 export function Dashboard() {
 
-    const { setAuth } = useContext(AuthContext)
-
-    const navigate = useNavigate()
+    const { auth } = useContext(AuthContext)
 
     const [value, setValue] = useState(0)
 
@@ -44,38 +43,37 @@ export function Dashboard() {
         setValue(newValue)
     }
 
-    const logout = () => {
-        navigate('/')
-        setAuth(null)
-        localStorage.removeItem('solid_auth')
-    }
-
     return (
-        <Box sx={{ paddingX: 2 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3, paddingY: 1 }}>
-                <Typography variant="h6" align="center">
-                    Solid Platform
-                </Typography>
-                <Button type="button" variant="contained" onClick={logout}>
-                    Cerrar sesión
-                </Button>
-            </Box>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                    <Tab label="Planilla" {...a11yProps(0)} />
-                    <Tab label="Capataces" {...a11yProps(1)} />
-                    <Tab label="Empleados" {...a11yProps(2)} />
-                </Tabs>
-            </Box>
-            <CustomTabPanel value={value} index={0}>
-                <MovementsAbm />
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={1}>
-                <ChiefsAbm />
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={2}>
-                <WorkersAbm />
-            </CustomTabPanel>
-        </Box>
+        <>
+            {auth ?
+                <Box sx={{ paddingX: 2 }}>
+                    <Header />
+                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                            <Tab label="Planilla" {...a11yProps(0)} />
+                            <Tab label="Capataces" {...a11yProps(1)} />
+                            <Tab label="Empleados" {...a11yProps(2)} />
+                        </Tabs>
+                    </Box>
+                    <CustomTabPanel value={value} index={0}>
+                        <MovementsAbm />
+                    </CustomTabPanel>
+                    <CustomTabPanel value={value} index={1}>
+                        <ChiefsAbm />
+                    </CustomTabPanel>
+                    <CustomTabPanel value={value} index={2}>
+                        <WorkersAbm />
+                    </CustomTabPanel>
+                </Box> :
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90vh' }}>
+                    <Box sx={{ width: '30%' }}>
+                        <Typography variant="h6" align="center" marginBottom={1}>
+                            Inicie sesión para usar el sistema
+                        </Typography>
+                        <LoginForm />
+                    </Box>
+                </Box>
+            }
+        </>
     )
 }

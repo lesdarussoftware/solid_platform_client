@@ -1,18 +1,18 @@
 import { useContext, useEffect } from "react"
 
-import { DataContext } from "../providers/DataProvider"
-import { useWorkers } from "../hooks/useWorkers"
+import { DataContext } from "../../providers/DataProvider"
+import { useChiefs } from "../../hooks/useChiefs"
 
-import { DataGridWithFrontendPagination } from "./DataGridWithFrontendPagination"
+import { DataGridWithFrontendPagination } from "../datagrid/DataGridWithFrontendPagination"
 
-export function WorkersAbm() {
+export function ChiefsAbm() {
 
     const { state } = useContext(DataContext)
 
-    const { getWorkers } = useWorkers()
+    const { getChiefs } = useChiefs()
 
     useEffect(() => {
-        getWorkers()
+        getChiefs()
     }, [])
 
     const headCells = [
@@ -42,7 +42,7 @@ export function WorkersAbm() {
     return (
         <DataGridWithFrontendPagination
             headCells={headCells}
-            rows={state.workers}
+            rows={state.chiefs}
         />
     )
 }
