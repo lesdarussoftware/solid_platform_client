@@ -13,8 +13,9 @@ export function WorkersAbm() {
     const { state } = useContext(DataContext)
 
     const { getWorkers, open, setOpen, handleSubmit, handleDelete } = useWorkers()
-    const { formData, handleChange, reset, disabled, setDisabled, errors, validate } = useForm({
+    const { formData, setFormData, handleChange, reset, disabled, setDisabled, errors, validate } = useForm({
         defaultData: {
+            id: '',
             dni: '',
             first_name: '',
             last_name: '',
@@ -42,6 +43,13 @@ export function WorkersAbm() {
 
     const headCells = [
         {
+            id: "id",
+            numeric: true,
+            disablePadding: false,
+            label: "#",
+            accessor: 'id'
+        },
+        {
             id: "dni",
             numeric: false,
             disablePadding: true,
@@ -68,6 +76,10 @@ export function WorkersAbm() {
         <DataGrid
             headCells={headCells}
             rows={state.workers}
+            setOpen={setOpen}
+            setFormData={setFormData}
+            showEditAction
+            showDeleteAction
             contentHeader={
                 <Box>
                     <Button type="button" variant="contained" onClick={() => setOpen('NEW')}>
@@ -83,15 +95,17 @@ export function WorkersAbm() {
                 </Typography>
                 <form onChange={handleChange} onSubmit={(e) => handleSubmit(e, validate, formData, setDisabled, reset)}>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                        <FormControl>
-                            <InputLabel htmlFor="dni">DNI</InputLabel>
-                            <Input id="dni" type="text" name="dni" value={formData.dni} />
-                            {errors.dni?.type === 'required' &&
-                                <Typography variant="caption" color="red" marginTop={1}>
-                                    * El dni es requerido.
-                                </Typography>
-                            }
-                        </FormControl>
+                        {open === 'NEW' &&
+                            <FormControl>
+                                <InputLabel htmlFor="dni">DNI</InputLabel>
+                                <Input id="dni" type="number" name="dni" value={formData.dni} />
+                                {errors.dni?.type === 'required' &&
+                                    <Typography variant="caption" color="red" marginTop={1}>
+                                        * El dni es requerido.
+                                    </Typography>
+                                }
+                            </FormControl>
+                        }
                         <FormControl>
                             <InputLabel htmlFor="first_name">Nombre</InputLabel>
                             <Input id="first_name" type="text" name="first_name" value={formData.first_name} />
@@ -142,10 +156,9 @@ export function WorkersAbm() {
                 </form>
             </ModalComponent>
             <ModalComponent open={open === 'DELETE'} onClose={() => reset(setOpen)}>
-                <Typography variant="h6" sx={{ marginBottom: 1 }}>
+                <Typography variant="h6" sx={{ marginBottom: 1, textAlign: 'center' }}>
                     {`¿Desea borrar el registro del empleado ${formData.first_name + ' ' + formData.last_name} (#${formData.id})?`}
                 </Typography>
-                <p style={{ textAlign: 'center' }}>Los datos no podrán ser recuperados.</p>
                 <Box sx={{ display: 'flex', gap: 1 }}>
                     <Button
                         type="button"

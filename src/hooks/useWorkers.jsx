@@ -28,11 +28,11 @@ export function useWorkers() {
     async function handleSubmit(e, validate, formData, setDisabled, reset) {
         e.preventDefault()
         if (validate()) {
-            const urls = { 'NEW': WORKER_URL, 'EDIT': `${WORKER_URL}/${formData.dni}` }
+            const urls = { 'NEW': WORKER_URL, 'EDIT': `${WORKER_URL}/${formData.id}` }
             const { status, data } = await handleQuery({
                 url: urls[open],
                 method: open === 'NEW' ? 'POST' : open === 'EDIT' ? 'PUT' : 'GET',
-                body: JSON.stringify(formData)
+                body: JSON.stringify({ ...formData, dni: parseInt(formData.dni) })
             })
             if (status === STATUS_CODES.CREATED) {
                 dispatch({ type: 'WORKERS', payload: [data, ...state.workers] })
@@ -41,7 +41,7 @@ export function useWorkers() {
             } else if (status === STATUS_CODES.OK) {
                 dispatch({
                     type: 'WORKERS',
-                    payload: [data, ...state.workers.filter(item => item.dni !== data.dni)]
+                    payload: [data, ...state.workers.filter(item => item.id !== data.id)]
                 })
                 setMessage('Empleado editado correctamente.')
             } else {
@@ -58,11 +58,11 @@ export function useWorkers() {
     }
 
     async function handleDelete(formData, reset, setDisabled) {
-        const { status, data } = await handleQuery({ url: `${WORKER_URL}/${formData.dni}`, method: 'DELETE' })
+        const { status, data } = await handleQuery({ url: `${WORKER_URL}/${formData.id}`, method: 'DELETE' })
         if (status === STATUS_CODES.OK) {
             dispatch({
                 type: 'WORKERS',
-                payload: [...state.workers.filter(item => item.dni !== data.dni)]
+                payload: [...state.workers.filter(item => item.id !== data.id)]
             })
             setCount(count - 1)
             setSeverity('success')

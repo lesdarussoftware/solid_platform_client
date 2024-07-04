@@ -18,10 +18,10 @@ export function EnhancedTableHead({
     return (
         <TableHead>
             <TableRow>
+                <TableCell />
                 {headCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}
-                        className='font-bold flex-1 px-4 py-1'
                         align="center"
                         padding={headCell.disablePadding ? 'none' : 'normal'}
                         sortDirection={orderBy === headCell.id ? order : false}
