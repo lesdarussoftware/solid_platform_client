@@ -15,7 +15,6 @@ import { ModalComponent } from "../common/ModalComponent"
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers"
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns"
 import { es } from "date-fns/locale"
-import { Link } from "react-router-dom"
 
 export function MovementsAbm() {
 
@@ -123,7 +122,7 @@ export function MovementsAbm() {
         //     disablePadding: true,
         //     label: "Ubic. QR",
         //     accessor: (row) => {
-        //         if (row.lat === -24.875551 && row.lng === -65.538401) return ''
+        //         if (row.lat === '-24.875551' && row.lng === '-65.538401') return ''
         //         return (
         //             <Link
         //                 target="_blank"
@@ -180,7 +179,7 @@ export function MovementsAbm() {
                             <Select
                                 labelId="type-select"
                                 id="type"
-                                value={filter.type}
+                                value={formData.type}
                                 label="Evento"
                                 name="type"
                                 onChange={e => handleChange({ target: { name: 'type', value: e.target.value } })}
@@ -199,7 +198,7 @@ export function MovementsAbm() {
                             <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
                                 <DatePicker
                                     label="Fecha"
-                                    value={formData.date}
+                                    value={new Date(formData.date)}
                                     name="date"
                                     onChange={value => handleChange({ target: { name: 'date', value: new Date(value.toISOString()) } })}
                                 />
