@@ -8,6 +8,7 @@ import { ChiefsAbm } from "../components/abm/ChiefsAbm"
 import { WorkersAbm } from "../components/abm/WorkersAbm"
 import { Header } from "../components/common/Header"
 import { LoginForm } from "../components/common/LoginForm"
+import { SitesAbm } from "../components/abm/SitesAbm"
 
 function CustomTabPanel(props) {
 
@@ -67,10 +68,10 @@ export function Dashboard() {
                         <WorkersAbm />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={3}>
-                    
+                        <SitesAbm />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={4}>
-                    
+
                     </CustomTabPanel>
                 </Box> :
                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90vh' }}>
