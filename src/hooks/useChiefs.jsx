@@ -16,9 +16,13 @@ export function useChiefs() {
 
     const [open, setOpen] = useState(null)
     const [count, setCount] = useState(0)
+    const [filter, setFilter] = useState({
+        page: 0,
+        offset: 5
+    })
 
     async function getChiefs(params) {
-        const { status, data } = await handleQuery({ url: `${CHIEF_URL}${params ? `/${params}` : ''}` })
+        const { status, data } = await handleQuery({ url: `${CHIEF_URL}${params ? `${params}` : ''}` })
         if (status === STATUS_CODES.OK) {
             dispatch({ type: 'CHIEFS', payload: data[0] })
             setCount(data[1])
@@ -78,5 +82,5 @@ export function useChiefs() {
         setOpenMessage(true)
     }
 
-    return { getChiefs, open, setOpen, handleSubmit, handleDelete, count }
+    return { getChiefs, open, setOpen, handleSubmit, handleDelete, count, filter, setFilter }
 }

@@ -16,9 +16,13 @@ export function useSites() {
 
     const [open, setOpen] = useState(null)
     const [count, setCount] = useState(0)
+    const [filter, setFilter] = useState({
+        page: 0,
+        offset: 5
+    })
 
     async function getSites(params) {
-        const { status, data } = await handleQuery({ url: `${SITE_URL}${params ? `/${params}` : ''}` })
+        const { status, data } = await handleQuery({ url: `${SITE_URL}${params ? `${params}` : ''}` })
         if (status === STATUS_CODES.OK) {
             dispatch({ type: 'SITES', payload: data[0] })
             setCount(data[1])
@@ -78,5 +82,5 @@ export function useSites() {
         setOpenMessage(true)
     }
 
-    return { getSites, open, setOpen, handleSubmit, handleDelete, count }
+    return { getSites, open, setOpen, handleSubmit, handleDelete, count, filter, setFilter }
 }

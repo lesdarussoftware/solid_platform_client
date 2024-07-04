@@ -12,7 +12,7 @@ export function UsersAbm() {
 
     const { state } = useContext(DataContext)
 
-    const { getUsers, open, setOpen, handleSubmit, handleDelete } = useUsers()
+    const { getUsers, open, setOpen, handleSubmit, handleDelete, filter, setFilter, count } = useUsers()
     const { formData, setFormData, handleChange, reset, disabled, setDisabled, errors, validate } = useForm({
         defaultData: {
             id: '',
@@ -43,8 +43,9 @@ export function UsersAbm() {
     })
 
     useEffect(() => {
-        getUsers()
-    }, [])
+        const { page, offset } = filter
+        getUsers(`?page=${page}&offset=${offset}`)
+    }, [filter])
 
     const headCells = useMemo(() => [
         {
@@ -83,6 +84,9 @@ export function UsersAbm() {
             rows={state.users}
             setOpen={setOpen}
             setFormData={setFormData}
+            filter={filter}
+            setFilter={setFilter}
+            count={count}
             contentHeader={
                 <Box sx={{ display: 'flex', justifyContent: 'end' }}>
                     <Button type="button" variant="contained" onClick={() => setOpen('NEW')}>

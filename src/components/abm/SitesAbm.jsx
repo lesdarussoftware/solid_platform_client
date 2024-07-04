@@ -12,15 +12,16 @@ export function SitesAbm() {
 
     const { state } = useContext(DataContext)
 
-    const { getSites, open, setOpen, handleSubmit, handleDelete } = useSites()
+    const { getSites, open, setOpen, handleSubmit, handleDelete, filter, setFilter, count } = useSites()
     const { formData, setFormData, handleChange, reset, disabled, setDisabled, errors, validate } = useForm({
         defaultData: { id: '', name: '', },
         rules: { name: { required: true, maxLength: 191 } }
     })
 
     useEffect(() => {
-        getSites()
-    }, [])
+        const { page, offset } = filter
+        getSites(`?page=${page}&offset=${offset}`)
+    }, [filter])
 
     const headCells = useMemo(() => [
         {
@@ -45,6 +46,9 @@ export function SitesAbm() {
             rows={state.sites}
             setOpen={setOpen}
             setFormData={setFormData}
+            filter={filter}
+            setFilter={setFilter}
+            count={count}
             showEditAction
             showDeleteAction
             contentHeader={

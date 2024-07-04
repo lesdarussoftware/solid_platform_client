@@ -19,7 +19,7 @@ export function EnhancedTableHead({
     return (
         <TableHead>
             <TableRow>
-                {addCell && <TableCell sx={{ width: 80 }} />}
+                {addCell && <TableCell sx={{ width: 120 }} />}
                 {headCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}

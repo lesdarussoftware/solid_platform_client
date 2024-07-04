@@ -16,9 +16,13 @@ export function useWorkers() {
 
     const [open, setOpen] = useState(null)
     const [count, setCount] = useState(0)
+    const [filter, setFilter] = useState({
+        page: 0,
+        offset: 5
+    })
 
     async function getWorkers(params) {
-        const { status, data } = await handleQuery({ url: `${WORKER_URL}${params ? `/${params}` : ''}` })
+        const { status, data } = await handleQuery({ url: `${WORKER_URL}${params ? `${params}` : ''}` })
         if (status === STATUS_CODES.OK) {
             dispatch({ type: 'WORKERS', payload: data[0] })
             setCount(data[1])
@@ -77,5 +81,5 @@ export function useWorkers() {
         setOpenMessage(true)
     }
 
-    return { getWorkers, open, setOpen, handleSubmit, handleDelete, count }
+    return { getWorkers, open, setOpen, handleSubmit, handleDelete, count, filter, setFilter }
 }

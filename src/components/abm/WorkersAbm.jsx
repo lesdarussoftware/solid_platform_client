@@ -12,7 +12,7 @@ export function WorkersAbm() {
 
     const { state } = useContext(DataContext)
 
-    const { getWorkers, open, setOpen, handleSubmit, handleDelete } = useWorkers()
+    const { getWorkers, open, setOpen, handleSubmit, handleDelete, filter, setFilter, count } = useWorkers()
     const { formData, setFormData, handleChange, reset, disabled, setDisabled, errors, validate } = useForm({
         defaultData: {
             id: '',
@@ -38,8 +38,9 @@ export function WorkersAbm() {
     })
 
     useEffect(() => {
-        getWorkers()
-    }, [])
+        const { page, offset } = filter
+        getWorkers(`?page=${page}&offset=${offset}`)
+    }, [filter])
 
     const headCells = useMemo(() => [
         {
@@ -69,6 +70,13 @@ export function WorkersAbm() {
             disablePadding: true,
             label: "Apellido",
             accessor: 'last_name'
+        },
+        {
+            id: "qr",
+            numeric: false,
+            disablePadding: true,
+            label: "QR",
+            accessor: 'last_name'
         }
     ], [])
 
@@ -78,6 +86,9 @@ export function WorkersAbm() {
             rows={state.workers}
             setOpen={setOpen}
             setFormData={setFormData}
+            filter={filter}
+            setFilter={setFilter}
+            count={count}
             showEditAction
             showDeleteAction
             contentHeader={

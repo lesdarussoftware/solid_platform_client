@@ -21,9 +21,19 @@ export function useMovements() {
     const [newMovementWorkerDni, setNewMovementWorkerDni] = useState(0)
     const [open, setOpen] = useState(null)
     const [count, setCount] = useState(0)
+    const [filter, setFilter] = useState({
+        page: 0,
+        offset: 5,
+        type: '',
+        from: '',
+        to: '',
+        chief: '',
+        worker: '',
+        site: ''
+    })
 
     async function getMovements(params) {
-        const { status, data } = await handleQuery({ url: `${MOVEMENT_URL}${params ? `/${params}` : ''}` })
+        const { status, data } = await handleQuery({ url: `${MOVEMENT_URL}${params ? `${params}` : ''}` })
         if (status === STATUS_CODES.OK) {
             dispatch({ type: 'MOVEMENTS', payload: data[0] })
             setCount(data[1])
@@ -173,6 +183,8 @@ export function useMovements() {
         getLocation,
         getMovements,
         count,
+        filter,
+        setFilter,
         open,
         setOpen,
         handleSubmit,

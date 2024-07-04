@@ -8,6 +8,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import SearchSharpIcon from '@mui/icons-material/SearchSharp'
 import EditIcon from '@mui/icons-material/Edit'
 import CloseIcon from "@mui/icons-material/Close"
 
@@ -25,37 +26,38 @@ export function DataGrid({
     defaultOrderBy = 'id',
     setFormData,
     setOpen,
+    showViewAction,
     showEditAction,
-    showDeleteAction
+    showDeleteAction,
+    filter,
+    setFilter,
+    count
 }) {
 
     const [order, setOrder] = useState(defaultOrder);
     const [orderBy, setOrderBy] = useState(defaultOrderBy);
-    const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(5);
 
-    const handleRequestSort = (event, property) => {
+    const handleRequestSort = (_, property) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
     };
 
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
-    };
+    const handleChangePage = (_, newPage) => {
+        setFilter({ ...filter, page: newPage });
+    }
 
     const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
-    };
+        setFilter({
+            ...filter,
+            offset: parseInt(event.target.value, 10),
+            page: 0
+        })
+    }
 
-    const visibleRows = useMemo(
-        () =>
-            stableSort(rows, getComparator(order, orderBy, headCells.find(hc => hc.id === orderBy)?.sorter)).slice(
-                page * rowsPerPage,
-                page * rowsPerPage + rowsPerPage,
-            ),
-        [order, orderBy, page, rowsPerPage, rows],
+    const visibleRows = useMemo(() =>
+        stableSort(rows, getComparator(order, orderBy, headCells.find(hc => hc.id === orderBy)?.sorter)),
+        [order, orderBy, rows, filter.page]
     );
 
     return (
@@ -75,7 +77,7 @@ export function DataGrid({
                             order={order}
                             orderBy={orderBy}
                             onRequestSort={handleRequestSort}
-                            addCell={showEditAction || showDeleteAction}
+                            addCell={showEditAction || showDeleteAction || showViewAction}
                         />
                         <TableBody>
                             {visibleRows && visibleRows.length > 0 ? (
@@ -86,8 +88,21 @@ export function DataGrid({
                                             tabIndex={-1}
                                             key={row.id}
                                         >
-                                            {(showEditAction || showDeleteAction) &&
+                                            {(showEditAction || showDeleteAction || showViewAction) &&
                                                 <TableCell>
+                                                    {showViewAction &&
+                                                        <Tooltip
+                                                            title="Detalles"
+                                                            onClick={() => {
+                                                                if (setFormData) setFormData(rows.find((r) => r.id === row.id))
+                                                                if (setOpen) setOpen("VIEW")
+                                                            }}
+                                                        >
+                                                            <IconButton>
+                                                                <SearchSharpIcon />
+                                                            </IconButton>
+                                                        </Tooltip>
+                                                    }
                                                     {showEditAction &&
                                                         <Tooltip
                                                             title="Editar"
@@ -149,13 +164,20 @@ export function DataGrid({
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25, 50]}
                     component="div"
-                    count={rows.length}
-                    rowsPerPage={rowsPerPage}
+                    count={-1}
+                    rowsPerPage={filter.offset}
                     labelRowsPerPage="Registros por página"
-                    labelDisplayedRows={({ from, to, count }) => `${from}–${to} de ${count}`}
-                    page={page}
+                    labelDisplayedRows={({ from, to }) => `${from}–${to} de ${count}`}
+                    page={filter.page}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
+                    slotProps={{
+                        actions: {
+                            nextButton: {
+                                disabled: ((filter.page + 1) * filter.offset) >= count
+                            }
+                        }
+                    }}
                 />
             </Paper>
             {children}

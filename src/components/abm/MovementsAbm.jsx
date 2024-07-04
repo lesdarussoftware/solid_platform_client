@@ -1,4 +1,8 @@
-import { useContext, useEffect, useMemo, useState } from "react"
+import { useContext, useEffect, useMemo } from "react"
+import { Autocomplete, Box, Button, FormControl, Input, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material"
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers"
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns"
+import { es } from "date-fns/locale"
 import { format } from 'date-fns'
 
 import { DataContext } from "../../providers/DataProvider"
@@ -10,17 +14,13 @@ import { useWorkers } from "../../hooks/useWorkers"
 
 import { DataGrid } from "../datagrid/DataGrid"
 import { MovementFilter } from "../filters/MovementFilter"
-import { Autocomplete, Box, Button, FormControl, Input, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material"
 import { ModalComponent } from "../common/ModalComponent"
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers"
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns"
-import { es } from "date-fns/locale"
 
 export function MovementsAbm() {
 
     const { state } = useContext(DataContext)
 
-    const { getMovements, open, setOpen, handleSubmit, handleDelete } = useMovements()
+    const { getMovements, open, setOpen, handleSubmit, handleDelete, filter, setFilter, count } = useMovements()
     const { getSites } = useSites()
     const { getChiefs } = useChiefs()
     const { getWorkers } = useWorkers()
@@ -53,25 +53,18 @@ export function MovementsAbm() {
         }
     })
 
-    const [filter, setFilter] = useState({
-        type: '',
-        from: new Date(Date.now()),
-        to: new Date(Date.now()),
-        chief: '',
-        worekr: '',
-        site: ''
-    })
-
     useEffect(() => {
-        getMovements()
         getSites()
         getChiefs()
         getWorkers()
     }, [])
 
     useEffect(() => {
-        console.log(formData)
-    }, [formData])
+        const { from, to, page, offset, type, chief, worker, site } = filter
+        const fromIsNotString = typeof from !== 'string'
+        const toIsNotString = typeof to !== 'string'
+        getMovements(`?page=${page}&offset=${offset}&from=${fromIsNotString ? new Date(from).toISOString() : ''}&to=${toIsNotString ? new Date(to).toISOString() : ''}&type=${type}&chief=${chief}&worker=${worker}&site=${site}`)
+    }, [filter])
 
     const headCells = useMemo(() => [
         {
@@ -156,6 +149,10 @@ export function MovementsAbm() {
             rows={state.movements}
             setOpen={setOpen}
             setFormData={setFormData}
+            filter={filter}
+            setFilter={setFilter}
+            count={count}
+            showViewAction
             showEditAction
             showDeleteAction
             contentHeader={

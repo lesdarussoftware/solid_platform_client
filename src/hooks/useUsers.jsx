@@ -18,9 +18,13 @@ export function useUsers() {
 
     const [open, setOpen] = useState(null)
     const [count, setCount] = useState(0)
+    const [filter, setFilter] = useState({
+        page: 0,
+        offset: 5
+    })
 
     async function getUsers(params) {
-        const { status, data } = await handleQuery({ url: `${USER_URL}${params ? `/${params}` : ''}` })
+        const { status, data } = await handleQuery({ url: `${USER_URL}${params ? `${params}` : ''}` })
         if (status === STATUS_CODES.OK) {
             dispatch({ type: 'USERS', payload: data[0] })
             setCount(data[1])
@@ -101,5 +105,5 @@ export function useUsers() {
         }
     }
 
-    return { getUsers, open, setOpen, handleSubmit, handleDelete, count, handleModifyData }
+    return { getUsers, open, setOpen, handleSubmit, handleDelete, count, handleModifyData, filter, setFilter }
 }

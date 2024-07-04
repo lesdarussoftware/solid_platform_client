@@ -12,7 +12,7 @@ export function ChiefsAbm() {
 
     const { state } = useContext(DataContext)
 
-    const { getChiefs, open, setOpen, handleSubmit, handleDelete } = useChiefs()
+    const { getChiefs, open, setOpen, handleSubmit, handleDelete, filter, setFilter, count } = useChiefs()
     const { formData, setFormData, handleChange, reset, disabled, setDisabled, errors, validate } = useForm({
         defaultData: {
             id: '',
@@ -38,8 +38,9 @@ export function ChiefsAbm() {
     })
 
     useEffect(() => {
-        getChiefs()
-    }, [])
+        const { page, offset } = filter
+        getChiefs(`?page=${page}&offset=${offset}`)
+    }, [filter])
 
     const headCells = useMemo(() => [
         {
@@ -78,6 +79,9 @@ export function ChiefsAbm() {
             rows={state.chiefs}
             setOpen={setOpen}
             setFormData={setFormData}
+            filter={filter}
+            setFilter={setFilter}
+            count={count}
             showEditAction
             showDeleteAction
             contentHeader={
