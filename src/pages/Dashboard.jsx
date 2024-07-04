@@ -23,7 +23,7 @@ function CustomTabPanel(props) {
             aria-labelledby={`simple-tab-${index}`}
             {...other}
         >
-            {value === index && <Box sx={{ p: 1 }}>{children}</Box>}
+            {value === index && <Box sx={{ paddingTop: 1 }}>{children}</Box>}
         </div>
     )
 }
@@ -48,7 +48,7 @@ export function Dashboard() {
     return (
         <>
             {auth ?
-                <Box sx={{ padding: 1 }}>
+                <Box>
                     <Header />
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">

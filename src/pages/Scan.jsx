@@ -7,6 +7,7 @@ import { useSites } from "../hooks/useSites";
 import { useMovements } from "../hooks/useMovements";
 
 import { QrReader } from "../components/common/QrReader";
+import { useForm } from "../hooks/useForm";
 
 export function Scan() {
 
@@ -14,20 +15,17 @@ export function Scan() {
 
     const { getSites } = useSites()
     const { getChiefs } = useChiefs()
-    const {
-        handleSync,
-        handleSubmit,
-        newMovementWorkerDni,
-        setNewMovementWorkerDni,
-        formData,
-        validate,
-        handleChange,
-        errors,
-        setFormData,
-        disabled,
-        reset,
-        getLocation
-    } = useMovements()
+    const { handleSync, handleScan, newMovementWorkerDni, setNewMovementWorkerDni, getLocation } = useMovements()
+    const { formData, setFormData, validate, errors, disabled, handleChange, reset } = useForm({
+        defaultData: {
+            chief_dni: '',
+            site_name: '',
+            type: null,
+            lat: null,
+            lng: null
+        },
+        rules: { site_name: { required: true }, chief_dni: { required: true } }
+    })
 
     useEffect(() => {
         getSites()
@@ -52,7 +50,7 @@ export function Scan() {
                     formData={formData}
                     reset={reset}
                     setFormData={setFormData}
-                    handleSubmit={handleSubmit}
+                    handleSubmit={handleScan}
                     newMovementWorkerDni={newMovementWorkerDni}
                     setNewMovementWorkerDni={setNewMovementWorkerDni}
                 /> :
