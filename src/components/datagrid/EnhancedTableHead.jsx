@@ -8,7 +8,8 @@ export function EnhancedTableHead({
     order,
     orderBy,
     onRequestSort,
-    disableSorting
+    disableSorting,
+    addCell
 }) {
 
     const createSortHandler = (property) => (event) => {
@@ -18,7 +19,7 @@ export function EnhancedTableHead({
     return (
         <TableHead>
             <TableRow>
-                <TableCell />
+                {addCell && <TableCell sx={{ width: 80 }} />}
                 {headCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}

@@ -8,6 +8,7 @@ import { NotificationsProvider } from "./providers/NotificationsProvider"
 import { Home } from "./pages/Home"
 import { Dashboard } from "./pages/Dashboard"
 import { Scan } from "./pages/Scan"
+import { Profile } from "./pages/Profile"
 import { Error } from "./pages/Error"
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/escanear" element={<Scan />} />
+                <Route path="/perfil" element={<Profile />} />
                 <Route path="*" element={<Error />} />
               </Routes>
             </BrowserRouter>

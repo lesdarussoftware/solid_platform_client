@@ -10,6 +10,8 @@ const reducer = (state, action) => {
             return { ...state, workers: action.payload }
         case 'MOVEMENTS':
             return { ...state, movements: action.payload }
+        case 'USERS':
+            return { ...state, users: action.payload }
         default:
             return state
     }
@@ -19,7 +21,8 @@ const initialState = {
     sites: JSON.parse(localStorage.getItem('solid_sites_storage') ?? '[]'),
     chiefs: JSON.parse(localStorage.getItem('solid_chiefs_storage') ?? '[]'),
     workers: [],
-    movements: []
+    movements: [],
+    users: []
 }
 
 export const DataContext = createContext({

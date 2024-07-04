@@ -75,6 +75,7 @@ export function DataGrid({
                             order={order}
                             orderBy={orderBy}
                             onRequestSort={handleRequestSort}
+                            addCell={showEditAction || showDeleteAction}
                         />
                         <TableBody>
                             {visibleRows && visibleRows.length > 0 ? (
@@ -85,34 +86,36 @@ export function DataGrid({
                                             tabIndex={-1}
                                             key={row.id}
                                         >
-                                            <TableCell sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
-                                                {showEditAction &&
-                                                    <Tooltip
-                                                        title="Editar"
-                                                        onClick={() => {
-                                                            if (setFormData) setFormData(rows.find((r) => r.id === row.id))
-                                                            if (setOpen) setOpen("EDIT")
-                                                        }}
-                                                    >
-                                                        <IconButton>
-                                                            <EditIcon />
-                                                        </IconButton>
-                                                    </Tooltip>
-                                                }
-                                                {showDeleteAction &&
-                                                    <Tooltip
-                                                        title="Borrar"
-                                                        onClick={() => {
-                                                            if (setFormData) setFormData(rows.find((r) => r.id === row.id))
-                                                            if (setOpen) setOpen("DELETE")
-                                                        }}
-                                                    >
-                                                        <IconButton>
-                                                            <CloseIcon />
-                                                        </IconButton>
-                                                    </Tooltip>
-                                                }
-                                            </TableCell>
+                                            {(showEditAction || showDeleteAction) &&
+                                                <TableCell>
+                                                    {showEditAction &&
+                                                        <Tooltip
+                                                            title="Editar"
+                                                            onClick={() => {
+                                                                if (setFormData) setFormData(rows.find((r) => r.id === row.id))
+                                                                if (setOpen) setOpen("EDIT")
+                                                            }}
+                                                        >
+                                                            <IconButton>
+                                                                <EditIcon />
+                                                            </IconButton>
+                                                        </Tooltip>
+                                                    }
+                                                    {showDeleteAction &&
+                                                        <Tooltip
+                                                            title="Borrar"
+                                                            onClick={() => {
+                                                                if (setFormData) setFormData(rows.find((r) => r.id === row.id))
+                                                                if (setOpen) setOpen("DELETE")
+                                                            }}
+                                                        >
+                                                            <IconButton>
+                                                                <CloseIcon />
+                                                            </IconButton>
+                                                        </Tooltip>
+                                                    }
+                                                </TableCell>
+                                            }
                                             {headCells.map((cell) => cell.accessor).map((accessor) => (
                                                 <TableCell
                                                     key={accessor}

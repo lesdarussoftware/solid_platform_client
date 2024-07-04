@@ -9,6 +9,7 @@ import { WorkersAbm } from "../components/abm/WorkersAbm"
 import { Header } from "../components/common/Header"
 import { LoginForm } from "../components/common/LoginForm"
 import { SitesAbm } from "../components/abm/SitesAbm"
+import { UsersAbm } from "../components/abm/UsersAbm"
 
 function CustomTabPanel(props) {
 
@@ -47,7 +48,7 @@ export function Dashboard() {
     return (
         <>
             {auth ?
-                <Box sx={{ paddingX: 2 }}>
+                <Box sx={{ padding: 1 }}>
                     <Header />
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
@@ -71,7 +72,7 @@ export function Dashboard() {
                         <SitesAbm />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={4}>
-
+                        <UsersAbm />
                     </CustomTabPanel>
                 </Box> :
                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90vh' }}>
