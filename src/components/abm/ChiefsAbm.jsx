@@ -1,5 +1,5 @@
 import { useContext, useEffect, useMemo } from "react"
-import { Box, Button, FormControl, Input, InputLabel, Typography } from "@mui/material"
+import { Box, Button, FormControl, Input, InputLabel, LinearProgress, Typography } from "@mui/material"
 
 import { DataContext } from "../../providers/DataProvider"
 import { useChiefs } from "../../hooks/useChiefs"
@@ -12,7 +12,7 @@ export function ChiefsAbm() {
 
     const { state } = useContext(DataContext)
 
-    const { getChiefs, open, setOpen, handleSubmit, handleDelete, filter, setFilter, count } = useChiefs()
+    const { getChiefs, open, setOpen, handleSubmit, handleDelete, filter, setFilter, count, loadingChiefs } = useChiefs()
     const { formData, setFormData, handleChange, reset, disabled, setDisabled, errors, validate } = useForm({
         defaultData: {
             id: '',
@@ -74,124 +74,131 @@ export function ChiefsAbm() {
     ], [])
 
     return (
-        <DataGrid
-            headCells={headCells}
-            rows={state.chiefs}
-            setOpen={setOpen}
-            setFormData={setFormData}
-            filter={filter}
-            setFilter={setFilter}
-            count={count}
-            showEditAction
-            showDeleteAction
-            contentHeader={
-                <Box sx={{ display: 'flex', justifyContent: 'end' }}>
-                    <Button type="button" variant="contained" onClick={() => setOpen('NEW')}>
-                        Agregar
-                    </Button>
-                </Box>
-            }
-        >
-            <ModalComponent open={open === 'NEW' || open === 'EDIT'} reduceWidth={900} onClose={() => reset(setOpen)}>
-                <Typography variant="h6" sx={{ marginBottom: 1, fontSize: { xs: 18, sm: 18, md: 20 } }}>
-                    {open === 'NEW' && 'Registrar nuevo capataz'}
-                    {open === 'EDIT' && `Editar capataz #${formData.id}`}
-                </Typography>
-                <form onChange={handleChange} onSubmit={(e) => handleSubmit(e, validate, formData, setDisabled, reset)}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                        {open === 'NEW' &&
-                            <FormControl>
-                                <InputLabel htmlFor="dni">DNI</InputLabel>
-                                <Input id="dni" type="number" name="dni" value={formData.dni} />
-                                {errors.dni?.type === 'required' &&
-                                    <Typography variant="caption" color="red" marginTop={1}>
-                                        * El dni es requerido.
-                                    </Typography>
+        <>
+            {loadingChiefs ?
+                <Box sx={{ width: '100%' }}>
+                    <LinearProgress />
+                </Box> :
+                <DataGrid
+                    headCells={headCells}
+                    rows={state.chiefs}
+                    setOpen={setOpen}
+                    setFormData={setFormData}
+                    filter={filter}
+                    setFilter={setFilter}
+                    count={count}
+                    showEditAction
+                    showDeleteAction
+                    contentHeader={
+                        <Box sx={{ display: 'flex', justifyContent: 'end' }}>
+                            <Button type="button" variant="contained" onClick={() => setOpen('NEW')}>
+                                Agregar
+                            </Button>
+                        </Box>
+                    }
+                >
+                    <ModalComponent open={open === 'NEW' || open === 'EDIT'} reduceWidth={900} onClose={() => reset(setOpen)}>
+                        <Typography variant="h6" sx={{ marginBottom: 1, fontSize: { xs: 18, sm: 18, md: 20 } }}>
+                            {open === 'NEW' && 'Registrar nuevo capataz'}
+                            {open === 'EDIT' && `Editar capataz #${formData.id}`}
+                        </Typography>
+                        <form onChange={handleChange} onSubmit={(e) => handleSubmit(e, validate, formData, setDisabled, reset)}>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                                {open === 'NEW' &&
+                                    <FormControl>
+                                        <InputLabel htmlFor="dni">DNI</InputLabel>
+                                        <Input id="dni" type="number" name="dni" value={formData.dni} />
+                                        {errors.dni?.type === 'required' &&
+                                            <Typography variant="caption" color="red" marginTop={1}>
+                                                * El dni es requerido.
+                                            </Typography>
+                                        }
+                                    </FormControl>
                                 }
-                            </FormControl>
-                        }
-                        <FormControl>
-                            <InputLabel htmlFor="first_name">Nombre</InputLabel>
-                            <Input id="first_name" type="text" name="first_name" value={formData.first_name} />
-                            {errors.first_name?.type === 'required' &&
-                                <Typography variant="caption" color="red" marginTop={1}>
-                                    * El nombre es requerido.
-                                </Typography>
-                            }
-                            {errors.first_name?.type === 'maxLength' &&
-                                <Typography variant="caption" color="red" marginTop={1}>
-                                    * El nombre es demasiado largo.
-                                </Typography>
-                            }
-                        </FormControl>
-                        <FormControl>
-                            <InputLabel htmlFor="last_name">Apellido</InputLabel>
-                            <Input id="last_name" type="text" name="last_name" value={formData.last_name} />
-                            {errors.last_name?.type === 'required' &&
-                                <Typography variant="caption" color="red" marginTop={1}>
-                                    * El apellido es requerido.
-                                </Typography>
-                            }
-                            {errors.last_name?.type === 'maxLength' &&
-                                <Typography variant="caption" color="red" marginTop={1}>
-                                    * El apellido es demasiado largo.
-                                </Typography>
-                            }
-                        </FormControl>
-                    </Box>
-                    <Box sx={{ display: 'flex', gap: 1, marginTop: 2, justifyContent: 'center' }}>
-                        <Button
-                            type="button"
-                            variant="outlined"
-                            sx={{ width: '50%', margin: '0 auto', marginTop: 1 }}
-                            onClick={() => reset(setOpen)}
-                        >
-                            Cancelar
-                        </Button>
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            sx={{ width: '50%', margin: '0 auto', marginTop: 1, color: '#fff' }}
-                            disabled={disabled}
-                        >
-                            Guardar
-                        </Button>
-                    </Box>
-                </form>
-            </ModalComponent>
-            <ModalComponent open={open === 'DELETE'} onClose={() => reset(setOpen)}>
-                <Typography variant="h6" sx={{ marginBottom: 1, textAlign: 'center' }}>
-                    {`¿Desea borrar el registro del capataz ${formData.first_name + ' ' + formData.last_name} (#${formData.id})?`}
-                </Typography>
-                <Box sx={{ display: 'flex', gap: 1 }}>
-                    <Button
-                        type="button"
-                        variant="outlined"
-                        sx={{
-                            width: '50%',
-                            margin: '0 auto',
-                            marginTop: 1
-                        }}
-                        onClick={() => reset(setOpen)}
-                    >
-                        Cancelar
-                    </Button>
-                    <Button
-                        type="button"
-                        variant="contained"
-                        sx={{
-                            width: '50%',
-                            margin: '0 auto',
-                            marginTop: 1,
-                            color: '#fff'
-                        }}
-                        disabled={disabled}
-                        onClick={() => handleDelete(formData, reset, setDisabled)}
-                    >
-                        Confirmar
-                    </Button>
-                </Box>
-            </ModalComponent>
-        </DataGrid>
+                                <FormControl>
+                                    <InputLabel htmlFor="first_name">Nombre</InputLabel>
+                                    <Input id="first_name" type="text" name="first_name" value={formData.first_name} />
+                                    {errors.first_name?.type === 'required' &&
+                                        <Typography variant="caption" color="red" marginTop={1}>
+                                            * El nombre es requerido.
+                                        </Typography>
+                                    }
+                                    {errors.first_name?.type === 'maxLength' &&
+                                        <Typography variant="caption" color="red" marginTop={1}>
+                                            * El nombre es demasiado largo.
+                                        </Typography>
+                                    }
+                                </FormControl>
+                                <FormControl>
+                                    <InputLabel htmlFor="last_name">Apellido</InputLabel>
+                                    <Input id="last_name" type="text" name="last_name" value={formData.last_name} />
+                                    {errors.last_name?.type === 'required' &&
+                                        <Typography variant="caption" color="red" marginTop={1}>
+                                            * El apellido es requerido.
+                                        </Typography>
+                                    }
+                                    {errors.last_name?.type === 'maxLength' &&
+                                        <Typography variant="caption" color="red" marginTop={1}>
+                                            * El apellido es demasiado largo.
+                                        </Typography>
+                                    }
+                                </FormControl>
+                            </Box>
+                            <Box sx={{ display: 'flex', gap: 1, marginTop: 2, justifyContent: 'center' }}>
+                                <Button
+                                    type="button"
+                                    variant="outlined"
+                                    sx={{ width: '50%', margin: '0 auto', marginTop: 1 }}
+                                    onClick={() => reset(setOpen)}
+                                >
+                                    Cancelar
+                                </Button>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    sx={{ width: '50%', margin: '0 auto', marginTop: 1, color: '#fff' }}
+                                    disabled={disabled}
+                                >
+                                    Guardar
+                                </Button>
+                            </Box>
+                        </form>
+                    </ModalComponent>
+                    <ModalComponent open={open === 'DELETE'} onClose={() => reset(setOpen)}>
+                        <Typography variant="h6" sx={{ marginBottom: 1, textAlign: 'center' }}>
+                            {`¿Desea borrar el registro del capataz ${formData.first_name + ' ' + formData.last_name} (#${formData.id})?`}
+                        </Typography>
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                            <Button
+                                type="button"
+                                variant="outlined"
+                                sx={{
+                                    width: '50%',
+                                    margin: '0 auto',
+                                    marginTop: 1
+                                }}
+                                onClick={() => reset(setOpen)}
+                            >
+                                Cancelar
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="contained"
+                                sx={{
+                                    width: '50%',
+                                    margin: '0 auto',
+                                    marginTop: 1,
+                                    color: '#fff'
+                                }}
+                                disabled={disabled}
+                                onClick={() => handleDelete(formData, reset, setDisabled)}
+                            >
+                                Confirmar
+                            </Button>
+                        </Box>
+                    </ModalComponent>
+                </DataGrid>
+            }
+        </>
     )
 }

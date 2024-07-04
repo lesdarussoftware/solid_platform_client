@@ -14,6 +14,7 @@ export function useWorkers() {
 
     const { handleQuery } = useQuery()
 
+    const [loadingWorkers, setLoadingWorkers] = useState(true)
     const [open, setOpen] = useState(null)
     const [count, setCount] = useState(0)
     const [filter, setFilter] = useState({
@@ -26,6 +27,7 @@ export function useWorkers() {
         if (status === STATUS_CODES.OK) {
             dispatch({ type: 'WORKERS', payload: data[0] })
             setCount(data[1])
+            setLoadingWorkers(false)
         }
     }
 
@@ -81,5 +83,5 @@ export function useWorkers() {
         setOpenMessage(true)
     }
 
-    return { getWorkers, open, setOpen, handleSubmit, handleDelete, count, filter, setFilter }
+    return { getWorkers, open, setOpen, handleSubmit, handleDelete, count, filter, setFilter, loadingWorkers }
 }

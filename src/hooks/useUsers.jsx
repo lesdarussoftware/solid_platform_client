@@ -16,6 +16,7 @@ export function useUsers() {
     const { handleQuery } = useQuery()
     const { handleLogout } = useAuth()
 
+    const [loadingUsers, setLoadingUsers] = useState(true)
     const [open, setOpen] = useState(null)
     const [count, setCount] = useState(0)
     const [filter, setFilter] = useState({
@@ -28,6 +29,7 @@ export function useUsers() {
         if (status === STATUS_CODES.OK) {
             dispatch({ type: 'USERS', payload: data[0] })
             setCount(data[1])
+            setLoadingUsers(false)
         }
     }
 
@@ -105,5 +107,5 @@ export function useUsers() {
         }
     }
 
-    return { getUsers, open, setOpen, handleSubmit, handleDelete, count, handleModifyData, filter, setFilter }
+    return { getUsers, open, setOpen, handleSubmit, handleDelete, count, handleModifyData, filter, setFilter, loadingUsers }
 }

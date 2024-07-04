@@ -14,6 +14,7 @@ export function useSites() {
 
     const { handleQuery } = useQuery()
 
+    const [loadingSites, setLoadingSites] = useState(true)
     const [open, setOpen] = useState(null)
     const [count, setCount] = useState(0)
     const [filter, setFilter] = useState({
@@ -26,6 +27,7 @@ export function useSites() {
         if (status === STATUS_CODES.OK) {
             dispatch({ type: 'SITES', payload: data[0] })
             setCount(data[1])
+            setLoadingSites(false)
             localStorage.setItem('solid_sites_storage', JSON.stringify(data))
         }
     }
@@ -82,5 +84,5 @@ export function useSites() {
         setOpenMessage(true)
     }
 
-    return { getSites, open, setOpen, handleSubmit, handleDelete, count, filter, setFilter }
+    return { getSites, open, setOpen, handleSubmit, handleDelete, count, filter, setFilter, loadingSites }
 }

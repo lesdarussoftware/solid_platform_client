@@ -14,6 +14,7 @@ export function useChiefs() {
 
     const { handleQuery } = useQuery()
 
+    const [loadingChiefs, setLoadingChiefs] = useState(true)
     const [open, setOpen] = useState(null)
     const [count, setCount] = useState(0)
     const [filter, setFilter] = useState({
@@ -26,6 +27,7 @@ export function useChiefs() {
         if (status === STATUS_CODES.OK) {
             dispatch({ type: 'CHIEFS', payload: data[0] })
             setCount(data[1])
+            setLoadingChiefs(false)
             localStorage.setItem('solid_chiefs_storage', JSON.stringify(data))
         }
     }
@@ -82,5 +84,5 @@ export function useChiefs() {
         setOpenMessage(true)
     }
 
-    return { getChiefs, open, setOpen, handleSubmit, handleDelete, count, filter, setFilter }
+    return { getChiefs, open, setOpen, handleSubmit, handleDelete, count, filter, setFilter, loadingChiefs }
 }

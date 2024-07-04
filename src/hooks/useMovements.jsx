@@ -18,6 +18,7 @@ export function useMovements() {
 
     const { handleQuery } = useQuery()
 
+    const [loadingMovements, setLoadingMovements] = useState(true)
     const [newMovementWorkerDni, setNewMovementWorkerDni] = useState(0)
     const [open, setOpen] = useState(null)
     const [count, setCount] = useState(0)
@@ -37,6 +38,7 @@ export function useMovements() {
         if (status === STATUS_CODES.OK) {
             dispatch({ type: 'MOVEMENTS', payload: data[0] })
             setCount(data[1])
+            setLoadingMovements(false)
         }
     }
 
@@ -188,6 +190,7 @@ export function useMovements() {
         open,
         setOpen,
         handleSubmit,
-        handleDelete
+        handleDelete,
+        loadingMovements
     }
 }
