@@ -147,7 +147,7 @@ export function DataGrid({
                     </Table>
                 </TableContainer>
                 <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
+                    rowsPerPageOptions={[5, 10, 25, 50]}
                     component="div"
                     count={rows.length}
                     rowsPerPage={rowsPerPage}

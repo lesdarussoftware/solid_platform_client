@@ -81,9 +81,12 @@ export function WorkersAbm() {
             showEditAction
             showDeleteAction
             contentHeader={
-                <Box>
+                <Box sx={{ display: 'flex', justifyContent: 'end', gap: 1 }}>
                     <Button type="button" variant="contained" onClick={() => setOpen('NEW')}>
                         Agregar
+                    </Button>
+                    <Button type="button" variant="contained" onClick={() => setOpen('GENERATE-QR')}>
+                        Generar QR
                     </Button>
                 </Box>
             }

@@ -53,8 +53,8 @@ export function Dashboard() {
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                             <Tab label="Planilla" {...a11yProps(0)} />
-                            <Tab label="Capataces" {...a11yProps(1)} />
-                            <Tab label="Empleados" {...a11yProps(2)} />
+                            <Tab label="Empleados" {...a11yProps(1)} />
+                            <Tab label="Capataces" {...a11yProps(2)} />
                             <Tab label="Obras" {...a11yProps(3)} />
                             <Tab label="Usuarios" {...a11yProps(4)} />
                         </Tabs>
@@ -63,10 +63,10 @@ export function Dashboard() {
                         <MovementsAbm />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={1}>
-                        <ChiefsAbm />
+                        <WorkersAbm />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={2}>
-                        <WorkersAbm />
+                        <ChiefsAbm />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={3}>
                         <SitesAbm />
