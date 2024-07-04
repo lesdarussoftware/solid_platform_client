@@ -6,7 +6,7 @@ export function Header() {
     const { handleLogout } = useAuth()
 
     return (
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3, paddingY: 1 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', paddingY: 1 }}>
             <Typography variant="h6" align="center">
                 Solid Platform
             </Typography>

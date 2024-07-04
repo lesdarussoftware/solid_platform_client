@@ -53,6 +53,8 @@ export function Dashboard() {
                             <Tab label="Planilla" {...a11yProps(0)} />
                             <Tab label="Capataces" {...a11yProps(1)} />
                             <Tab label="Empleados" {...a11yProps(2)} />
+                            <Tab label="Obras" {...a11yProps(3)} />
+                            <Tab label="Usuarios" {...a11yProps(4)} />
                         </Tabs>
                     </Box>
                     <CustomTabPanel value={value} index={0}>
@@ -63,6 +65,12 @@ export function Dashboard() {
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={2}>
                         <WorkersAbm />
+                    </CustomTabPanel>
+                    <CustomTabPanel value={value} index={3}>
+                    
+                    </CustomTabPanel>
+                    <CustomTabPanel value={value} index={4}>
+                    
                     </CustomTabPanel>
                 </Box> :
                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90vh' }}>

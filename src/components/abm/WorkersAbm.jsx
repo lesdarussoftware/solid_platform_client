@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react"
+import { useContext, useEffect, useMemo } from "react"
 import { Box, Button, FormControl, Input, InputLabel, Typography } from "@mui/material"
 
 import { DataContext } from "../../providers/DataProvider"
@@ -41,7 +41,7 @@ export function WorkersAbm() {
         getWorkers()
     }, [])
 
-    const headCells = [
+    const headCells = useMemo(() => [
         {
             id: "id",
             numeric: true,
@@ -70,7 +70,7 @@ export function WorkersAbm() {
             label: "Apellido",
             accessor: 'last_name'
         }
-    ]
+    ], [])
 
     return (
         <DataGrid
