@@ -178,7 +178,6 @@ export function useMovements() {
     }
 
     return {
-        handleSubmit,
         handleScan,
         newMovementWorkerHash,
         setNewMovementWorkerHash,
