@@ -28,7 +28,7 @@ export function useSites() {
             dispatch({ type: 'SITES', payload: data[0] })
             setCount(data[1])
             setLoadingSites(false)
-            localStorage.setItem('solid_sites_storage', JSON.stringify(data))
+            localStorage.setItem('solid_sites_storage', JSON.stringify(data[0]))
         }
     }
 

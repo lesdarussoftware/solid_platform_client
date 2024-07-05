@@ -28,7 +28,7 @@ export function useChiefs() {
             dispatch({ type: 'CHIEFS', payload: data[0] })
             setCount(data[1])
             setLoadingChiefs(false)
-            localStorage.setItem('solid_chiefs_storage', JSON.stringify(data))
+            localStorage.setItem('solid_chiefs_storage', JSON.stringify(data[0]))
         }
     }
 
