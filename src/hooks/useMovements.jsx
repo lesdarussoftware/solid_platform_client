@@ -118,7 +118,7 @@ export function useMovements() {
             setOpenMessage(true)
         } catch (e) {
             if (e.toString().includes('TypeError: Failed to fetch')) {
-                saveMovementInCache()
+                saveMovementInCache(formData)
             } else {
                 console.error(e)
                 setMessage('Ocurrió un error.')
@@ -128,7 +128,7 @@ export function useMovements() {
         }
     }
 
-    async function saveMovementInCache() {
+    async function saveMovementInCache(formData) {
         const movementsCache = JSON.parse(localStorage.getItem('solid_movements_storage') ?? '[]')
         const newMovementsCache = [...movementsCache, { ...formData, date: new Date(Date.now()) }]
         localStorage.setItem('solid_movements_storage', JSON.stringify(newMovementsCache))
