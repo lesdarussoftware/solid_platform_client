@@ -95,10 +95,9 @@ export function useMovements() {
         setOpenMessage(true)
     }
 
-    async function handleScan() {
+    async function handleScan(formData) {
         try {
             let additionalData = { date: new Date(Date.now()) }
-            console.log(JSON.stringify({ ...formData, ...additionalData }))
             const { status, data } = await handleQuery({
                 url: MOVEMENT_URL,
                 method: 'POST',
@@ -158,14 +157,14 @@ export function useMovements() {
         }
     }
 
-    function getLocation() {
+    function getLocation(formData, setFormData) {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     setFormData({
                         ...formData,
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude
+                        lat: position.coords.latitude.toString(),
+                        lng: position.coords.longitude.toString()
                     })
                 },
                 (error) => {

@@ -314,11 +314,11 @@ export function MovementsAbm() {
                                     <TableRow>
                                         <TableCell align="center">{formData.created_by}</TableCell>
                                         <TableCell align="center">
-                                            {format(new Date(formData.created_at ?? Date.now()), 'dd/MM/yyyy hh:mm:ss')}
+                                            {format(new Date(formData.created_at ?? Date.now()), 'dd/MM/yyyy HH:mm:ss')}
                                         </TableCell>
                                         <TableCell align="center">{formData.updated_by}</TableCell>
                                         <TableCell align="center">
-                                            {format(new Date(formData.updated_at ?? Date.now()), 'dd/MM/yyyy hh:mm:ss')}
+                                            {format(new Date(formData.updated_at ?? Date.now()), 'dd/MM/yyyy HH:mm:ss')}
                                         </TableCell>
                                         <TableCell align="center">
                                             <Link

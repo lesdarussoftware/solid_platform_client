@@ -35,7 +35,7 @@ export function QrReader({
     }, [newMovementWorkerHash])
 
     useEffect(() => {
-        if (formData.worker_id.toString().length > 0) handleSubmit()
+        if (formData.worker_id.toString().length > 0) handleSubmit(formData)
     }, [formData.worker_id])
 
     const onScanFail = (err) => console.log(err)

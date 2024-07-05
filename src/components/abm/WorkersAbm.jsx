@@ -82,7 +82,7 @@ export function WorkersAbm() {
                     return (
                         <img
                             width={50}
-                            src={`https://api.qrserver.com/v1/create-qr-code/?size=110x110&margin=4&data=${row.qrs[0].hash}`}
+                            src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=4&data=${row.qrs[0].hash}`}
                         />
                     )
                 }

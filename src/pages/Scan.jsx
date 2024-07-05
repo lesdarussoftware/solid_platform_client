@@ -20,6 +20,7 @@ export function Scan() {
         defaultData: {
             chief_id: '',
             site_id: '',
+            worker_id: '',
             type: null,
             lat: null,
             lng: null
@@ -36,7 +37,7 @@ export function Scan() {
     const handleSaveMainData = e => {
         e.preventDefault()
         if (validate()) {
-            getLocation()
+            getLocation(formData, setFormData)
         }
     }
 
