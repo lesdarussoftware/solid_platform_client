@@ -45,13 +45,13 @@ export function useWorkers() {
             if (status === STATUS_CODES.CREATED) {
                 dispatch({ type: 'WORKERS', payload: [data, ...state.workers] })
                 setCount(count + 1)
-                setMessage('Empleado registrado correctamente.')
+                setMessage('Operario registrado correctamente.')
             } else if (status === STATUS_CODES.OK) {
                 dispatch({
                     type: 'WORKERS',
                     payload: [data, ...state.workers.filter(item => item.id !== data.id)]
                 })
-                setMessage('Empleado editado correctamente.')
+                setMessage('Operario editado correctamente.')
             } else {
                 setMessage(data.message)
                 setSeverity('error')
@@ -74,7 +74,7 @@ export function useWorkers() {
             })
             setCount(count - 1)
             setSeverity('success')
-            setMessage('Empleado eliminado correctamente.')
+            setMessage('Operario eliminado correctamente.')
             reset(setOpen)
         }
         if (status === STATUS_CODES.SERVER_ERROR) {

@@ -11,8 +11,15 @@ export function MovementFilter({ filter, setFilter }) {
     const { state } = useContext(DataContext)
 
     return (
-        <Box sx={{ width: '60%', display: 'flex', justifyContent: 'start', gap: 0.5, paddingTop: 1, alignItems: 'start' }}>
-            <Box sx={{ width: '30%', display: 'flex', flexDirection: 'column', gap: 1 }}>
+        <Box sx={{
+            width: { xs: '100%', sm: '80%', lg: '60%' },
+            display: 'flex',
+            justifyContent: 'start',
+            gap: 0.5,
+            alignItems: 'start',
+            flexWrap: 'wrap'
+        }}>
+            <Box sx={{ width: { xs: '100%', sm: '30%' }, display: 'flex', flexDirection: 'column', gap: 1 }}>
                 <FormControl>
                     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
                         <DatePicker
@@ -32,15 +39,15 @@ export function MovementFilter({ filter, setFilter }) {
                     </LocalizationProvider>
                 </FormControl>
             </Box>
-            <Box sx={{ width: '20%', display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <Box sx={{ width: { xs: '100%', sm: '20%' }, display: 'flex', flexDirection: 'column', gap: 1 }}>
                 <FormControl>
                     <Autocomplete
                         disablePortal
                         id="worker-autocomplete"
                         options={state.workers.map(w => `${w.first_name} ${w.last_name}`)}
-                        noOptionsText="No hay empleados disponibles."
+                        noOptionsText="No hay operarios disponibles."
                         onChange={(_, value) => setFilter({ ...filter, worker: value ?? '' })}
-                        renderInput={(params) => <TextField {...params} label="Empleado" />}
+                        renderInput={(params) => <TextField {...params} label="Operario" />}
                         value={filter.worker}
                         isOptionEqualToValue={(option, value) => value.length === 0 || option === value}
                     />
@@ -58,7 +65,7 @@ export function MovementFilter({ filter, setFilter }) {
                     />
                 </FormControl>
             </Box>
-            <Box sx={{ width: '20%', display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <Box sx={{ width: { xs: '100%', sm: '20%' }, display: 'flex', flexDirection: 'column', gap: 1 }}>
                 <FormControl>
                     <InputLabel id="type-select">Evento</InputLabel>
                     <Select
@@ -90,7 +97,7 @@ export function MovementFilter({ filter, setFilter }) {
             <Button
                 type="button"
                 variant="outlined"
-                sx={{ width: '15%' }}
+                sx={{ width: { xs: '100%', sm: '15%' } }}
                 onClick={() => setFilter({
                     ...filter,
                     type: '',

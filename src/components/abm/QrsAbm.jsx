@@ -24,10 +24,10 @@ export function QrsAbm({ open, setOpen }) {
             </Typography>
             <Box sx={{ display: 'flex', gap: 2, marginTop: 1, marginBottom: 1 }}>
                 <FormControl sx={{ width: '30%' }}>
-                    <InputLabel id="worker-select">Empleado</InputLabel>
+                    <InputLabel id="worker-select">Operario</InputLabel>
                     <Select
                         labelId="worker-select"
-                        label="Empleado"
+                        label="Operario"
                         id="worker-select"
                         onChange={e => {
                             if (e.target.value.toString().length > 0) {

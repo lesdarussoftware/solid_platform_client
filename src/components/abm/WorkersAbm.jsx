@@ -119,8 +119,8 @@ export function WorkersAbm() {
                 >
                     <ModalComponent open={open === 'NEW' || open === 'EDIT'} reduceWidth={900} onClose={() => reset(setOpen)}>
                         <Typography variant="h6" sx={{ marginBottom: 1, fontSize: { xs: 18, sm: 18, md: 20 } }}>
-                            {open === 'NEW' && 'Registrar nuevo empleado'}
-                            {open === 'EDIT' && `Editar empleado #${formData.id}`}
+                            {open === 'NEW' && 'Registrar nuevo operario'}
+                            {open === 'EDIT' && `Editar operario #${formData.id}`}
                         </Typography>
                         <form onChange={handleChange} onSubmit={(e) => handleSubmit(e, validate, formData, setDisabled, reset)}>
                             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -186,7 +186,7 @@ export function WorkersAbm() {
                     </ModalComponent>
                     <ModalComponent open={open === 'DELETE'} onClose={() => reset(setOpen)}>
                         <Typography variant="h6" sx={{ marginBottom: 1, textAlign: 'center' }}>
-                            {`¿Desea borrar el registro del empleado ${formData.first_name + ' ' + formData.last_name} (#${formData.id})?`}
+                            {`¿Desea borrar el registro del operario ${formData.first_name + ' ' + formData.last_name} (#${formData.id})?`}
                         </Typography>
                         <Box sx={{ display: 'flex', gap: 1 }}>
                             <Button

@@ -86,7 +86,7 @@ export function MovementsAbm() {
             id: "worker",
             numeric: false,
             disablePadding: true,
-            label: "Empleado",
+            label: "Operario",
             accessor: (row) => `${row.worker.first_name} ${row.worker.last_name}`
         },
         {
@@ -130,9 +130,21 @@ export function MovementsAbm() {
                     showEditAction
                     showDeleteAction
                     contentHeader={
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+                        <Box sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'start',
+                            flexWrap: 'wrap',
+                            paddingTop: 0.3,
+                            gap: { xs: 1, sm: 0 }
+                        }}>
                             <MovementFilter filter={filter} setFilter={setFilter} />
-                            <Button type="button" variant="contained" onClick={() => setOpen('NEW')}>
+                            <Button
+                                type="button"
+                                variant="contained"
+                                onClick={() => setOpen('NEW')}
+                                sx={{ width: { xs: '100%', sm: '20%', lg: '10%' } }}
+                            >
                                 Agregar
                             </Button>
                         </Box>
@@ -197,15 +209,15 @@ export function MovementsAbm() {
                                         disablePortal
                                         id="worker-autocomplete"
                                         options={state.workers.map(w => ({ label: `${w.first_name} ${w.last_name}`, id: w.id }))}
-                                        noOptionsText="No hay empleados disponibles."
+                                        noOptionsText="No hay operarios disponibles."
                                         onChange={(_, value) => handleChange({ target: { name: 'worker_id', value: value.id } })}
-                                        renderInput={(params) => <TextField {...params} label="Empleado" />}
+                                        renderInput={(params) => <TextField {...params} label="Operario" />}
                                         value={formData.worker_id.toString().length > 0 ? `${state.workers.find(w => w.id === formData.worker_id).first_name} ${state.workers.find(w => w.id === formData.worker_id).last_name}` : ''}
                                         isOptionEqualToValue={(option, value) => value.length === 0 || option.id === value.id}
                                     />
                                     {errors.site_id?.type === 'required' &&
                                         <Typography variant="caption" color="red" marginTop={1}>
-                                            * El empleado es requerido.
+                                            * El operario es requerido.
                                         </Typography>
                                     }
                                 </FormControl>
