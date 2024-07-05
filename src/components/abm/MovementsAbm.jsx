@@ -150,109 +150,115 @@ export function MovementsAbm() {
                         </Box>
                     }
                 >
-                    <ModalComponent open={open === 'NEW' || open === 'EDIT'} reduceWidth={900} onClose={() => reset(setOpen)}>
+                    <ModalComponent open={open === 'NEW' || open === 'EDIT'} reduceWidth={500} onClose={() => reset(setOpen)}>
                         <Typography variant="h6" sx={{ marginBottom: 1, fontSize: { xs: 18, sm: 18, md: 20 } }}>
                             {open === 'NEW' && 'Registrar nuevo evento'}
                             {open === 'EDIT' && `Editar evento #${formData.id}`}
                         </Typography>
                         <form onSubmit={(e) => handleSubmit(e, validate, formData, setDisabled, reset)}>
                             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                                <FormControl>
-                                    <InputLabel id="type-select">Evento</InputLabel>
-                                    <Select
-                                        labelId="type-select"
-                                        id="type"
-                                        value={formData.type}
-                                        label="Evento"
-                                        name="type"
-                                        onChange={e => handleChange({ target: { name: 'type', value: e.target.value } })}
-                                    >
-                                        <MenuItem value="">Seleccione</MenuItem>
-                                        <MenuItem value="INGRESO">INGRESO</MenuItem>
-                                        <MenuItem value="EGRESO">EGRESO</MenuItem>
-                                    </Select>
-                                    {errors.site_id?.type === 'required' &&
-                                        <Typography variant="caption" color="red" marginTop={1}>
-                                            * El evento es requerido.
-                                        </Typography>
-                                    }
-                                </FormControl>
-                                <FormControl>
-                                    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
-                                        <DatePicker
-                                            label="Fecha"
-                                            value={new Date(formData.date)}
-                                            name="date"
-                                            onChange={value => handleChange({ target: { name: 'date', value: new Date(value.toISOString()) } })}
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 1 }}>
+                                    <FormControl sx={{ width: '50%' }}>
+                                        <InputLabel id="type-select">Evento</InputLabel>
+                                        <Select
+                                            labelId="type-select"
+                                            id="type"
+                                            value={formData.type}
+                                            label="Evento"
+                                            name="type"
+                                            onChange={e => handleChange({ target: { name: 'type', value: e.target.value } })}
+                                        >
+                                            <MenuItem value="">Seleccione</MenuItem>
+                                            <MenuItem value="INGRESO">INGRESO</MenuItem>
+                                            <MenuItem value="EGRESO">EGRESO</MenuItem>
+                                        </Select>
+                                        {errors.site_id?.type === 'required' &&
+                                            <Typography variant="caption" color="red" marginTop={1}>
+                                                * El evento es requerido.
+                                            </Typography>
+                                        }
+                                    </FormControl>
+                                    <FormControl sx={{ width: '50%' }}>
+                                        <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
+                                            <DatePicker
+                                                label="Fecha"
+                                                value={new Date(formData.date)}
+                                                name="date"
+                                                onChange={value => handleChange({ target: { name: 'date', value: new Date(value.toISOString()) } })}
+                                            />
+                                        </LocalizationProvider>
+                                    </FormControl>
+                                </Box>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 1 }}>
+                                    <FormControl sx={{ width: '50%' }}>
+                                        <Autocomplete
+                                            disablePortal
+                                            id="chief-autocomplete"
+                                            options={state.chiefs.map(c => ({ label: `${c.first_name} ${c.last_name}`, id: c.id }))}
+                                            noOptionsText="No hay capataces disponibles."
+                                            onChange={(_, value) => handleChange({ target: { name: 'chief_id', value: value.id } })}
+                                            renderInput={(params) => <TextField {...params} label="Capataz" />}
+                                            value={formData.chief_id.toString().length > 0 ? `${state.chiefs.find(c => c.id === formData.chief_id).first_name} ${state.chiefs.find(c => c.id === formData.chief_id).last_name}` : ''}
+                                            isOptionEqualToValue={(option, value) => value.length === 0 || option.id === value.id}
                                         />
-                                    </LocalizationProvider>
-                                </FormControl>
-                                <FormControl>
-                                    <Autocomplete
-                                        disablePortal
-                                        id="chief-autocomplete"
-                                        options={state.chiefs.map(c => ({ label: `${c.first_name} ${c.last_name}`, id: c.id }))}
-                                        noOptionsText="No hay capataces disponibles."
-                                        onChange={(_, value) => handleChange({ target: { name: 'chief_id', value: value.id } })}
-                                        renderInput={(params) => <TextField {...params} label="Capataz" />}
-                                        value={formData.chief_id.toString().length > 0 ? `${state.chiefs.find(c => c.id === formData.chief_id).first_name} ${state.chiefs.find(c => c.id === formData.chief_id).last_name}` : ''}
-                                        isOptionEqualToValue={(option, value) => value.length === 0 || option.id === value.id}
-                                    />
-                                    {errors.site_id?.type === 'required' &&
-                                        <Typography variant="caption" color="red" marginTop={1}>
-                                            * El capataz es requerido.
-                                        </Typography>
-                                    }
-                                </FormControl>
-                                <FormControl>
-                                    <Autocomplete
-                                        disablePortal
-                                        id="worker-autocomplete"
-                                        options={state.workers.map(w => ({ label: `${w.first_name} ${w.last_name}`, id: w.id }))}
-                                        noOptionsText="No hay operarios disponibles."
-                                        onChange={(_, value) => handleChange({ target: { name: 'worker_id', value: value.id } })}
-                                        renderInput={(params) => <TextField {...params} label="Operario" />}
-                                        value={formData.worker_id.toString().length > 0 ? `${state.workers.find(w => w.id === formData.worker_id).first_name} ${state.workers.find(w => w.id === formData.worker_id).last_name}` : ''}
-                                        isOptionEqualToValue={(option, value) => value.length === 0 || option.id === value.id}
-                                    />
-                                    {errors.site_id?.type === 'required' &&
-                                        <Typography variant="caption" color="red" marginTop={1}>
-                                            * El operario es requerido.
-                                        </Typography>
-                                    }
-                                </FormControl>
-                                <FormControl>
-                                    <Autocomplete
-                                        disablePortal
-                                        id="site-autocomplete"
-                                        options={state.sites.map(s => ({ label: s.name, id: s.id }))}
-                                        noOptionsText="No hay obras disponibles."
-                                        onChange={(_, value) => handleChange({ target: { name: 'site_id', value: value.id } })}
-                                        renderInput={(params) => <TextField {...params} label="Obra" />}
-                                        value={formData.site_id.toString().length > 0 ? state.sites.find(s => s.id === formData.site_id).name : ''}
-                                        isOptionEqualToValue={(option, value) => value.length === 0 || option.id === value.id}
-                                    />
-                                    {errors.site_id?.type === 'required' &&
-                                        <Typography variant="caption" color="red" marginTop={1}>
-                                            * La obra es requerida.
-                                        </Typography>
-                                    }
-                                </FormControl>
-                                <FormControl>
-                                    <InputLabel htmlFor="observations">Observaciones</InputLabel>
-                                    <Input
-                                        id="observations"
-                                        type="text"
-                                        name="observations"
-                                        value={formData.observations}
-                                        onChange={(e, value) => handleChange({ target: { name: 'observations', value: e.target.value } })}
-                                    />
-                                    {errors.observations?.type === 'maxLength' &&
-                                        <Typography variant="caption" color="red" marginTop={1}>
-                                            * Las observaciones son demasiado largas.
-                                        </Typography>
-                                    }
-                                </FormControl>
+                                        {errors.site_id?.type === 'required' &&
+                                            <Typography variant="caption" color="red" marginTop={1}>
+                                                * El capataz es requerido.
+                                            </Typography>
+                                        }
+                                    </FormControl>
+                                    <FormControl sx={{ width: '50%' }}>
+                                        <Autocomplete
+                                            disablePortal
+                                            id="worker-autocomplete"
+                                            options={state.workers.map(w => ({ label: `${w.first_name} ${w.last_name}`, id: w.id }))}
+                                            noOptionsText="No hay operarios disponibles."
+                                            onChange={(_, value) => handleChange({ target: { name: 'worker_id', value: value.id } })}
+                                            renderInput={(params) => <TextField {...params} label="Operario" />}
+                                            value={formData.worker_id.toString().length > 0 ? `${state.workers.find(w => w.id === formData.worker_id).first_name} ${state.workers.find(w => w.id === formData.worker_id).last_name}` : ''}
+                                            isOptionEqualToValue={(option, value) => value.length === 0 || option.id === value.id}
+                                        />
+                                        {errors.site_id?.type === 'required' &&
+                                            <Typography variant="caption" color="red" marginTop={1}>
+                                                * El operario es requerido.
+                                            </Typography>
+                                        }
+                                    </FormControl>
+                                </Box>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 1 }}>
+                                    <FormControl sx={{ width: '50%' }}>
+                                        <Autocomplete
+                                            disablePortal
+                                            id="site-autocomplete"
+                                            options={state.sites.map(s => ({ label: s.name, id: s.id }))}
+                                            noOptionsText="No hay obras disponibles."
+                                            onChange={(_, value) => handleChange({ target: { name: 'site_id', value: value.id } })}
+                                            renderInput={(params) => <TextField {...params} label="Obra" />}
+                                            value={formData.site_id.toString().length > 0 ? state.sites.find(s => s.id === formData.site_id).name : ''}
+                                            isOptionEqualToValue={(option, value) => value.length === 0 || option.id === value.id}
+                                        />
+                                        {errors.site_id?.type === 'required' &&
+                                            <Typography variant="caption" color="red" marginTop={1}>
+                                                * La obra es requerida.
+                                            </Typography>
+                                        }
+                                    </FormControl>
+                                    <FormControl sx={{ width: '50%' }}>
+                                        <InputLabel htmlFor="observations">Observaciones</InputLabel>
+                                        <Input
+                                            id="observations"
+                                            type="text"
+                                            name="observations"
+                                            value={formData.observations}
+                                            onChange={(e, value) => handleChange({ target: { name: 'observations', value: e.target.value } })}
+                                        />
+                                        {errors.observations?.type === 'maxLength' &&
+                                            <Typography variant="caption" color="red" marginTop={1}>
+                                                * Las observaciones son demasiado largas.
+                                            </Typography>
+                                        }
+                                    </FormControl>
+                                </Box>
                             </Box>
                             <Box sx={{ display: 'flex', gap: 1, marginTop: 2, justifyContent: 'center' }}>
                                 <Button
@@ -320,6 +326,7 @@ export function MovementsAbm() {
                                         <TableCell align="center">Modificado por</TableCell>
                                         <TableCell align="center">Fecha modificación</TableCell>
                                         <TableCell align="center">Ubicación toma QR</TableCell>
+                                        <TableCell align="center">Observaciones</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -344,6 +351,7 @@ export function MovementsAbm() {
                                                 }
                                             </Link>
                                         </TableCell>
+                                        <TableCell align="center">{formData.observations}</TableCell>
                                     </TableRow>
                                 </TableBody>
                             </Table>
