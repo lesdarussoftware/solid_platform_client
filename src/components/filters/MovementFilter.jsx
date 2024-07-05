@@ -42,6 +42,7 @@ export function MovementFilter({ filter, setFilter }) {
                         onChange={(_, value) => setFilter({ ...filter, worker: value ?? '' })}
                         renderInput={(params) => <TextField {...params} label="Empleado" />}
                         value={filter.worker}
+                        isOptionEqualToValue={(option, value) => value.length === 0 || option === value}
                     />
                 </FormControl>
                 <FormControl>
@@ -53,6 +54,7 @@ export function MovementFilter({ filter, setFilter }) {
                         onChange={(_, value) => setFilter({ ...filter, chief: value ?? '' })}
                         renderInput={(params) => <TextField {...params} label="Capataz" />}
                         value={filter.chief}
+                        isOptionEqualToValue={(option, value) => value.length === 0 || option === value}
                     />
                 </FormControl>
             </Box>
@@ -81,6 +83,7 @@ export function MovementFilter({ filter, setFilter }) {
                         onChange={(_, value) => setFilter({ ...filter, site: value ?? '' })}
                         renderInput={(params) => <TextField {...params} label="Obra" />}
                         value={filter.site}
+                        isOptionEqualToValue={(option, value) => value.length === 0 || option === value}
                     />
                 </FormControl>
             </Box>

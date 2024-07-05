@@ -1,10 +1,11 @@
 import { useContext, useState } from "react"
+import { v4 as uuid } from 'uuid'
 
 import { MessageContext } from "../providers/MessageProvider"
 import { DataContext } from "../providers/DataProvider"
 import { useQuery } from "./useQuery"
 
-import { WORKER_URL } from "../helpers/urls"
+import { QR_URL, WORKER_URL } from "../helpers/urls"
 import { STATUS_CODES } from "../helpers/statusCodes"
 
 export function useWorkers() {
@@ -17,6 +18,7 @@ export function useWorkers() {
     const [loadingWorkers, setLoadingWorkers] = useState(true)
     const [open, setOpen] = useState(null)
     const [count, setCount] = useState(0)
+    const [newQrs, setNewQrs] = useState([])
     const [filter, setFilter] = useState({
         page: 0,
         offset: 5
@@ -83,5 +85,58 @@ export function useWorkers() {
         setOpenMessage(true)
     }
 
-    return { getWorkers, open, setOpen, handleSubmit, handleDelete, count, filter, setFilter, loadingWorkers }
+    async function handleGenerateQr(e, setOpenInstance) {
+        e.preventDefault()
+        const { status, data } = await handleQuery({
+            url: QR_URL,
+            method: 'POST',
+            body: JSON.stringify({
+                qrs: newQrs.map(nqr => ({
+                    worker_id: nqr,
+                    hash: `${nqr}-${uuid()}`
+                }))
+            })
+        })
+        if (status === STATUS_CODES.CREATED) {
+            const newWorkerIds = Array.from(new Set(data.map(qr => qr.worker_id)))
+            dispatch({
+                type: 'WORKERS',
+                payload: [
+                    ...state.workers.map(w => {
+                        if (!newWorkerIds.includes(w.id)) return w
+                        return {
+                            ...w,
+                            qrs: [
+                                ...data.filter(item => item.worker_id === w.id),
+                                ...w.qrs
+                            ]
+                        }
+                    })
+                ]
+            })
+            setSeverity('success')
+            setMessage('QRs generados correctamente.')
+            setOpenInstance(null)
+            setNewQrs([])
+        } else {
+            setMessage(data.message)
+            setSeverity('error')
+        }
+        setOpenMessage(true)
+    }
+
+    return {
+        getWorkers,
+        open,
+        setOpen,
+        handleSubmit,
+        handleDelete,
+        count,
+        filter,
+        setFilter,
+        loadingWorkers,
+        newQrs,
+        setNewQrs,
+        handleGenerateQr
+    }
 }

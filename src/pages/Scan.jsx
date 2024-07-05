@@ -15,16 +15,16 @@ export function Scan() {
 
     const { getSites } = useSites()
     const { getChiefs } = useChiefs()
-    const { handleSync, handleScan, newMovementWorkerDni, setNewMovementWorkerDni, getLocation } = useMovements()
+    const { handleSync, handleScan, newMovementWorkerHash, setNewMovementWorkerHash, getLocation } = useMovements()
     const { formData, setFormData, validate, errors, disabled, handleChange, reset } = useForm({
         defaultData: {
-            chief_dni: '',
-            site_name: '',
+            chief_id: '',
+            site_id: '',
             type: null,
             lat: null,
             lng: null
         },
-        rules: { site_name: { required: true }, chief_dni: { required: true } }
+        rules: { site_id: { required: true }, chief_id: { required: true } }
     })
 
     useEffect(() => {
@@ -51,8 +51,8 @@ export function Scan() {
                     reset={reset}
                     setFormData={setFormData}
                     handleSubmit={handleScan}
-                    newMovementWorkerDni={newMovementWorkerDni}
-                    setNewMovementWorkerDni={setNewMovementWorkerDni}
+                    newMovementWorkerHash={newMovementWorkerHash}
+                    setNewMovementWorkerHash={setNewMovementWorkerHash}
                 /> :
                 <Box>
                     <form onSubmit={handleSaveMainData}>
@@ -61,13 +61,13 @@ export function Scan() {
                                 <Autocomplete
                                     disablePortal
                                     id="chief-autocomplete"
-                                    options={state.chiefs.map(c => ({ label: `${c.first_name} ${c.last_name} (${c.dni})`, id: c.dni }))}
+                                    options={state.chiefs.map(c => ({ label: `${c.first_name} ${c.last_name} (${c.dni})`, id: c.id }))}
                                     noOptionsText="No hay registros disponibles."
-                                    onChange={(_, value) => handleChange({ target: { name: 'chief_dni', value: value.id } })}
+                                    onChange={(_, value) => handleChange({ target: { name: 'chief_id', value: value?.id ?? '' } })}
                                     renderInput={(params) => <TextField {...params} label="Capataz" />}
                                     isOptionEqualToValue={(option, value) => option.id === value.id}
                                 />
-                                {errors.chief_dni?.type === 'required' &&
+                                {errors.chief_id?.type === 'required' &&
                                     <Typography variant="caption" color="red" marginTop={1}>
                                         * El capataz es requerido.
                                     </Typography>
@@ -77,13 +77,13 @@ export function Scan() {
                                 <Autocomplete
                                     disablePortal
                                     id="site-autocomplete"
-                                    options={state.sites.map(s => ({ label: s.name, name: s.name }))}
+                                    options={state.sites.map(s => ({ label: s.name, id: s.id }))}
                                     noOptionsText="No hay registros disponibles."
-                                    onChange={(_, value) => handleChange({ target: { name: 'site_name', value: value.name } })}
+                                    onChange={(_, value) => handleChange({ target: { name: 'site_id', value: value?.id ?? '' } })}
                                     renderInput={(params) => <TextField {...params} label="Obra" />}
                                     isOptionEqualToValue={(option, value) => option.name === value.name}
                                 />
-                                {errors.site_name?.type === 'required' &&
+                                {errors.site_id?.type === 'required' &&
                                     <Typography variant="caption" color="red" marginTop={1}>
                                         * La obra es requerida.
                                     </Typography>

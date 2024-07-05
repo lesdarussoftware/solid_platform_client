@@ -27,7 +27,7 @@ export function UserDropdown({ setShowUserDropdown }) {
         flexDirection: 'column',
         backgroundColor: 'black',
         top: '40px',
-        right: 0,
+        right: 10,
         borderRadius: '0.5rem',
         textAlign: 'start',
         color: 'white',

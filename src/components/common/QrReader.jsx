@@ -11,8 +11,8 @@ export function QrReader({
     reset,
     handleSubmit,
     setFormData,
-    newMovementWorkerDni,
-    setNewMovementWorkerDni
+    newMovementWorkerHash,
+    setNewMovementWorkerHash
 }) {
 
     const { state } = useContext(DataContext)
@@ -25,18 +25,18 @@ export function QrReader({
     const qrBoxEl = useRef(null)
 
     const onScanSuccess = (result) => {
-        setNewMovementWorkerDni(parseInt(result.data))
+        setNewMovementWorkerHash(parseInt(result.data))
         scanner?.current?.stop()
         setReScan(true)
     }
 
     useEffect(() => {
-        setFormData({ ...formData, worker_dni: newMovementWorkerDni })
-    }, [newMovementWorkerDni])
+        setFormData({ ...formData, worker_id: newMovementWorkerHash })
+    }, [newMovementWorkerHash])
 
     useEffect(() => {
-        if (formData.worker_dni > 0) handleSubmit()
-    }, [formData.worker_dni])
+        if (formData.worker_id.toString().length > 0) handleSubmit()
+    }, [formData.worker_id])
 
     const onScanFail = (err) => console.log(err)
 
@@ -105,9 +105,9 @@ export function QrReader({
                     <TableBody>
                         <TableRow>
                             <TableCell align="center">
-                                {`${state.chiefs.find(c => c.dni === formData.chief_dni).first_name} ${state.chiefs.find(c => c.dni === formData.chief_dni).last_name} (${formData.chief_dni})`}
+                                {`${state.chiefs.find(c => c.id === parseInt(formData.chief_id))?.first_name} ${state.chiefs.find(c => c.id === parseInt(formData.chief_id))?.last_name} (${state.chiefs.find(c => c.id === parseInt(formData.chief_id))?.dni})`}
                             </TableCell>
-                            <TableCell align="center">{formData.site_name}</TableCell>
+                            <TableCell align="center">{state.sites.find(s => s.id === parseInt(formData.site_id))?.name}</TableCell>
                             <TableCell align="center">{formData.type}</TableCell>
                         </TableRow>
                     </TableBody>

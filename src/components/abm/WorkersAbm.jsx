@@ -7,6 +7,7 @@ import { useForm } from "../../hooks/useForm"
 
 import { DataGrid } from "../datagrid/DataGrid"
 import { ModalComponent } from "../common/ModalComponent"
+import { QrsAbm } from "./QrsAbm"
 
 export function WorkersAbm() {
 
@@ -75,8 +76,17 @@ export function WorkersAbm() {
             id: "qr",
             numeric: false,
             disablePadding: true,
-            label: "QR",
-            accessor: 'last_name'
+            label: "Último QR",
+            accessor: (row) => {
+                if (row.qrs.length > 0) {
+                    return (
+                        <img
+                            width={50}
+                            src={`https://api.qrserver.com/v1/create-qr-code/?size=110x110&margin=4&data=${row.qrs[0].hash}`}
+                        />
+                    )
+                }
+            }
         }
     ], [])
 
@@ -207,6 +217,10 @@ export function WorkersAbm() {
                             </Button>
                         </Box>
                     </ModalComponent>
+                    <QrsAbm
+                        open={open === 'GENERATE-QR'}
+                        setOpen={setOpen}
+                    />
                 </DataGrid>
             }
         </>

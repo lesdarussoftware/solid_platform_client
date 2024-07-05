@@ -19,7 +19,7 @@ export function useMovements() {
     const { handleQuery } = useQuery()
 
     const [loadingMovements, setLoadingMovements] = useState(true)
-    const [newMovementWorkerDni, setNewMovementWorkerDni] = useState(0)
+    const [newMovementWorkerHash, setNewMovementWorkerHash] = useState('')
     const [open, setOpen] = useState(null)
     const [count, setCount] = useState(0)
     const [filter, setFilter] = useState({
@@ -98,6 +98,7 @@ export function useMovements() {
     async function handleScan() {
         try {
             let additionalData = { date: new Date(Date.now()) }
+            console.log(JSON.stringify({ ...formData, ...additionalData }))
             const { status, data } = await handleQuery({
                 url: MOVEMENT_URL,
                 method: 'POST',
@@ -106,7 +107,7 @@ export function useMovements() {
             if (status === STATUS_CODES.CREATED) {
                 setMessage(`Registro de ${data.worker.first_name} ${data.worker.last_name} guardado.`)
                 setSeverity('success')
-                setNewMovementWorkerDni(0)
+                setNewMovementWorkerHash('')
                 sendMessage({
                     data,
                     message: `Registro de ${data.worker.first_name} ${data.worker.last_name} en ${data.site_name} guardado.`
@@ -134,7 +135,7 @@ export function useMovements() {
         localStorage.setItem('solid_movements_storage', JSON.stringify(newMovementsCache))
         setMessage('Registro guardado sin conexión')
         setSeverity('success')
-        setNewMovementWorkerDni(0)
+        setNewMovementWorkerHash('')
         setOpenMessage(true)
     }
 
@@ -179,8 +180,8 @@ export function useMovements() {
     return {
         handleSubmit,
         handleScan,
-        newMovementWorkerDni,
-        setNewMovementWorkerDni,
+        newMovementWorkerHash,
+        setNewMovementWorkerHash,
         handleSync,
         getLocation,
         getMovements,

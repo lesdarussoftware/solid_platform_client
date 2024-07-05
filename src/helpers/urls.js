@@ -8,3 +8,4 @@ export const CHIEF_URL = `${BASE_URL}/chiefs`
 export const USER_URL = `${BASE_URL}/users`
 export const WORKER_URL = `${BASE_URL}/workers`
 export const MOVEMENT_URL = `${BASE_URL}/movements`
+export const QR_URL = `${BASE_URL}/qrs`
