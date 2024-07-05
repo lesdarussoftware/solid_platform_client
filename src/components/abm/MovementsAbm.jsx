@@ -341,9 +341,9 @@ export function MovementsAbm() {
                                 type="button"
                                 variant="outlined"
                                 sx={{
-                                    width: '50%',
+                                    width: '20%',
                                     margin: '0 auto',
-                                    marginTop: 1
+                                    marginTop: 2
                                 }}
                                 onClick={() => setOpen(null)}
                             >
