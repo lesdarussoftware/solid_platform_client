@@ -10,26 +10,39 @@ import { Dashboard } from "./pages/Dashboard"
 import { Scan } from "./pages/Scan"
 import { Profile } from "./pages/Profile"
 import { Error } from "./pages/Error"
+import { ThemeProvider } from "@emotion/react"
+import { createTheme } from "@mui/material"
 
 function App() {
+
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: '#000',
+      }
+    },
+  })
+
   return (
-    <AuthProvider>
-      <DataProvider>
-        <MessageProvider>
-          <NotificationsProvider>
-            <BrowserRouter basename="solid-platform">
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/escanear" element={<Scan />} />
-                <Route path="/perfil" element={<Profile />} />
-                <Route path="*" element={<Error />} />
-              </Routes>
-            </BrowserRouter>
-          </NotificationsProvider>
-        </MessageProvider>
-      </DataProvider>
-    </AuthProvider>
+    <ThemeProvider theme={theme}>
+      <AuthProvider>
+        <DataProvider>
+          <MessageProvider>
+            <NotificationsProvider>
+              <BrowserRouter basename="solid-platform">
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/escanear" element={<Scan />} />
+                  <Route path="/perfil" element={<Profile />} />
+                  <Route path="*" element={<Error />} />
+                </Routes>
+              </BrowserRouter>
+            </NotificationsProvider>
+          </MessageProvider>
+        </DataProvider>
+      </AuthProvider>
+    </ThemeProvider>
   )
 }
 

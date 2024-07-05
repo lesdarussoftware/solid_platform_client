@@ -1,10 +1,12 @@
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 
 import { AuthContext } from "../providers/AuthProvider";
 
 import { LoginForm } from "../components/common/LoginForm";
+
+import Logo from '../assets/logo.jpeg'
 
 export function Home() {
 
@@ -22,12 +24,9 @@ export function Home() {
             alignItems: 'center',
             justifyContent: 'center',
             height: '90vh',
-            flexDirection: 'column',
-            gap: 3
+            flexDirection: 'column'
         }}>
-            <Typography variant="h2" sx={{ color: '#000', fontSize: 45 }}>
-                Solid Platform
-            </Typography>
+            <img src={Logo} width={180} />
             <LoginForm submitAction={() => navigate('/dashboard')} />
         </Box>
     )

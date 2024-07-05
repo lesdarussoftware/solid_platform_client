@@ -5,6 +5,8 @@ import { AuthContext } from "../../providers/AuthProvider";
 
 import { UserDropdown } from "./UserDropdown";
 
+import Logo from '../../assets/logo.jpeg'
+
 export function Header() {
 
     const { auth } = useContext(AuthContext)
@@ -12,10 +14,8 @@ export function Header() {
     const [showUserDropdown, setShowUserDropdown] = useState(false)
 
     return (
-        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Typography variant="h6" align="center">
-                Solid Platform
-            </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', paddingLeft: 1, paddingRight: 1 }}>
+            <img src={Logo} width={60} />
             <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative' }}>
                 <Avatar
                     sx={{ cursor: 'pointer' }}
