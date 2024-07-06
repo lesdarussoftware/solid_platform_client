@@ -8,6 +8,7 @@ import { ChiefsAbm } from "../components/abm/ChiefsAbm"
 import { WorkersAbm } from "../components/abm/WorkersAbm"
 import { Header } from "../components/common/Header"
 import { LoginForm } from "../components/common/LoginForm"
+import { CategoriesAbm } from "../components/abm/CategoriesAbm"
 import { SitesAbm } from "../components/abm/SitesAbm"
 import { UsersAbm } from "../components/abm/UsersAbm"
 
@@ -51,12 +52,20 @@ export function Dashboard() {
                 <Box>
                     <Header />
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                        <Tabs
+                            value={value}
+                            onChange={handleChange}
+                            aria-label="basic tabs example"
+                            variant="scrollable"
+                            scrollButtons="auto"
+                            sx={{ marginY: { xs: 3, sm: 0 } }}
+                        >
                             <Tab label="Planilla" {...a11yProps(0)} />
                             <Tab label="Operarios" {...a11yProps(1)} />
                             <Tab label="Capataces" {...a11yProps(2)} />
-                            <Tab label="Obras" {...a11yProps(3)} />
-                            <Tab label="Usuarios" {...a11yProps(4)} />
+                            <Tab label="Categorías" {...a11yProps(3)} />
+                            <Tab label="Obras" {...a11yProps(4)} />
+                            <Tab label="Usuarios" {...a11yProps(5)} />
                         </Tabs>
                     </Box>
                     <CustomTabPanel value={value} index={0}>
@@ -69,9 +78,12 @@ export function Dashboard() {
                         <ChiefsAbm />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={3}>
-                        <SitesAbm />
+                        <CategoriesAbm />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={4}>
+                        <SitesAbm />
+                    </CustomTabPanel>
+                    <CustomTabPanel value={value} index={5}>
                         <UsersAbm />
                     </CustomTabPanel>
                 </Box> :

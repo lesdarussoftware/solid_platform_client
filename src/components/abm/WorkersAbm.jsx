@@ -1,18 +1,25 @@
 import { useContext, useEffect, useMemo } from "react"
-import { Box, Button, FormControl, Input, InputLabel, LinearProgress, Typography } from "@mui/material"
+import { Box, Button, FormControl, Input, InputLabel, LinearProgress, MenuItem, Select, Typography } from "@mui/material"
+import { format } from "date-fns"
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers"
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns"
+import { es } from "date-fns/locale"
 
 import { DataContext } from "../../providers/DataProvider"
+import { useCategories } from "../../hooks/useCategories"
 import { useWorkers } from "../../hooks/useWorkers"
 import { useForm } from "../../hooks/useForm"
 
 import { DataGrid } from "../datagrid/DataGrid"
 import { ModalComponent } from "../common/ModalComponent"
 import { QrsAbm } from "./QrsAbm"
+import { PersonalForm } from "../common/PersonalForm"
 
 export function WorkersAbm() {
 
     const { state } = useContext(DataContext)
 
+    const { getCategories, loadingCategories } = useCategories()
     const { getWorkers, open, setOpen, handleSubmit, handleDelete, filter, setFilter, count, loadingWorkers } = useWorkers()
     const { formData, setFormData, handleChange, reset, disabled, setDisabled, errors, validate } = useForm({
         defaultData: {
@@ -20,6 +27,12 @@ export function WorkersAbm() {
             dni: '',
             first_name: '',
             last_name: '',
+            cuil: '',
+            birth: '',
+            address: '',
+            city: '',
+            cell_phone: '',
+            category_id: '',
             qr: ''
         },
         rules: {
@@ -34,9 +47,28 @@ export function WorkersAbm() {
             last_name: {
                 required: true,
                 maxLength: 191
+            },
+            cuil: {
+                maxLength: 55
+            },
+            address: {
+                maxLength: 55
+            },
+            city: {
+                maxLength: 55
+            },
+            cell_phone: {
+                maxLength: 55
+            },
+            category_id: {
+                required: true
             }
         }
     })
+
+    useEffect(() => {
+        getCategories()
+    }, [])
 
     useEffect(() => {
         const { page, offset } = filter
@@ -73,10 +105,52 @@ export function WorkersAbm() {
             accessor: 'last_name'
         },
         {
+            id: "cuil",
+            numeric: false,
+            disablePadding: true,
+            label: "CUIL",
+            accessor: 'cuil'
+        },
+        {
+            id: "birth",
+            numeric: false,
+            disablePadding: true,
+            label: "Fecha Nac.",
+            accessor: (row) => row.birth ? format(new Date(row.birth), 'dd/MM/yyyy') : ''
+        },
+        {
+            id: "address",
+            numeric: false,
+            disablePadding: true,
+            label: "Dirección",
+            accessor: 'address'
+        },
+        {
+            id: "city",
+            numeric: false,
+            disablePadding: true,
+            label: "Localidad",
+            accessor: 'city'
+        },
+        {
+            id: "cell_phone",
+            numeric: false,
+            disablePadding: true,
+            label: "Celular",
+            accessor: 'cell_phone'
+        },
+        {
+            id: "category",
+            numeric: false,
+            disablePadding: true,
+            label: "Categoría",
+            accessor: (row) => row.category.name
+        },
+        {
             id: "qr",
             numeric: false,
             disablePadding: true,
-            label: "Último QR",
+            label: "Últ. QR",
             accessor: (row) => {
                 if (row.qrs.length > 0) {
                     return (
@@ -92,7 +166,7 @@ export function WorkersAbm() {
 
     return (
         <>
-            {loadingWorkers ?
+            {loadingWorkers || loadingCategories ?
                 <Box sx={{ width: '100%' }}>
                     <LinearProgress />
                 </Box> :
@@ -117,72 +191,21 @@ export function WorkersAbm() {
                         </Box>
                     }
                 >
-                    <ModalComponent open={open === 'NEW' || open === 'EDIT'} reduceWidth={900} onClose={() => reset(setOpen)}>
+                    <ModalComponent open={open === 'NEW' || open === 'EDIT'} reduceWidth={500} onClose={() => reset(setOpen)}>
                         <Typography variant="h6" sx={{ marginBottom: 1, fontSize: { xs: 18, sm: 18, md: 20 } }}>
                             {open === 'NEW' && 'Registrar nuevo operario'}
                             {open === 'EDIT' && `Editar operario #${formData.id}`}
                         </Typography>
-                        <form onChange={handleChange} onSubmit={(e) => handleSubmit(e, validate, formData, setDisabled, reset)}>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                                {open === 'NEW' &&
-                                    <FormControl>
-                                        <InputLabel htmlFor="dni">DNI</InputLabel>
-                                        <Input id="dni" type="number" name="dni" value={formData.dni} />
-                                        {errors.dni?.type === 'required' &&
-                                            <Typography variant="caption" color="red" marginTop={1}>
-                                                * El dni es requerido.
-                                            </Typography>
-                                        }
-                                    </FormControl>
-                                }
-                                <FormControl>
-                                    <InputLabel htmlFor="first_name">Nombre</InputLabel>
-                                    <Input id="first_name" type="text" name="first_name" value={formData.first_name} />
-                                    {errors.first_name?.type === 'required' &&
-                                        <Typography variant="caption" color="red" marginTop={1}>
-                                            * El nombre es requerido.
-                                        </Typography>
-                                    }
-                                    {errors.first_name?.type === 'maxLength' &&
-                                        <Typography variant="caption" color="red" marginTop={1}>
-                                            * El nombre es demasiado largo.
-                                        </Typography>
-                                    }
-                                </FormControl>
-                                <FormControl>
-                                    <InputLabel htmlFor="last_name">Apellido</InputLabel>
-                                    <Input id="last_name" type="text" name="last_name" value={formData.last_name} />
-                                    {errors.last_name?.type === 'required' &&
-                                        <Typography variant="caption" color="red" marginTop={1}>
-                                            * El apellido es requerido.
-                                        </Typography>
-                                    }
-                                    {errors.last_name?.type === 'maxLength' &&
-                                        <Typography variant="caption" color="red" marginTop={1}>
-                                            * El apellido es demasiado largo.
-                                        </Typography>
-                                    }
-                                </FormControl>
-                            </Box>
-                            <Box sx={{ display: 'flex', gap: 1, marginTop: 2, justifyContent: 'center' }}>
-                                <Button
-                                    type="button"
-                                    variant="outlined"
-                                    sx={{ width: '50%', margin: '0 auto', marginTop: 1 }}
-                                    onClick={() => reset(setOpen)}
-                                >
-                                    Cancelar
-                                </Button>
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    sx={{ width: '50%', margin: '0 auto', marginTop: 1, color: '#fff' }}
-                                    disabled={disabled}
-                                >
-                                    Guardar
-                                </Button>
-                            </Box>
-                        </form>
+                        <PersonalForm
+                            handleChange={handleChange}
+                            handleSubmit={handleSubmit}
+                            validate={validate}
+                            formData={formData}
+                            disabled={disabled}
+                            setDisabled={setDisabled}
+                            reset={reset}
+                            errors={errors}
+                        />
                     </ModalComponent>
                     <ModalComponent open={open === 'DELETE'} onClose={() => reset(setOpen)}>
                         <Typography variant="h6" sx={{ marginBottom: 1, textAlign: 'center' }}>

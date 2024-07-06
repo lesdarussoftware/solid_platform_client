@@ -26,7 +26,7 @@ export function UserDropdown({ setShowUserDropdown }) {
         justifyContent: 'center',
         flexDirection: 'column',
         backgroundColor: 'black',
-        top: '40px',
+        top: '50px',
         right: 10,
         borderRadius: '0.5rem',
         textAlign: 'start',

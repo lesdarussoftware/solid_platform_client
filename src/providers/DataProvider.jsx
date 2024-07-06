@@ -8,6 +8,8 @@ const reducer = (state, action) => {
             return { ...state, chiefs: action.payload }
         case 'WORKERS':
             return { ...state, workers: action.payload }
+        case 'CATEGORIES':
+            return { ...state, categories: action.payload }
         case 'MOVEMENTS':
             return { ...state, movements: action.payload }
         case 'USERS':
@@ -20,6 +22,7 @@ const reducer = (state, action) => {
 const initialState = {
     sites: JSON.parse(localStorage.getItem('solid_sites_storage') ?? '[]'),
     chiefs: JSON.parse(localStorage.getItem('solid_chiefs_storage') ?? '[]'),
+    categories: [],
     workers: [],
     movements: [],
     users: []

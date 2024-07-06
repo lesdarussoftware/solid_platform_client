@@ -43,7 +43,7 @@ export function Scan() {
 
     return (
         <Box>
-            <Typography variant="h4" align="center" marginBottom={3} marginTop={3}>
+            <Typography variant="h3" align="center" marginBottom={3} marginTop={3}>
                 Escáner de QR
             </Typography>
             {formData.type ?
@@ -105,19 +105,19 @@ export function Scan() {
                             type="button"
                             disabled={!disabled}
                             variant="contained"
-                            sx={{ padding: 3, width: { xs: '80%', sm: '30%' } }}
+                            sx={{ padding: 3, width: { xs: '80%', sm: '30%' }, fontSize: 20 }}
                             onClick={() => setFormData({ ...formData, type: 'INGRESO' })}
                         >
-                            Escanear ingreso
+                            Ingreso
                         </Button>
                         <Button
                             type="button"
                             disabled={!disabled}
                             variant="contained"
-                            sx={{ padding: 3, width: { xs: '80%', sm: '30%' } }}
+                            sx={{ padding: 3, width: { xs: '80%', sm: '30%', fontSize: 20 } }}
                             onClick={() => setFormData({ ...formData, type: 'EGRESO' })}
                         >
-                            Escanear egreso
+                            Egreso
                         </Button>
                     </Box>
                 </Box>
