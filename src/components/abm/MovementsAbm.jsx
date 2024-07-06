@@ -12,6 +12,7 @@ import { useForm } from "../../hooks/useForm"
 import { useSites } from "../../hooks/useSites"
 import { useChiefs } from "../../hooks/useChiefs"
 import { useWorkers } from "../../hooks/useWorkers"
+import { useCategories } from "../../hooks/useCategories"
 
 import { DataGrid } from "../datagrid/DataGrid"
 import { MovementFilter } from "../filters/MovementFilter"
@@ -22,6 +23,7 @@ export function MovementsAbm() {
     const { state } = useContext(DataContext)
 
     const { getMovements, open, setOpen, handleSubmit, handleDelete, filter, setFilter, count, loadingMovements } = useMovements()
+    const { getCategories, loadingCategories } = useCategories()
     const { getSites, loadingSites } = useSites()
     const { getChiefs, loadingChiefs } = useChiefs()
     const { getWorkers, loadingWorkers } = useWorkers()
@@ -58,13 +60,14 @@ export function MovementsAbm() {
         getSites()
         getChiefs()
         getWorkers()
+        getCategories()
     }, [])
 
     useEffect(() => {
-        const { from, to, page, offset, type, chief, worker, site } = filter
+        const { from, to, page, offset, type, chief, worker, site, category } = filter
         const fromIsNotString = typeof from !== 'string'
         const toIsNotString = typeof to !== 'string'
-        getMovements(`?page=${page}&offset=${offset}&from=${fromIsNotString ? new Date(from).toISOString() : ''}&to=${toIsNotString ? new Date(to).toISOString() : ''}&type=${type}&chief=${chief}&worker=${worker}&site=${site}`)
+        getMovements(`?page=${page}&offset=${offset}&from=${fromIsNotString ? new Date(from).toISOString() : ''}&to=${toIsNotString ? new Date(to).toISOString() : ''}&type=${type}&chief=${chief}&worker=${worker}&site=${site}&category=${category}`)
     }, [filter])
 
     const headCells = useMemo(() => [
@@ -114,7 +117,7 @@ export function MovementsAbm() {
 
     return (
         <>
-            {loadingMovements || loadingChiefs || loadingSites || loadingWorkers ?
+            {loadingMovements || loadingChiefs || loadingSites || loadingWorkers || loadingCategories ?
                 <Box sx={{ width: '100%' }}>
                     <LinearProgress />
                 </Box> :
@@ -136,7 +139,7 @@ export function MovementsAbm() {
                             alignItems: 'start',
                             flexWrap: 'wrap',
                             paddingTop: 0.3,
-                            gap: { xs: 1, sm: 0 }
+                            gap: { xs: 1, lg: 0 }
                         }}>
                             <MovementFilter filter={filter} setFilter={setFilter} />
                             <Button

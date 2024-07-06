@@ -12,14 +12,14 @@ export function MovementFilter({ filter, setFilter }) {
 
     return (
         <Box sx={{
-            width: { xs: '100%', sm: '80%', lg: '60%' },
+            width: { xs: '100%', lg: '60%' },
             display: 'flex',
-            justifyContent: 'start',
+            justifyContent: 'space-between',
             gap: 0.5,
             alignItems: 'start',
             flexWrap: 'wrap'
         }}>
-            <Box sx={{ width: { xs: '100%', sm: '30%' }, display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <Box sx={{ width: { xs: '100%', sm: '27%' }, display: 'flex', flexDirection: 'column', gap: 1 }}>
                 <FormControl>
                     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
                         <DatePicker
@@ -65,7 +65,7 @@ export function MovementFilter({ filter, setFilter }) {
                     />
                 </FormControl>
             </Box>
-            <Box sx={{ width: { xs: '100%', sm: '20%' }, display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <Box sx={{ width: { xs: '100%', sm: '15%' }, display: 'flex', flexDirection: 'column', gap: 1 }}>
                 <FormControl>
                     <InputLabel id="type-select">Evento</InputLabel>
                     <Select
@@ -94,6 +94,20 @@ export function MovementFilter({ filter, setFilter }) {
                     />
                 </FormControl>
             </Box>
+            <Box sx={{ width: { xs: '100%', sm: '20%' } }}>
+                <FormControl sx={{ width: '100%' }}>
+                    <Autocomplete
+                        disablePortal
+                        id="category-autocomplete"
+                        options={state.categories.map(c => c.name)}
+                        noOptionsText="No hay categorías disponibles."
+                        onChange={(_, value) => setFilter({ ...filter, category: value ?? '' })}
+                        renderInput={(params) => <TextField {...params} label="Categoría" />}
+                        value={filter.category}
+                        isOptionEqualToValue={(option, value) => value.length === 0 || option === value}
+                    />
+                </FormControl>
+            </Box>
             <Button
                 type="button"
                 variant="outlined"
@@ -105,7 +119,8 @@ export function MovementFilter({ filter, setFilter }) {
                     to: '',
                     chief: '',
                     worker: '',
-                    site: ''
+                    site: '',
+                    category: ''
                 })}
             >
                 Limpiar

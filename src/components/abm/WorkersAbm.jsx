@@ -204,6 +204,7 @@ export function WorkersAbm() {
                             disabled={disabled}
                             setDisabled={setDisabled}
                             reset={reset}
+                            setOpen={setOpen}
                             errors={errors}
                         />
                     </ModalComponent>

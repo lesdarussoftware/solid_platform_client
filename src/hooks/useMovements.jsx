@@ -30,7 +30,8 @@ export function useMovements() {
         to: '',
         chief: '',
         worker: '',
-        site: ''
+        site: '',
+        category: ''
     })
 
     async function getMovements(params) {

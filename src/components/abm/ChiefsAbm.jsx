@@ -180,6 +180,7 @@ export function ChiefsAbm() {
                             disabled={disabled}
                             setDisabled={setDisabled}
                             reset={reset}
+                            setOpen={setOpen}
                             errors={errors}
                         />
                     </ModalComponent>

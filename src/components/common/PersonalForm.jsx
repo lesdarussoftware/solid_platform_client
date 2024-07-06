@@ -14,6 +14,7 @@ export function PersonalForm({
     disabled,
     setDisabled,
     reset,
+    setOpen,
     errors
 }) {
 
@@ -96,7 +97,7 @@ export function PersonalForm({
                         <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
                             <DatePicker
                                 label="Fecha Nac."
-                                value={new Date(typeof formData.birth === 'string' ? Date.now() : formData.birth)}
+                                value={new Date(formData.birth === '' ? Date.now() : formData.birth)}
                                 name="date"
                                 onChange={value => handleChange({ target: { name: 'birth', value: new Date(value.toISOString()) } })}
                             />
