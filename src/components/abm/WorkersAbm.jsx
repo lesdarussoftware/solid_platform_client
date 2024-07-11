@@ -33,7 +33,9 @@ export function WorkersAbm() {
             city: '',
             cell_phone: '',
             category_id: '',
-            qr: ''
+            qr: '',
+            observations: '',
+            regime: ''
         },
         rules: {
             dni: {
@@ -62,6 +64,9 @@ export function WorkersAbm() {
             },
             category_id: {
                 required: true
+            },
+            observations: {
+                maxLength: 191
             }
         }
     })
@@ -87,7 +92,7 @@ export function WorkersAbm() {
             id: "dni",
             numeric: false,
             disablePadding: true,
-            label: "Documento",
+            label: "DNI",
             accessor: 'dni'
         },
         {
@@ -115,7 +120,7 @@ export function WorkersAbm() {
             id: "birth",
             numeric: false,
             disablePadding: true,
-            label: "Fecha Nac.",
+            label: "F. Nac.",
             accessor: (row) => row.birth ? format(new Date(row.birth), 'dd/MM/yyyy') : ''
         },
         {
@@ -147,10 +152,24 @@ export function WorkersAbm() {
             accessor: (row) => row.category.name
         },
         {
+            id: "observations",
+            numeric: false,
+            disablePadding: true,
+            label: "Observaciones",
+            accessor: 'observations'
+        },
+        {
+            id: "regime",
+            numeric: false,
+            disablePadding: true,
+            label: "Régimen",
+            accessor: 'regime'
+        },
+        {
             id: "qr",
             numeric: false,
             disablePadding: true,
-            label: "Últ. QR",
+            label: "QR",
             accessor: (row) => {
                 if (row.qrs.length > 0) {
                     return (
@@ -206,6 +225,7 @@ export function WorkersAbm() {
                             reset={reset}
                             setOpen={setOpen}
                             errors={errors}
+                            fromWorkers
                         />
                     </ModalComponent>
                     <ModalComponent open={open === 'DELETE'} onClose={() => reset(setOpen)}>

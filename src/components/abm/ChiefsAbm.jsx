@@ -1,9 +1,8 @@
 import { useContext, useEffect, useMemo } from "react"
-import { Box, Button, FormControl, Input, InputLabel, LinearProgress, Typography } from "@mui/material"
+import { Box, Button, LinearProgress, Typography } from "@mui/material"
 import { format } from "date-fns"
 
 import { DataContext } from "../../providers/DataProvider"
-import { useCategories } from "../../hooks/useCategories"
 import { useChiefs } from "../../hooks/useChiefs"
 import { useForm } from "../../hooks/useForm"
 
@@ -15,7 +14,6 @@ export function ChiefsAbm() {
 
     const { state } = useContext(DataContext)
 
-    const { getCategories, loadingCategories } = useCategories()
     const { getChiefs, open, setOpen, handleSubmit, handleDelete, filter, setFilter, count, loadingChiefs } = useChiefs()
     const { formData, setFormData, handleChange, reset, disabled, setDisabled, errors, validate } = useForm({
         defaultData: {
@@ -27,8 +25,7 @@ export function ChiefsAbm() {
             birth: '',
             address: '',
             city: '',
-            cell_phone: '',
-            category_id: ''
+            cell_phone: ''
         },
         rules: {
             dni: {
@@ -54,16 +51,9 @@ export function ChiefsAbm() {
             },
             cell_phone: {
                 maxLength: 55
-            },
-            category_id: {
-                required: true
             }
         }
     })
-
-    useEffect(() => {
-        getCategories()
-    }, [])
 
     useEffect(() => {
         const { page, offset } = filter
@@ -133,19 +123,12 @@ export function ChiefsAbm() {
             disablePadding: true,
             label: "Celular",
             accessor: 'cell_phone'
-        },
-        {
-            id: "category",
-            numeric: false,
-            disablePadding: true,
-            label: "Categoría",
-            accessor: (row) => row.category.name
         }
     ], [])
 
     return (
         <>
-            {loadingChiefs || loadingCategories ?
+            {loadingChiefs ?
                 <Box sx={{ width: '100%' }}>
                     <LinearProgress />
                 </Box> :

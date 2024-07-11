@@ -60,7 +60,7 @@ export function Dashboard() {
                             scrollButtons="auto"
                             sx={{ marginY: { xs: 3, sm: 0 } }}
                         >
-                            <Tab label="Planilla" {...a11yProps(0)} />
+                            <Tab label="Tarjas" {...a11yProps(0)} />
                             <Tab label="Operarios" {...a11yProps(1)} />
                             <Tab label="Capataces" {...a11yProps(2)} />
                             <Tab label="Categorías" {...a11yProps(3)} />

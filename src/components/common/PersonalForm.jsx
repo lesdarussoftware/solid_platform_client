@@ -15,7 +15,8 @@ export function PersonalForm({
     setDisabled,
     reset,
     setOpen,
-    errors
+    errors,
+    fromWorkers
 }) {
 
     const { state } = useContext(DataContext)
@@ -133,6 +134,23 @@ export function PersonalForm({
                         }
                     </FormControl>
                 </Box>
+                {fromWorkers &&
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 1 }}>
+                        <FormControl sx={{ width: '33%' }}>
+                            <InputLabel htmlFor="regime">Régimen</InputLabel>
+                            <Input id="regime" type="number" name="regime" value={formData.regime} />
+                        </FormControl>
+                        <FormControl sx={{ width: '66%' }}>
+                            <InputLabel htmlFor="observations">Observaciones</InputLabel>
+                            <Input id="observations" type="text" name="observations" value={formData.observations} />
+                            {errors.observations?.type === 'maxLength' &&
+                                <Typography variant="caption" color="red" marginTop={1}>
+                                    * Las observaciones son demasiado largas.
+                                </Typography>
+                            }
+                        </FormControl>
+                    </Box>
+                }
             </Box>
             <Box sx={{ display: 'flex', gap: 1, marginTop: 2, justifyContent: 'center' }}>
                 <Button
