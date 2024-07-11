@@ -25,7 +25,9 @@ export function ChiefsAbm() {
             birth: '',
             address: '',
             city: '',
-            cell_phone: ''
+            cell_phone: '',
+            observations: '',
+            regime: ''
         },
         rules: {
             dni: {
@@ -51,6 +53,9 @@ export function ChiefsAbm() {
             },
             cell_phone: {
                 maxLength: 55
+            },
+            observations: {
+                maxLength: 191
             }
         }
     })
@@ -123,6 +128,20 @@ export function ChiefsAbm() {
             disablePadding: true,
             label: "Celular",
             accessor: 'cell_phone'
+        },
+        {
+            id: "observations",
+            numeric: false,
+            disablePadding: true,
+            label: "Observaciones",
+            accessor: 'observations'
+        },
+        {
+            id: "regime",
+            numeric: false,
+            disablePadding: true,
+            label: "Régimen",
+            accessor: 'regime'
         }
     ], [])
 

@@ -93,45 +93,7 @@ export function PersonalForm({
                         </LocalizationProvider>
                     </FormControl>
                 </Box>
-                {fromWorkers &&
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 1 }}>
-                        <FormControl sx={{ width: '33%' }}>
-                            <InputLabel id="category-select">Categoría</InputLabel>
-                            <Select
-                                labelId="category-select"
-                                id="category"
-                                value={formData.category_id}
-                                label="Categoría"
-                                name="category"
-                                onChange={e => handleChange({ target: { name: 'category_id', value: e.target.value } })}
-                            >
-                                <MenuItem value="">Seleccione</MenuItem>
-                                {state.categories.map(cat => (
-                                    <MenuItem key={cat.id} value={cat.id}>{cat.name}</MenuItem>
-                                ))}
-                            </Select>
-                            {errors.site_id?.type === 'required' &&
-                                <Typography variant="caption" color="red" marginTop={1}>
-                                    * El evento es requerido.
-                                </Typography>
-                            }
-                        </FormControl>
-                        <FormControl sx={{ width: '33%' }}>
-                            <InputLabel htmlFor="regime">Régimen</InputLabel>
-                            <Input id="regime" type="number" name="regime" value={formData.regime} />
-                        </FormControl>
-                        <FormControl sx={{ width: '33%' }}>
-                            <InputLabel htmlFor="observations">Observaciones</InputLabel>
-                            <Input id="observations" type="text" name="observations" value={formData.observations} />
-                            {errors.observations?.type === 'maxLength' &&
-                                <Typography variant="caption" color="red" marginTop={1}>
-                                    * Las observaciones son demasiado largas.
-                                </Typography>
-                            }
-                        </FormControl>
-                    </Box>
-                }
-                <Box sx={{ display: 'flex', gap: 1 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 1 }}>
                     <FormControl sx={{ width: '33%' }}>
                         <InputLabel htmlFor="address">Dirección</InputLabel>
                         <Input id="address" type="text" name="address" value={formData.address} />
@@ -147,6 +109,44 @@ export function PersonalForm({
                         {errors.city?.type === 'maxLength' &&
                             <Typography variant="caption" color="red" marginTop={1}>
                                 * La ciudad es demasiado larga.
+                            </Typography>
+                        }
+                    </FormControl>
+                    <FormControl sx={{ width: '33%' }}>
+                        <InputLabel htmlFor="regime">Régimen</InputLabel>
+                        <Input id="regime" type="number" name="regime" value={formData.regime} />
+                    </FormControl>
+                </Box>
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                    {fromWorkers &&
+                        <FormControl sx={{ width: '33%' }}>
+                            <InputLabel id="category-select">Categoría</InputLabel>
+                            <Select
+                                labelId="category-select"
+                                id="category"
+                                value={formData.category_id}
+                                label="Categoría"
+                                name="category"
+                                onChange={e => handleChange({ target: { name: 'category_id', value: e.target.value } })}
+                            >
+                                <MenuItem value="">Seleccione</MenuItem>
+                                {state.categories.map(cat => (
+                                    <MenuItem key={cat.id} value={cat.id}>{cat.name}</MenuItem>
+                                ))}
+                            </Select>
+                            {errors.category_id?.type === 'required' &&
+                                <Typography variant="caption" color="red" marginTop={1}>
+                                    * La categoría es requerida.
+                                </Typography>
+                            }
+                        </FormControl>
+                    }
+                    <FormControl sx={{ width: '33%' }}>
+                        <InputLabel htmlFor="observations">Observaciones</InputLabel>
+                        <Input id="observations" type="text" name="observations" value={formData.observations} />
+                        {errors.observations?.type === 'maxLength' &&
+                            <Typography variant="caption" color="red" marginTop={1}>
+                                * Las observaciones son demasiado largas.
                             </Typography>
                         }
                     </FormControl>
