@@ -131,7 +131,7 @@ export function PersonalForm({
                         </FormControl>
                     </Box>
                 }
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 1 }}>
+                <Box sx={{ display: 'flex', gap: 1 }}>
                     <FormControl sx={{ width: '33%' }}>
                         <InputLabel htmlFor="address">Dirección</InputLabel>
                         <Input id="address" type="text" name="address" value={formData.address} />
