@@ -56,7 +56,13 @@ export function Scan() {
                     setNewMovementWorkerHash={setNewMovementWorkerHash}
                 /> :
                 <Box>
-                    {JSON.stringify(state.chiefs)}
+                    {state.chiefs.map(c => (
+                        <>
+                            <p>{c.id}</p>
+                            <p>{c.first_name}</p>
+                            <p>{c.last_name}</p>
+                        </>
+                    ))}
                     <form onSubmit={handleSaveMainData}>
                         <Box sx={{ width: { xs: '80%', sm: '30%' }, display: 'flex', flexDirection: 'column', gap: 2, margin: '0 auto' }}>
                             <FormControl>
