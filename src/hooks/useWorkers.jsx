@@ -19,6 +19,8 @@ export function useWorkers() {
     const [open, setOpen] = useState(null)
     const [count, setCount] = useState(0)
     const [newQrs, setNewQrs] = useState([])
+    const [workersForQr, setWorkersForQr] = useState([])
+    const [disabled, setDisabled] = useState(false)
     const [filter, setFilter] = useState({
         page: 0,
         offset: 5
@@ -31,6 +33,11 @@ export function useWorkers() {
             setCount(data[1])
             setLoadingWorkers(false)
         }
+    }
+
+    async function getWorkersForQr() {
+        const { status, data } = await handleQuery({ url: WORKER_URL })
+        if (status === STATUS_CODES.OK) setWorkersForQr(data[0])
     }
 
     async function handleSubmit(e, validate, formData, setDisabled, reset) {
@@ -87,6 +94,7 @@ export function useWorkers() {
 
     async function handleGenerateQr(e, setOpenInstance) {
         e.preventDefault()
+        setDisabled(true)
         const { status, data } = await handleQuery({
             url: QR_URL,
             method: 'POST',
@@ -118,6 +126,7 @@ export function useWorkers() {
             setMessage('QRs generados correctamente.')
             setOpenInstance(null)
             setNewQrs([])
+            setDisabled(false)
         } else {
             setMessage(data.message)
             setSeverity('error')
@@ -137,6 +146,10 @@ export function useWorkers() {
         loadingWorkers,
         newQrs,
         setNewQrs,
-        handleGenerateQr
+        handleGenerateQr,
+        workersForQr,
+        getWorkersForQr,
+        disabled,
+        setDisabled
     }
 }

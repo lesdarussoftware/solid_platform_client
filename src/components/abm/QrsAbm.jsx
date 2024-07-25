@@ -1,16 +1,17 @@
-import { useContext } from "react";
-import { Autocomplete, Box, Button, Checkbox, FormControl, FormControlLabel, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
+import { useEffect } from "react";
+import { Box, Button, Checkbox, FormControl, FormControlLabel, InputLabel, MenuItem, Select, Typography } from "@mui/material";
 
-import { DataContext } from "../../providers/DataProvider";
 import { useWorkers } from "../../hooks/useWorkers";
 
 import { ModalComponent } from "../common/ModalComponent";
 
 export function QrsAbm({ open, setOpen }) {
 
-    const { state } = useContext(DataContext)
+    const { newQrs, setNewQrs, handleGenerateQr, workersForQr, getWorkersForQr, disabled } = useWorkers()
 
-    const { newQrs, setNewQrs, handleGenerateQr } = useWorkers()
+    useEffect(() => {
+        getWorkersForQr()
+    }, [])
 
     const handleClose = () => {
         setOpen(null)
@@ -37,7 +38,7 @@ export function QrsAbm({ open, setOpen }) {
                         }}
                     >
                         <MenuItem value="">Seleccione</MenuItem>
-                        {state.workers
+                        {workersForQr
                             .filter(w => !newQrs.includes(w.id))
                             .sort((a, b) => a.first_name - b.first_name)
                             .map(w => (
@@ -48,10 +49,10 @@ export function QrsAbm({ open, setOpen }) {
                 <FormControlLabel
                     control={<Checkbox />}
                     label="Seleccionar todos"
-                    checked={newQrs.length === state.workers.length}
+                    checked={newQrs.length === workersForQr.length}
                     onChange={e => {
                         if (e.target.checked) {
-                            setNewQrs(state.workers.map(w => w.id))
+                            setNewQrs(workersForQr.map(w => w.id))
                         } else {
                             setNewQrs([])
                         }
@@ -68,10 +69,10 @@ export function QrsAbm({ open, setOpen }) {
                 borderRadius: 1
             }}>
                 <>
-                    {newQrs.length < state.workers.length &&
+                    {newQrs.length < workersForQr.length &&
                         newQrs.map(nqr => (
                             <Typography variant="body1" sx={{ padding: 1 }}>
-                                {`${state.workers.find(w => w.id === nqr).first_name} ${state.workers.find(w => w.id === nqr).last_name}`}
+                                {`${workersForQr.find(w => w.id === nqr).first_name} ${workersForQr.find(w => w.id === nqr).last_name}`}
                             </Typography>
                         ))
                     }
@@ -90,7 +91,7 @@ export function QrsAbm({ open, setOpen }) {
                     type="button"
                     variant="contained"
                     sx={{ width: '50%', margin: '0 auto', color: '#fff' }}
-                    disabled={newQrs.length === 0}
+                    disabled={newQrs.length === 0 || disabled}
                     onClick={e => handleGenerateQr(e, setOpen)}
                 >
                     Guardar
