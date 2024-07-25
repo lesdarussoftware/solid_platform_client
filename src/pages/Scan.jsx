@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import { Autocomplete, Box, Button, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, Button, FormControl, TextField, Typography } from "@mui/material";
 
 import { DataContext } from "../providers/DataProvider";
 import { useChiefs } from "../hooks/useChiefs";
@@ -59,7 +59,7 @@ export function Scan() {
                     <form onSubmit={handleSaveMainData}>
                         <Box sx={{ width: { xs: '80%', sm: '30%' }, display: 'flex', flexDirection: 'column', gap: 2, margin: '0 auto' }}>
                             <FormControl>
-                                {/* <Autocomplete
+                                <Autocomplete
                                     disablePortal
                                     id="chief-autocomplete"
                                     options={state.chiefs.map(c => ({ label: `${c.first_name} ${c.last_name} (${c.dni})`, id: c.id }))}
@@ -67,21 +67,7 @@ export function Scan() {
                                     onChange={(_, value) => handleChange({ target: { name: 'chief_id', value: value?.id ?? '' } })}
                                     renderInput={(params) => <TextField {...params} label="Capataz" />}
                                     isOptionEqualToValue={(option, value) => option.id === value.id}
-                                /> */}
-                                <InputLabel id="chief-select">Capataz</InputLabel>
-                                <Select
-                                    labelId="chief-select"
-                                    label="Capataz"
-                                    id="chief-select"
-                                    onChange={e => handleChange({ target: { name: 'chief_id', value: e.target.value } })}
-                                >
-                                    {/* <MenuItem value="">Seleccione</MenuItem> */}
-                                    {state.chiefs.map(c => (
-                                        <MenuItem key={c.id} value={c.id}>
-                                            {`${c.first_name} ${c.last_name} (${c.dni})`}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
+                                />
                                 {errors.chief_id?.type === 'required' &&
                                     <Typography variant="caption" color="red" marginTop={1}>
                                         * El capataz es requerido.
@@ -89,7 +75,7 @@ export function Scan() {
                                 }
                             </FormControl>
                             <FormControl>
-                                {/* <Autocomplete
+                                <Autocomplete
                                     disablePortal
                                     id="site-autocomplete"
                                     options={state.sites.map(s => ({ label: s.name, id: s.id }))}
@@ -97,21 +83,7 @@ export function Scan() {
                                     onChange={(_, value) => handleChange({ target: { name: 'site_id', value: value?.id ?? '' } })}
                                     renderInput={(params) => <TextField {...params} label="Obra" />}
                                     isOptionEqualToValue={(option, value) => option.name === value.name}
-                                /> */}
-                                <InputLabel id="site-select">Obra</InputLabel>
-                                <Select
-                                    labelId="site-select"
-                                    label="Obra"
-                                    id="site-select"
-                                    onChange={e => handleChange({ target: { name: 'site_id', value: e.target.value } })}
-                                >
-                                    {/* <MenuItem value="">Seleccione</MenuItem> */}
-                                    {state.sites.map(s => (
-                                        <MenuItem key={s.id} value={s.id}>
-                                            {s.name}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
+                                />
                                 {errors.site_id?.type === 'required' &&
                                     <Typography variant="caption" color="red" marginTop={1}>
                                         * La obra es requerida.
