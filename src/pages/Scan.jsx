@@ -46,6 +46,7 @@ export function Scan() {
             <Typography variant="h3" align="center" marginBottom={3} marginTop={3}>
                 Escáner de QR
             </Typography>
+            {JSON.stringify(state.chiefs)}
             {formData.type ?
                 <QrReader
                     formData={formData}
