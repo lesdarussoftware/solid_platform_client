@@ -44,6 +44,7 @@ export function Scan() {
 
     return (
         <Box>
+            {JSON.stringify(localStorage.getItem('solid_chiefs_storage') ?? '[]')}
             <Typography variant="h3" align="center" marginBottom={3} marginTop={3}>
                 Escáner de QR
             </Typography>
