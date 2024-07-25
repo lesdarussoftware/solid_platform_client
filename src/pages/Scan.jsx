@@ -11,7 +11,7 @@ import { useForm } from "../hooks/useForm";
 
 export function Scan() {
 
-    const { state, dispatch } = useContext(DataContext)
+    const { state } = useContext(DataContext)
 
     const { getSites } = useSites()
     const { getChiefs } = useChiefs()
@@ -29,24 +29,11 @@ export function Scan() {
     })
 
     useEffect(() => {
-        // Intentar cargar los datos del local storage si están disponibles
-        const localSites = JSON.parse(localStorage.getItem('solid_sites_storage') ?? '[]')
-        const localChiefs = JSON.parse(localStorage.getItem('solid_chiefs_storage') ?? '[]')
-
-        if (localSites.length > 0) {
-            dispatch({ type: 'SITES', payload: localSites })
-        } else {
-            getSites()
-        }
-
-        if (localChiefs.length > 0) {
-            dispatch({ type: 'CHIEFS', payload: localChiefs })
-        } else {
-            getChiefs()
-        }
-
+        alert(localStorage.getItem('solid_chiefs_storage'))
+        getSites()
+        getChiefs()
         handleSync()
-    }, [dispatch, getSites, getChiefs, handleSync])
+    }, [])
 
     const handleSaveMainData = e => {
         e.preventDefault()
