@@ -56,6 +56,7 @@ export function Scan() {
                     <form onSubmit={handleSaveMainData}>
                         <Box sx={{ width: { xs: '80%', sm: '30%' }, display: 'flex', flexDirection: 'column', gap: 2, margin: '0 auto' }}>
                             <FormControl>
+                                {JSON.stringify(localStorage.getItem('solid_chiefs_storage') ?? '[]')}
                                 <Autocomplete
                                     disablePortal
                                     id="chief-autocomplete"
