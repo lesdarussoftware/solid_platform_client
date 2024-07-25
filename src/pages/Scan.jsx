@@ -28,8 +28,8 @@ export function Scan() {
         rules: { site_id: { required: true }, chief_id: { required: true } }
     })
 
+    alert(state.chiefs)
     useEffect(() => {
-        alert(localStorage.getItem('solid_chiefs_storage'))
         getSites()
         getChiefs()
         handleSync()
