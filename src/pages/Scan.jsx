@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Autocomplete, Box, Button, FormControl, TextField, Typography } from "@mui/material";
 
+import { DataContext } from "../providers/DataProvider";
 import { useChiefs } from "../hooks/useChiefs";
 import { useSites } from "../hooks/useSites";
 import { useMovements } from "../hooks/useMovements";
@@ -9,6 +10,8 @@ import { QrReader } from "../components/common/QrReader";
 import { useForm } from "../hooks/useForm";
 
 export function Scan() {
+
+    const { state } = useContext(DataContext)
 
     const { getSites } = useSites()
     const { getChiefs } = useChiefs()
@@ -53,14 +56,14 @@ export function Scan() {
                     setNewMovementWorkerHash={setNewMovementWorkerHash}
                 /> :
                 <Box>
+                    {JSON.stringify(state.chiefs)}
                     <form onSubmit={handleSaveMainData}>
                         <Box sx={{ width: { xs: '80%', sm: '30%' }, display: 'flex', flexDirection: 'column', gap: 2, margin: '0 auto' }}>
                             <FormControl>
-                                {JSON.stringify(localStorage.getItem('solid_chiefs_storage') ?? '[]')}
                                 <Autocomplete
                                     disablePortal
                                     id="chief-autocomplete"
-                                    options={JSON.parse(localStorage.getItem('solid_chiefs_storage') ?? '[]').map(c => ({ label: `${c.first_name} ${c.last_name} (${c.dni})`, id: c.id }))}
+                                    options={state.chiefs.map(c => ({ label: `${c.first_name} ${c.last_name} (${c.dni})`, id: c.id }))}
                                     noOptionsText="No hay registros disponibles."
                                     onChange={(_, value) => handleChange({ target: { name: 'chief_id', value: value?.id ?? '' } })}
                                     renderInput={(params) => <TextField {...params} label="Capataz" />}
@@ -76,7 +79,7 @@ export function Scan() {
                                 <Autocomplete
                                     disablePortal
                                     id="site-autocomplete"
-                                    options={JSON.parse(localStorage.getItem('solid_sites_storage') ?? '[]').map(s => ({ label: s.name, id: s.id }))}
+                                    options={state.sites.map(s => ({ label: s.name, id: s.id }))}
                                     noOptionsText="No hay registros disponibles."
                                     onChange={(_, value) => handleChange({ target: { name: 'site_id', value: value?.id ?? '' } })}
                                     renderInput={(params) => <TextField {...params} label="Obra" />}
