@@ -23,7 +23,7 @@ export function useWorkers() {
     const [disabled, setDisabled] = useState(false)
     const [filter, setFilter] = useState({
         page: 0,
-        offset: 5
+        offset: 60
     })
 
     async function getWorkers(params) {

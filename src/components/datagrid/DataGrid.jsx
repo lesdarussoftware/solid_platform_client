@@ -162,7 +162,7 @@ export function DataGrid({
                     </Table>
                 </TableContainer>
                 <TablePagination
-                    rowsPerPageOptions={[5, 10, 25, 50]}
+                    rowsPerPageOptions={[10, 25, 50, 60, 100]}
                     component="div"
                     count={-1}
                     rowsPerPage={filter.offset}

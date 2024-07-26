@@ -19,7 +19,7 @@ export function useSites() {
     const [count, setCount] = useState(0)
     const [filter, setFilter] = useState({
         page: 0,
-        offset: 5
+        offset: 60
     })
 
     async function getSites(params) {
