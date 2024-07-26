@@ -1,5 +1,5 @@
-import { useContext } from "react"
-import { Box, Button, FormControl, Input, InputLabel, MenuItem, Select, Typography } from "@mui/material"
+import { useContext, useEffect } from "react"
+import { Box, Button, Checkbox, FormControl, FormControlLabel, Input, InputLabel, MenuItem, Select, Typography } from "@mui/material"
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers"
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns"
 import { es } from "date-fns/locale"
@@ -15,8 +15,7 @@ export function PersonalForm({
     setDisabled,
     reset,
     setOpen,
-    errors,
-    fromWorkers
+    errors
 }) {
 
     const { state } = useContext(DataContext)
@@ -118,29 +117,27 @@ export function PersonalForm({
                     </FormControl>
                 </Box>
                 <Box sx={{ display: 'flex', gap: 1 }}>
-                    {fromWorkers &&
-                        <FormControl sx={{ width: '33%' }}>
-                            <InputLabel id="category-select">Categoría</InputLabel>
-                            <Select
-                                labelId="category-select"
-                                id="category"
-                                value={formData.category_id}
-                                label="Categoría"
-                                name="category"
-                                onChange={e => handleChange({ target: { name: 'category_id', value: e.target.value } })}
-                            >
-                                <MenuItem value="">Seleccione</MenuItem>
-                                {state.categories.map(cat => (
-                                    <MenuItem key={cat.id} value={cat.id}>{cat.name}</MenuItem>
-                                ))}
-                            </Select>
-                            {errors.category_id?.type === 'required' &&
-                                <Typography variant="caption" color="red" marginTop={1}>
-                                    * La categoría es requerida.
-                                </Typography>
-                            }
-                        </FormControl>
-                    }
+                    <FormControl sx={{ width: '33%' }}>
+                        <InputLabel id="category-select">Categoría</InputLabel>
+                        <Select
+                            labelId="category-select"
+                            id="category"
+                            value={formData.category_id}
+                            label="Categoría"
+                            name="category"
+                            onChange={e => handleChange({ target: { name: 'category_id', value: e.target.value } })}
+                        >
+                            <MenuItem value="">Seleccione</MenuItem>
+                            {state.categories.map(cat => (
+                                <MenuItem key={cat.id} value={cat.id}>{cat.name}</MenuItem>
+                            ))}
+                        </Select>
+                        {errors.category_id?.type === 'required' &&
+                            <Typography variant="caption" color="red" marginTop={1}>
+                                * La categoría es requerida.
+                            </Typography>
+                        }
+                    </FormControl>
                     <FormControl sx={{ width: '33%' }}>
                         <InputLabel htmlFor="observations">Observaciones</InputLabel>
                         <Input id="observations" type="text" name="observations" value={formData.observations} />
@@ -150,6 +147,13 @@ export function PersonalForm({
                             </Typography>
                         }
                     </FormControl>
+                    <FormControlLabel
+                        sx={{ width: '33%' }}
+                        control={<Checkbox />}
+                        label="Puede escanear"
+                        checked={formData.can_scan}
+                        onChange={e => handleChange({ target: { name: 'can_scan', value: e.target.checked } })}
+                    />
                 </Box>
             </Box>
             <Box sx={{ display: 'flex', gap: 1, marginTop: 2, justifyContent: 'center' }}>

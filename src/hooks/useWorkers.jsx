@@ -40,6 +40,14 @@ export function useWorkers() {
         if (status === STATUS_CODES.OK) setWorkersForQr(data[0])
     }
 
+    async function getScanners() {
+        const { status, data } = await handleQuery({ url: WORKER_URL + '?can_scan=true' })
+        if (status === STATUS_CODES.OK) {
+            dispatch({ type: 'SCANNERS', payload: data[0] })
+            localStorage.setItem('solid_scanners_storage', JSON.stringify(data[0]))
+        }
+    }
+
     async function handleSubmit(e, validate, formData, setDisabled, reset) {
         e.preventDefault()
         if (validate()) {
@@ -150,6 +158,7 @@ export function useWorkers() {
         workersForQr,
         getWorkersForQr,
         disabled,
-        setDisabled
+        setDisabled,
+        getScanners
     }
 }

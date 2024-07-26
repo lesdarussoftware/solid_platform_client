@@ -15,11 +15,11 @@ export function MovementFilter({ filter, setFilter }) {
             width: { xs: '100%', lg: '60%' },
             display: 'flex',
             justifyContent: 'space-between',
-            gap: 0.5,
+            gap: 0.1,
             alignItems: 'start',
             flexWrap: 'wrap'
         }}>
-            <Box sx={{ width: { xs: '100%', sm: '27%' }, display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <Box sx={{ width: { xs: '100%', sm: '30%' }, display: 'flex', flexDirection: 'column', gap: 1 }}>
                 <FormControl>
                     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
                         <DatePicker
@@ -39,7 +39,7 @@ export function MovementFilter({ filter, setFilter }) {
                     </LocalizationProvider>
                 </FormControl>
             </Box>
-            <Box sx={{ width: { xs: '100%', sm: '20%' }, display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <Box sx={{ width: { xs: '100%', sm: '30%' }, display: 'flex', flexDirection: 'column', gap: 1 }}>
                 <FormControl>
                     <Autocomplete
                         disablePortal
@@ -52,20 +52,20 @@ export function MovementFilter({ filter, setFilter }) {
                         isOptionEqualToValue={(option, value) => value.length === 0 || option === value}
                     />
                 </FormControl>
-                <FormControl>
+                <FormControl sx={{ width: '100%' }}>
                     <Autocomplete
                         disablePortal
-                        id="chief-autocomplete"
-                        options={state.chiefs.map(c => `${c.first_name} ${c.last_name}`)}
-                        noOptionsText="No hay capataces disponibles."
-                        onChange={(_, value) => setFilter({ ...filter, chief: value ?? '' })}
-                        renderInput={(params) => <TextField {...params} label="Capataz" />}
-                        value={filter.chief}
+                        id="category-autocomplete"
+                        options={state.categories.map(c => c.name)}
+                        noOptionsText="No hay categorías disponibles."
+                        onChange={(_, value) => setFilter({ ...filter, category: value ?? '' })}
+                        renderInput={(params) => <TextField {...params} label="Categoría" />}
+                        value={filter.category}
                         isOptionEqualToValue={(option, value) => value.length === 0 || option === value}
                     />
                 </FormControl>
             </Box>
-            <Box sx={{ width: { xs: '100%', sm: '15%' }, display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <Box sx={{ width: { xs: '100%', sm: '30%' }, display: 'flex', flexDirection: 'column', gap: 1 }}>
                 <FormControl>
                     <InputLabel id="type-select">Evento</InputLabel>
                     <Select
@@ -94,30 +94,15 @@ export function MovementFilter({ filter, setFilter }) {
                     />
                 </FormControl>
             </Box>
-            <Box sx={{ width: { xs: '100%', sm: '20%' } }}>
-                <FormControl sx={{ width: '100%' }}>
-                    <Autocomplete
-                        disablePortal
-                        id="category-autocomplete"
-                        options={state.categories.map(c => c.name)}
-                        noOptionsText="No hay categorías disponibles."
-                        onChange={(_, value) => setFilter({ ...filter, category: value ?? '' })}
-                        renderInput={(params) => <TextField {...params} label="Categoría" />}
-                        value={filter.category}
-                        isOptionEqualToValue={(option, value) => value.length === 0 || option === value}
-                    />
-                </FormControl>
-            </Box>
             <Button
                 type="button"
                 variant="outlined"
-                sx={{ width: { xs: '100%', sm: '15%' } }}
+                sx={{ width: { xs: '100%', sm: '9%' } }}
                 onClick={() => setFilter({
                     ...filter,
                     type: '',
                     from: '',
                     to: '',
-                    chief: '',
                     worker: '',
                     site: '',
                     category: ''

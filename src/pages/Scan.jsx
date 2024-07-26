@@ -2,35 +2,35 @@ import { useContext, useEffect } from "react";
 import { Box, Button, FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material";
 
 import { DataContext } from "../providers/DataProvider";
-import { useChiefs } from "../hooks/useChiefs";
 import { useSites } from "../hooks/useSites";
 import { useMovements } from "../hooks/useMovements";
 
 import { QrReader } from "../components/common/QrReader";
 import { useForm } from "../hooks/useForm";
+import { useWorkers } from "../hooks/useWorkers";
 
 export function Scan() {
 
     const { state } = useContext(DataContext)
 
     const { getSites } = useSites()
-    const { getChiefs } = useChiefs()
+    const { getScanners } = useWorkers()
     const { handleSync, handleScan, newMovementWorkerHash, setNewMovementWorkerHash, getLocation } = useMovements()
     const { formData, setFormData, validate, errors, disabled, handleChange, reset } = useForm({
         defaultData: {
-            chief_id: '',
+            created_by: '',
             site_id: '',
             worker_id: '',
             type: null,
             lat: null,
             lng: null
         },
-        rules: { site_id: { required: true }, chief_id: { required: true } }
+        rules: { site_id: { required: true }, created_by: { required: true } }
     })
 
     useEffect(() => {
         getSites()
-        getChiefs()
+        getScanners()
         handleSync()
     }, [])
 
@@ -59,20 +59,20 @@ export function Scan() {
                     <form onSubmit={handleSaveMainData}>
                         <Box sx={{ width: { xs: '80%', sm: '30%' }, display: 'flex', flexDirection: 'column', gap: 2, margin: '0 auto' }}>
                             <FormControl>
-                                <InputLabel id="chief-select">Capataz</InputLabel>
+                                <InputLabel id="scanner-select">Capataz</InputLabel>
                                 <Select
-                                    labelId="chief-select"
+                                    labelId="scanner-select"
                                     label="Capataz"
-                                    id="chief-select"
-                                    onChange={e => handleChange({ target: { name: 'chief_id', value: e.target.value } })}
+                                    id="scanner-select"
+                                    onChange={e => handleChange({ target: { name: 'created_by', value: e.target.value } })}
                                 >
-                                    {state.chiefs.map(c => (
-                                        <MenuItem key={c.id} value={c.id}>
-                                            {`${c.first_name} ${c.last_name} (${c.dni})`}
+                                    {state.scanners.map(s => (
+                                        <MenuItem key={s.id} value={`${s.first_name} ${s.last_name}`}>
+                                            {`${s.first_name} ${s.last_name} (${s.dni})`}
                                         </MenuItem>
                                     ))}
                                 </Select>
-                                {errors.chief_id?.type === 'required' &&
+                                {errors.created_by?.type === 'required' &&
                                     <Typography variant="caption" color="red" marginTop={1}>
                                         * El capataz es requerido.
                                     </Typography>

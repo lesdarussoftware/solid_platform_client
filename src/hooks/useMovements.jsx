@@ -28,7 +28,6 @@ export function useMovements() {
         type: '',
         from: '',
         to: '',
-        chief: '',
         worker: '',
         site: '',
         category: ''

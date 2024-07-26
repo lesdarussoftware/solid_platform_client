@@ -10,7 +10,6 @@ import { DataContext } from "../../providers/DataProvider"
 import { useMovements } from "../../hooks/useMovements"
 import { useForm } from "../../hooks/useForm"
 import { useSites } from "../../hooks/useSites"
-import { useChiefs } from "../../hooks/useChiefs"
 import { useWorkers } from "../../hooks/useWorkers"
 import { useCategories } from "../../hooks/useCategories"
 
@@ -25,7 +24,6 @@ export function MovementsAbm() {
     const { getMovements, open, setOpen, handleSubmit, handleDelete, filter, setFilter, count, loadingMovements } = useMovements()
     const { getCategories, loadingCategories } = useCategories()
     const { getSites, loadingSites } = useSites()
-    const { getChiefs, loadingChiefs } = useChiefs()
     const { getWorkers, loadingWorkers } = useWorkers()
     const { formData, setFormData, reset, handleChange, errors, validate, disabled, setDisabled } = useForm({
         defaultData: {
@@ -34,7 +32,6 @@ export function MovementsAbm() {
             date: new Date(Date.now()),
             worker_id: '',
             site_id: '',
-            chief_id: '',
             observations: ''
         },
         rules: {
@@ -42,9 +39,6 @@ export function MovementsAbm() {
                 required: true
             },
             worker_id: {
-                required: true
-            },
-            chief_id: {
                 required: true
             },
             site_id: {
@@ -58,16 +52,15 @@ export function MovementsAbm() {
 
     useEffect(() => {
         getSites()
-        getChiefs()
         getWorkers()
         getCategories()
     }, [])
 
     useEffect(() => {
-        const { from, to, page, offset, type, chief, worker, site, category } = filter
+        const { from, to, page, offset, type, worker, site, category } = filter
         const fromIsNotString = typeof from !== 'string'
         const toIsNotString = typeof to !== 'string'
-        getMovements(`?page=${page}&offset=${offset}&from=${fromIsNotString ? new Date(from).toISOString() : ''}&to=${toIsNotString ? new Date(to).toISOString() : ''}&type=${type}&chief=${chief}&worker=${worker}&site=${site}&category=${category}`)
+        getMovements(`?page=${page}&offset=${offset}&from=${fromIsNotString ? new Date(from).toISOString() : ''}&to=${toIsNotString ? new Date(to).toISOString() : ''}&type=${type}&worker=${worker}&site=${site}&category=${category}`)
     }, [filter])
 
     const headCells = useMemo(() => [
@@ -93,11 +86,11 @@ export function MovementsAbm() {
             accessor: (row) => `${row.worker.first_name} ${row.worker.last_name}`
         },
         {
-            id: "chief",
+            id: "created_by",
             numeric: false,
             disablePadding: true,
-            label: "Capataz",
-            accessor: (row) => `${row.chief.first_name} ${row.chief.last_name}`
+            label: "Creado por",
+            accessor: 'created_by'
         },
         {
             id: "type",
@@ -117,7 +110,7 @@ export function MovementsAbm() {
 
     return (
         <>
-            {loadingMovements || loadingChiefs || loadingSites || loadingWorkers || loadingCategories ?
+            {loadingMovements || loadingSites || loadingWorkers || loadingCategories ?
                 <Box sx={{ width: '100%' }}>
                     <LinearProgress />
                 </Box> :
@@ -196,23 +189,6 @@ export function MovementsAbm() {
                                     <FormControl sx={{ width: '50%' }}>
                                         <Autocomplete
                                             disablePortal
-                                            id="chief-autocomplete"
-                                            options={state.chiefs.map(c => ({ label: `${c.first_name} ${c.last_name}`, id: c.id }))}
-                                            noOptionsText="No hay capataces disponibles."
-                                            onChange={(_, value) => handleChange({ target: { name: 'chief_id', value: value.id } })}
-                                            renderInput={(params) => <TextField {...params} label="Capataz" />}
-                                            value={formData.chief_id.toString().length > 0 ? `${state.chiefs.find(c => c.id === formData.chief_id).first_name} ${state.chiefs.find(c => c.id === formData.chief_id).last_name}` : ''}
-                                            isOptionEqualToValue={(option, value) => value.length === 0 || option.id === value.id}
-                                        />
-                                        {errors.site_id?.type === 'required' &&
-                                            <Typography variant="caption" color="red" marginTop={1}>
-                                                * El capataz es requerido.
-                                            </Typography>
-                                        }
-                                    </FormControl>
-                                    <FormControl sx={{ width: '50%' }}>
-                                        <Autocomplete
-                                            disablePortal
                                             id="worker-autocomplete"
                                             options={state.workers.map(w => ({ label: `${w.first_name} ${w.last_name}`, id: w.id }))}
                                             noOptionsText="No hay operarios disponibles."
@@ -227,8 +203,6 @@ export function MovementsAbm() {
                                             </Typography>
                                         }
                                     </FormControl>
-                                </Box>
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 1 }}>
                                     <FormControl sx={{ width: '50%' }}>
                                         <Autocomplete
                                             disablePortal
@@ -246,7 +220,9 @@ export function MovementsAbm() {
                                             </Typography>
                                         }
                                     </FormControl>
-                                    <FormControl sx={{ width: '50%' }}>
+                                </Box>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 1 }}>
+                                    <FormControl sx={{ width: '100%' }}>
                                         <InputLabel htmlFor="observations">Observaciones</InputLabel>
                                         <Input
                                             id="observations"
@@ -324,7 +300,6 @@ export function MovementsAbm() {
                             <Table>
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell align="center">Creado por</TableCell>
                                         <TableCell align="center">Fecha creación</TableCell>
                                         <TableCell align="center">Modificado por</TableCell>
                                         <TableCell align="center">Fecha modificación</TableCell>
@@ -334,7 +309,6 @@ export function MovementsAbm() {
                                 </TableHead>
                                 <TableBody>
                                     <TableRow>
-                                        <TableCell align="center">{formData.created_by}</TableCell>
                                         <TableCell align="center">
                                             {format(new Date(formData.created_at ?? Date.now()), 'dd/MM/yyyy HH:mm:ss')}
                                         </TableCell>

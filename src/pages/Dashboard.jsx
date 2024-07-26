@@ -4,7 +4,6 @@ import { Box, Tabs, Tab, Typography } from "@mui/material"
 import { AuthContext } from "../providers/AuthProvider"
 
 import { MovementsAbm } from "../components/abm/MovementsAbm"
-import { ChiefsAbm } from "../components/abm/ChiefsAbm"
 import { WorkersAbm } from "../components/abm/WorkersAbm"
 import { Header } from "../components/common/Header"
 import { LoginForm } from "../components/common/LoginForm"
@@ -42,7 +41,7 @@ export function Dashboard() {
 
     const [value, setValue] = useState(0)
 
-    const handleChange = (event, newValue) => {
+    const handleChange = (_, newValue) => {
         setValue(newValue)
     }
 
@@ -61,11 +60,10 @@ export function Dashboard() {
                             sx={{ marginY: { xs: 3, sm: 0 } }}
                         >
                             <Tab label="Tarjas" {...a11yProps(0)} />
-                            <Tab label="Operarios" {...a11yProps(1)} />
-                            <Tab label="Capataces" {...a11yProps(2)} />
-                            <Tab label="Categorías" {...a11yProps(3)} />
-                            <Tab label="Obras" {...a11yProps(4)} />
-                            <Tab label="Usuarios" {...a11yProps(5)} />
+                            <Tab label="Personal" {...a11yProps(1)} />
+                            <Tab label="Categorías" {...a11yProps(2)} />
+                            <Tab label="Obras" {...a11yProps(3)} />
+                            <Tab label="Usuarios" {...a11yProps(4)} />
                         </Tabs>
                     </Box>
                     <CustomTabPanel value={value} index={0}>
@@ -75,15 +73,12 @@ export function Dashboard() {
                         <WorkersAbm />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={2}>
-                        <ChiefsAbm />
-                    </CustomTabPanel>
-                    <CustomTabPanel value={value} index={3}>
                         <CategoriesAbm />
                     </CustomTabPanel>
-                    <CustomTabPanel value={value} index={4}>
+                    <CustomTabPanel value={value} index={3}>
                         <SitesAbm />
                     </CustomTabPanel>
-                    <CustomTabPanel value={value} index={5}>
+                    <CustomTabPanel value={value} index={4}>
                         <UsersAbm />
                     </CustomTabPanel>
                 </Box> :

@@ -105,7 +105,10 @@ export function QrReader({
                     <TableBody>
                         <TableRow>
                             <TableCell align="center">
-                                {`${state.chiefs.find(c => c.id === parseInt(formData.chief_id))?.first_name} ${state.chiefs.find(c => c.id === parseInt(formData.chief_id))?.last_name} (${state.chiefs.find(c => c.id === parseInt(formData.chief_id))?.dni})`}
+                                {(() => {
+                                    const scanner = state.scanners.find(s => `${s.first_name} ${s.last_name}` === formData.created_by)
+                                    return `${scanner.first_name} ${scanner.last_name} (${scanner.dni})}`
+                                })()}
                             </TableCell>
                             <TableCell align="center">{state.sites.find(s => s.id === parseInt(formData.site_id))?.name}</TableCell>
                             <TableCell align="center">{formData.type}</TableCell>

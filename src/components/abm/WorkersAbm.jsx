@@ -1,5 +1,5 @@
 import { useContext, useEffect, useMemo } from "react"
-import { Box, Button, FormControl, Input, InputLabel, LinearProgress, MenuItem, Select, Typography } from "@mui/material"
+import { Box, Button, FormControl, Input, InputLabel, LinearProgress, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material"
 import { format } from "date-fns"
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers"
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns"
@@ -35,7 +35,8 @@ export function WorkersAbm() {
             category_id: '',
             qr: '',
             observations: '',
-            regime: ''
+            regime: '',
+            can_scan: ''
         },
         rules: {
             dni: {
@@ -117,27 +118,6 @@ export function WorkersAbm() {
             accessor: 'cuil'
         },
         {
-            id: "birth",
-            numeric: false,
-            disablePadding: true,
-            label: "F. Nac.",
-            accessor: (row) => row.birth ? format(new Date(row.birth), 'dd/MM/yyyy') : ''
-        },
-        {
-            id: "address",
-            numeric: false,
-            disablePadding: true,
-            label: "Dirección",
-            accessor: 'address'
-        },
-        {
-            id: "city",
-            numeric: false,
-            disablePadding: true,
-            label: "Localidad",
-            accessor: 'city'
-        },
-        {
             id: "cell_phone",
             numeric: false,
             disablePadding: true,
@@ -150,13 +130,6 @@ export function WorkersAbm() {
             disablePadding: true,
             label: "Categoría",
             accessor: (row) => row.category.name
-        },
-        {
-            id: "observations",
-            numeric: false,
-            disablePadding: true,
-            label: "Observaciones",
-            accessor: 'observations'
         },
         {
             id: "regime",
@@ -180,6 +153,13 @@ export function WorkersAbm() {
                     )
                 }
             }
+        },
+        {
+            id: "can_scan",
+            numeric: false,
+            disablePadding: true,
+            label: "Puede escanear",
+            accessor: (row) => row.can_scan ? 'Sí' : 'No'
         }
     ], [])
 
@@ -199,6 +179,7 @@ export function WorkersAbm() {
                     count={count}
                     showEditAction
                     showDeleteAction
+                    showViewAction
                     contentHeader={
                         <Box sx={{ display: 'flex', justifyContent: 'end', gap: 1 }}>
                             <Button type="button" variant="contained" onClick={() => setOpen('GENERATE-QR')}>
@@ -225,7 +206,6 @@ export function WorkersAbm() {
                             reset={reset}
                             setOpen={setOpen}
                             errors={errors}
-                            fromWorkers
                         />
                     </ModalComponent>
                     <ModalComponent open={open === 'DELETE'} onClose={() => reset(setOpen)}>
@@ -265,6 +245,61 @@ export function WorkersAbm() {
                         open={open === 'GENERATE-QR'}
                         setOpen={setOpen}
                     />
+                    <ModalComponent open={open === 'VIEW'} onClose={() => setOpen(null)} reduceWidth={400}>
+                        <Typography variant="h6" sx={{ marginBottom: 1, textAlign: 'center' }}>
+                            {`Detalles del registro #${formData.id}`}
+                        </Typography>
+                        <TableContainer component={Paper}>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell align="center">Fecha nacimiento</TableCell>
+                                        <TableCell align="center">Dirección</TableCell>
+                                        <TableCell align="center">Localidad</TableCell>
+                                        <TableCell align="center">Observaciones</TableCell>
+                                        <TableCell align="center">Fecha creación</TableCell>
+                                        <TableCell align="center">Fecha modificación</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    <TableRow>
+                                        <TableCell align="center">
+                                            {formData.birth ? format(new Date(formData.birth), 'dd/MM/yyyy') : ''}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {formData.address}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {formData.city}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {formData.observations}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {formData.created_at ? format(new Date(), 'dd/MM/yyyy') : ''}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {formData.created_at ? format(new Date(formData.updated_at), 'dd/MM/yyyy') : ''}
+                                        </TableCell>
+                                    </TableRow>
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                            <Button
+                                type="button"
+                                variant="outlined"
+                                sx={{
+                                    width: '20%',
+                                    margin: '0 auto',
+                                    marginTop: 2
+                                }}
+                                onClick={() => setOpen(null)}
+                            >
+                                Cerrar
+                            </Button>
+                        </Box>
+                    </ModalComponent>
                 </DataGrid>
             }
         </>
