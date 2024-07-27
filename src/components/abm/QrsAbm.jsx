@@ -26,7 +26,8 @@ export function QrsAbm({ open, setOpen }) {
     return (
         <ModalComponent open={open === 'GENERATE-QR' || open === 'PRINT-QR'} onClose={handleClose}>
             <Typography variant="h6">
-                Generar nuevos QR
+                {open === 'GENERATE-QR' && 'Generar nuevos QR'}
+                {open === 'PRINT-QR' && 'Imprimir QR'}
             </Typography>
             <Box sx={{ display: 'flex', gap: 2, marginTop: 1, marginBottom: 1 }}>
                 <FormControl sx={{ width: '30%' }}>
