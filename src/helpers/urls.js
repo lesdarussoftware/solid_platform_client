@@ -9,3 +9,4 @@ export const WORKER_URL = `${BASE_URL}/workers`
 export const MOVEMENT_URL = `${BASE_URL}/movements`
 export const QR_URL = `${BASE_URL}/qrs`
 export const CATEGORY_URL = `${BASE_URL}/categories`
+export const REPORT_URL = `${BASE_URL}/reports`

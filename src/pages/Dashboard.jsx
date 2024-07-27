@@ -10,6 +10,7 @@ import { LoginForm } from "../components/common/LoginForm"
 import { CategoriesAbm } from "../components/abm/CategoriesAbm"
 import { SitesAbm } from "../components/abm/SitesAbm"
 import { UsersAbm } from "../components/abm/UsersAbm"
+import { Reports } from "../components/common/Reports"
 
 function CustomTabPanel(props) {
 
@@ -64,6 +65,7 @@ export function Dashboard() {
                             <Tab label="Categorías" {...a11yProps(2)} />
                             <Tab label="Obras" {...a11yProps(3)} />
                             <Tab label="Usuarios" {...a11yProps(4)} />
+                            <Tab label="Reportes" {...a11yProps(5)} />
                         </Tabs>
                     </Box>
                     <CustomTabPanel value={value} index={0}>
@@ -80,6 +82,9 @@ export function Dashboard() {
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={4}>
                         <UsersAbm />
+                    </CustomTabPanel>
+                    <CustomTabPanel value={value} index={5}>
+                        <Reports />
                     </CustomTabPanel>
                 </Box> :
                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90vh' }}>
