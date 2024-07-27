@@ -185,12 +185,16 @@ export function WorkersAbm() {
                             <Button type="button" variant="contained" onClick={() => setOpen('GENERATE-QR')}>
                                 Generar QR
                             </Button>
+                            <Button type="button" variant="contained" onClick={() => setOpen('PRINT-QR')}>
+                                Imprimir QR
+                            </Button>
                             <Button type="button" variant="contained" onClick={() => setOpen('NEW')}>
                                 Agregar
                             </Button>
                         </Box>
                     }
                 >
+                    <QrsAbm open={open} setOpen={setOpen} />
                     <ModalComponent open={open === 'NEW' || open === 'EDIT'} reduceWidth={500} onClose={() => reset(setOpen)}>
                         <Typography variant="h6" sx={{ marginBottom: 1, fontSize: { xs: 18, sm: 18, md: 20 } }}>
                             {open === 'NEW' && 'Registrar nuevo operario'}
@@ -241,10 +245,6 @@ export function WorkersAbm() {
                             </Button>
                         </Box>
                     </ModalComponent>
-                    <QrsAbm
-                        open={open === 'GENERATE-QR'}
-                        setOpen={setOpen}
-                    />
                     <ModalComponent open={open === 'VIEW'} onClose={() => setOpen(null)} reduceWidth={400}>
                         <Typography variant="h6" sx={{ marginBottom: 1, textAlign: 'center' }}>
                             {`Detalles del registro #${formData.id}`}

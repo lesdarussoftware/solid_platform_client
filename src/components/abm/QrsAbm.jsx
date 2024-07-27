@@ -1,11 +1,16 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Box, Button, Checkbox, FormControl, FormControlLabel, InputLabel, MenuItem, Select, Typography } from "@mui/material";
 
+import { AuthContext } from "../../providers/AuthProvider";
 import { useWorkers } from "../../hooks/useWorkers";
 
 import { ModalComponent } from "../common/ModalComponent";
 
+import { REPORT_URL } from "../../helpers/urls";
+
 export function QrsAbm({ open, setOpen }) {
+
+    const { auth } = useContext(AuthContext)
 
     const { newQrs, setNewQrs, handleGenerateQr, workersForQr, getWorkersForQr, disabled } = useWorkers()
 
@@ -19,7 +24,7 @@ export function QrsAbm({ open, setOpen }) {
     }
 
     return (
-        <ModalComponent open={open} onClose={handleClose}>
+        <ModalComponent open={open === 'GENERATE-QR' || open === 'PRINT-QR'} onClose={handleClose}>
             <Typography variant="h6">
                 Generar nuevos QR
             </Typography>
@@ -92,7 +97,11 @@ export function QrsAbm({ open, setOpen }) {
                     variant="contained"
                     sx={{ width: '50%', margin: '0 auto', color: '#fff' }}
                     disabled={newQrs.length === 0 || disabled}
-                    onClick={e => handleGenerateQr(e, setOpen)}
+                    onClick={e => {
+                        console.log(open)
+                        if (open === 'GENERATE-QR') handleGenerateQr(e, setOpen)
+                        if (open === 'PRINT-QR') window.open(`${REPORT_URL}/lista-qr/${auth?.refresh_token}${newQrs.length > 0 && newQrs.length < workersForQr.length ? `?ids=${JSON.stringify(newQrs)}` : ''}`, '_blank')
+                    }}
                 >
                     Guardar
                 </Button>
