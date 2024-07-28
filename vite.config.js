@@ -9,7 +9,7 @@ export default defineConfig({
       manifest: {
         "name": "Solid Platform",
         "short_name": "Solid",
-        "start_url": "/scanner",
+        "start_url": "/",
         "display": "standalone",
         "background_color": "#ffffff",
         "theme_color": "#000000",
@@ -22,12 +22,13 @@ export default defineConfig({
         ]
       },
       registerType: 'autoUpdate',
-      // workbox: {
-      //   runtimeCaching: [{
-      //     urlPattern: ({ url }) => url.pathname.includes('/api/reports/'),
-      //     handler: 'NetworkOnly
-      //   }]
-      // }
+      workbox: {
+        navigateFallbackDenylist: [/^\/api/],
+        runtimeCaching: [{
+          urlPattern: ({ url }) => url.pathname.includes('/api/reports/'),
+          handler: 'NetworkOnly'
+        }]
+      }
     })
-  ],
+  ]
 })

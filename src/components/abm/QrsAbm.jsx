@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import { Box, Button, Checkbox, FormControl, FormControlLabel, InputLabel, MenuItem, Select, Typography } from "@mui/material";
+import { Box, Button, Checkbox, Chip, FormControl, FormControlLabel, InputLabel, MenuItem, Select, Typography } from "@mui/material";
 
 import { AuthContext } from "../../providers/AuthProvider";
 import { useWorkers } from "../../hooks/useWorkers";
@@ -77,9 +77,10 @@ export function QrsAbm({ open, setOpen }) {
                 <>
                     {newQrs.length < workersForQr.length &&
                         newQrs.map(nqr => (
-                            <Typography variant="body1" sx={{ padding: 1 }}>
-                                {`${workersForQr.find(w => w.id === nqr).first_name} ${workersForQr.find(w => w.id === nqr).last_name}`}
-                            </Typography>
+                            <Chip
+                                label={`${workersForQr.find(w => w.id === nqr).first_name} ${workersForQr.find(w => w.id === nqr).last_name}`}
+                                onDelete={() => setNewQrs(prev => [...prev.filter(item => item !== nqr)])}
+                            />
                         ))
                     }
                 </>
@@ -99,12 +100,12 @@ export function QrsAbm({ open, setOpen }) {
                     sx={{ width: '50%', margin: '0 auto', color: '#fff' }}
                     disabled={newQrs.length === 0 || disabled}
                     onClick={e => {
-                        console.log(open)
                         if (open === 'GENERATE-QR') handleGenerateQr(e, setOpen)
                         if (open === 'PRINT-QR') window.open(`${REPORT_URL}/lista-qr/${auth?.refresh_token}${newQrs.length > 0 && newQrs.length < workersForQr.length ? `?ids=${JSON.stringify(newQrs)}` : ''}`, '_blank')
                     }}
                 >
-                    Guardar
+                    {open === 'GENERATE-QR' && 'Guardar'}
+                    {open === 'PRINT-QR' && 'Imprimir'}
                 </Button>
             </Box>
         </ModalComponent>
