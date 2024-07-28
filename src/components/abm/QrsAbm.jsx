@@ -74,7 +74,7 @@ export function QrsAbm({ open, setOpen }) {
                 padding: 1,
                 borderRadius: 1
             }}>
-                <>
+                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                     {newQrs.length < workersForQr.length &&
                         newQrs.map(nqr => (
                             <Chip
@@ -83,7 +83,7 @@ export function QrsAbm({ open, setOpen }) {
                             />
                         ))
                     }
-                </>
+                </Box>
             </Box>
             <Box sx={{ display: 'flex', gap: 1, margin: '0 auto', marginTop: 2, justifyContent: 'center', width: '50%' }}>
                 <Button
