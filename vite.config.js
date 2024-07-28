@@ -32,7 +32,7 @@ export default defineConfig({
             }
           },
           {
-            urlPattern: /^https:\/\/vps-4223256-x.dattaweb.com\/api\//,
+            urlPattern: new RegExp('^https://vps-4223256-x.dattaweb.com/api/'),
             handler: 'NetworkOnly',
             options: {
               cacheName: 'api-cache',
