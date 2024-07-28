@@ -25,7 +25,7 @@ export default defineConfig({
       workbox: {
         runtimeCaching: [{
           urlPattern: ({ url }) => url.pathname.includes('/api/reports/'),
-          handler: 'NetworkFirst'
+          handler: 'NetworkOnly'
         }]
       }
     })
