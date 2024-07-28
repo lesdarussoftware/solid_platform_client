@@ -10,7 +10,7 @@ export function useQuery() {
 
     const { auth, setAuth, setOpenModal } = useContext(AuthContext)
 
-    async function handleQuery({ url, method = 'GET', body, token, customHandler = false }) {
+    async function handleQuery({ url, method = 'GET', body, token }) {
         const res = await fetch(url, {
             method,
             headers: {
@@ -22,7 +22,6 @@ export function useQuery() {
         const status = res.status;
         const data = await res.json();
         if (status === STATUS_CODES.OK || status === STATUS_CODES.CREATED) {
-            if (customHandler) return res
             return { status, data }
         }
         if (status === STATUS_CODES.UNAUTHORIZED && data.message === STATUS_MESSAGES.INVALID_TOKEN) {
