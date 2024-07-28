@@ -41,8 +41,7 @@ export function useWorkers() {
     }
 
     async function getScanners() {
-        const { status, data } = await handleQuery({ url: WORKER_URL + '?can_scan=true' })
-        console.log({ status, data })
+        const { status, data } = await handleQuery({ url: WORKER_URL + '/scanners' })
         if (status === STATUS_CODES.OK) {
             dispatch({ type: 'SCANNERS', payload: data[0] })
             localStorage.setItem('solid_scanners_storage', JSON.stringify(data[0]))
