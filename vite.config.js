@@ -24,7 +24,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       workbox: {
         runtimeCaching: [{
-          urlPattern: ({ url }) => url.origin === 'https://vps-4223256-x.dattaweb.com/api',
+          urlPattern: ({ url }) => url.pathname.includes('/api/reports/'),
           handler: 'NetworkFirst'
         }]
       }
