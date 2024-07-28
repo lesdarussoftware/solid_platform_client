@@ -23,22 +23,10 @@ export default defineConfig({
       },
       registerType: 'autoUpdate',
       workbox: {
-        runtimeCaching: [
-          {
-            urlPattern: /^\/api\//,
-            handler: 'NetworkOnly',
-            options: {
-              cacheName: 'api-cache',
-            }
-          },
-          {
-            urlPattern: new RegExp('^https://vps-4223256-x.dattaweb.com/api/'),
-            handler: 'NetworkOnly',
-            options: {
-              cacheName: 'api-cache',
-            }
-          }
-        ]
+        runtimeCaching: [{
+          urlPattern: ({ url }) => url.origin === 'https://vps-4223256-x.dattaweb.com/api',
+          handler: 'NetworkFirst'
+        }]
       }
     })
   ],
