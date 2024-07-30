@@ -25,3 +25,14 @@ export function stableSort(array, comparator) {
     });
     return stabilizedThis.map((el) => el[0]);
 }
+
+export function groupBy(array, key) {
+    return array.reduce((result, item) => {
+        const groupKey = typeof key === 'function' ? key(item) : item[key];
+        if (!result[groupKey]) {
+            result[groupKey] = [];
+        }
+        result[groupKey].push(item);
+        return result;
+    }, {});
+}
