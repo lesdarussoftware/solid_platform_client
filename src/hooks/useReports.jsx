@@ -14,15 +14,18 @@ export function useReports() {
     const { handleQuery } = useQuery()
 
     const [siteStatusRows, setSiteStatusRows] = useState([])
+    const [loadingSiteStatus, setLoadingSiteStatus] = useState(false)
 
     async function getSiteStatusRows(formData, validate, setDisabled) {
         if (validate()) {
+            setLoadingSiteStatus(true)
             const { status, data } = await handleQuery({
                 url: MOVEMENT_URL + `/site-status/${formData.site}/${formData.from.toISOString()}/${formData.to.toISOString()}`
             })
             if (status === STATUS_CODES.OK) {
                 setSiteStatusRows(data)
                 setDisabled(false)
+                setLoadingSiteStatus(false)
             }
         }
     }
@@ -42,6 +45,7 @@ export function useReports() {
         siteStatusRows,
         setSiteStatusRows,
         getSiteStatusRows,
-        printSiteStatus
+        printSiteStatus,
+        loadingSiteStatus
     }
 }

@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Autocomplete, Box, Button, FormControl, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, Button, FormControl, LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers"
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns"
 import { es } from "date-fns/locale"
@@ -12,7 +12,7 @@ export function Reports() {
 
     const { state } = useContext(DataContext)
 
-    const { getSiteStatusRows, siteStatusRows, printSiteStatus } = useReports()
+    const { getSiteStatusRows, siteStatusRows, printSiteStatus, loadingSiteStatus } = useReports()
     const {
         formData: siteStatusData,
         errors: siteStatusErrors,
@@ -109,7 +109,16 @@ export function Reports() {
                         </TableHead>
                         <TableBody>
                             {siteStatusRows.length === 0 ?
-                                <TableCell colSpan={5} align="center">No hay registros para mostrar.</TableCell> :
+                                <TableRow>
+                                    <TableCell colSpan={5} align="center">
+                                        <>
+                                            {loadingSiteStatus ?
+                                                <LinearProgress /> :
+                                                <>{'No hay registros para mostrar.'}</>
+                                            }
+                                        </>
+                                    </TableCell>
+                                </TableRow> :
                                 siteStatusRows.map(ssr => {
                                     const color = ssr.observations.length > 0 ? 'red' : '';
                                     return (
