@@ -36,7 +36,7 @@ export function WorkersAbm() {
             qr: '',
             observations: '',
             regime: '',
-            can_scan: ''
+            can_scan: false
         },
         rules: {
             dni: {
