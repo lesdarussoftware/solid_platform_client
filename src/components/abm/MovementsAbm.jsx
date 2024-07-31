@@ -1,30 +1,30 @@
-import { useContext, useEffect, useMemo } from "react"
-import { Link } from "react-router-dom"
-import { Autocomplete, Box, Button, FormControl, Input, InputLabel, LinearProgress, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material"
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers"
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns"
-import { es } from "date-fns/locale"
-import { format } from 'date-fns'
+import { useContext, useEffect, useMemo } from "react";
+import { Link } from "react-router-dom";
+import { Autocomplete, Box, Button, FormControl, Input, InputLabel, LinearProgress, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
+import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { es } from "date-fns/locale";
+import { format } from 'date-fns';
 
-import { DataContext } from "../../providers/DataProvider"
-import { useMovements } from "../../hooks/useMovements"
-import { useForm } from "../../hooks/useForm"
-import { useSites } from "../../hooks/useSites"
-import { useWorkers } from "../../hooks/useWorkers"
-import { useCategories } from "../../hooks/useCategories"
+import { DataContext } from "../../providers/DataProvider";
+import { useMovements } from "../../hooks/useMovements";
+import { useForm } from "../../hooks/useForm";
+import { useSites } from "../../hooks/useSites";
+import { useWorkers } from "../../hooks/useWorkers";
+import { useCategories } from "../../hooks/useCategories";
 
-import { DataGrid } from "../datagrid/DataGrid"
-import { MovementFilter } from "../filters/MovementFilter"
-import { ModalComponent } from "../common/ModalComponent"
+import { DataGrid } from "../datagrid/DataGrid";
+import { MovementFilter } from "../filters/MovementFilter";
+import { ModalComponent } from "../common/ModalComponent";
 
 export function MovementsAbm() {
 
-    const { state } = useContext(DataContext)
+    const { state } = useContext(DataContext);
 
-    const { getMovements, open, setOpen, handleSubmit, handleDelete, filter, setFilter, count, loadingMovements } = useMovements()
-    const { getCategories, loadingCategories } = useCategories()
-    const { getSites, loadingSites } = useSites()
-    const { getWorkers, loadingWorkers } = useWorkers()
+    const { getMovements, open, setOpen, handleSubmit, handleDelete, filter, setFilter, count, loadingMovements } = useMovements();
+    const { getCategories, loadingCategories } = useCategories();
+    const { getSites, loadingSites } = useSites();
+    const { getWorkers, loadingWorkers } = useWorkers();
     const { formData, setFormData, reset, handleChange, errors, validate, disabled, setDisabled } = useForm({
         defaultData: {
             id: '',
@@ -48,20 +48,20 @@ export function MovementsAbm() {
                 maxLength: 55
             }
         }
-    })
+    });
 
     useEffect(() => {
-        getSites()
-        getWorkers()
-        getCategories()
-    }, [])
+        getSites();
+        getWorkers();
+        getCategories();
+    }, []);
 
     useEffect(() => {
-        const { from, to, page, offset, type, worker, site, category } = filter
-        const fromIsNotString = typeof from !== 'string'
-        const toIsNotString = typeof to !== 'string'
-        getMovements(`?page=${page}&offset=${offset}&from=${fromIsNotString ? new Date(from).toISOString() : ''}&to=${toIsNotString ? new Date(to).toISOString() : ''}&type=${type}&worker=${worker}&site=${site}&category=${category}`)
-    }, [filter])
+        const { from, to, page, offset, type, worker, site, category } = filter;
+        const fromIsNotString = typeof from !== 'string';
+        const toIsNotString = typeof to !== 'string';
+        getMovements(`?page=${page}&offset=${offset}&from=${fromIsNotString ? new Date(from).toISOString() : ''}&to=${toIsNotString ? new Date(to).toISOString() : ''}&type=${type}&worker=${worker}&site=${site}&category=${category}`);
+    }, [filter]);
 
     const headCells = useMemo(() => [
         {
@@ -106,7 +106,7 @@ export function MovementsAbm() {
             label: "Obra",
             accessor: (row) => row.site.name
         }
-    ], [])
+    ], []);
 
     return (
         <>
@@ -176,11 +176,12 @@ export function MovementsAbm() {
                                     </FormControl>
                                     <FormControl sx={{ width: '50%' }}>
                                         <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
-                                            <DatePicker
-                                                label="Fecha"
-                                                value={new Date(formData.date)}
+                                            <DateTimePicker
+                                                label="Fecha y hora"
+                                                value={formData.date}
                                                 name="date"
-                                                onChange={value => handleChange({ target: { name: 'date', value: new Date(value.toISOString()) } })}
+                                                onChange={value => handleChange({ target: { name: 'date', value: new Date(value) } })}
+                                                renderInput={(params) => <TextField {...params} />}
                                             />
                                         </LocalizationProvider>
                                     </FormControl>
@@ -192,12 +193,12 @@ export function MovementsAbm() {
                                             id="worker-autocomplete"
                                             options={state.workers.map(w => ({ label: `${w.first_name} ${w.last_name}`, id: w.id }))}
                                             noOptionsText="No hay operarios disponibles."
-                                            onChange={(_, value) => handleChange({ target: { name: 'worker_id', value: value.id } })}
+                                            onChange={(_, value) => handleChange({ target: { name: 'worker_id', value: value?.id || '' } })}
                                             renderInput={(params) => <TextField {...params} label="Operario" />}
-                                            value={formData.worker_id.toString().length > 0 ? `${state.workers.find(w => w.id === formData.worker_id).first_name} ${state.workers.find(w => w.id === formData.worker_id).last_name}` : ''}
+                                            value={state.workers.find(w => w.id === formData.worker_id)?.label || ''}
                                             isOptionEqualToValue={(option, value) => value.length === 0 || option.id === value.id}
                                         />
-                                        {errors.site_id?.type === 'required' &&
+                                        {errors.worker_id?.type === 'required' &&
                                             <Typography variant="caption" color="red" marginTop={1}>
                                                 * El operario es requerido.
                                             </Typography>
@@ -209,9 +210,9 @@ export function MovementsAbm() {
                                             id="site-autocomplete"
                                             options={state.sites.map(s => ({ label: s.name, id: s.id }))}
                                             noOptionsText="No hay obras disponibles."
-                                            onChange={(_, value) => handleChange({ target: { name: 'site_id', value: value.id } })}
+                                            onChange={(_, value) => handleChange({ target: { name: 'site_id', value: value?.id || '' } })}
                                             renderInput={(params) => <TextField {...params} label="Obra" />}
-                                            value={formData.site_id.toString().length > 0 ? state.sites.find(s => s.id === formData.site_id).name : ''}
+                                            value={state.sites.find(s => s.id === formData.site_id)?.label || ''}
                                             isOptionEqualToValue={(option, value) => value.length === 0 || option.id === value.id}
                                         />
                                         {errors.site_id?.type === 'required' &&
@@ -221,135 +222,38 @@ export function MovementsAbm() {
                                         }
                                     </FormControl>
                                 </Box>
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 1 }}>
-                                    <FormControl sx={{ width: '100%' }}>
-                                        <InputLabel htmlFor="observations">Observaciones</InputLabel>
-                                        <Input
-                                            id="observations"
-                                            type="text"
-                                            name="observations"
-                                            value={formData.observations}
-                                            onChange={(e, value) => handleChange({ target: { name: 'observations', value: e.target.value } })}
-                                        />
-                                        {errors.observations?.type === 'maxLength' &&
-                                            <Typography variant="caption" color="red" marginTop={1}>
-                                                * Las observaciones son demasiado largas.
-                                            </Typography>
-                                        }
-                                    </FormControl>
+                                <TextField
+                                    fullWidth
+                                    id="observations"
+                                    label="Observaciones"
+                                    name="observations"
+                                    value={formData.observations}
+                                    onChange={handleChange}
+                                    multiline
+                                    minRows={2}
+                                    inputProps={{
+                                        maxLength: 55
+                                    }}
+                                />
+                                {errors.observations?.type === 'maxLength' &&
+                                    <Typography variant="caption" color="red">
+                                        * Las observaciones no deben superar los 55 caracteres.
+                                    </Typography>
+                                }
+                                <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
+                                    <Button type="button" variant="contained" onClick={() => reset(setOpen)}>
+                                        Cancelar
+                                    </Button>
+                                    <Button type="submit" variant="contained" disabled={disabled}>
+                                        {open === 'NEW' && 'Guardar'}
+                                        {open === 'EDIT' && 'Actualizar'}
+                                    </Button>
                                 </Box>
                             </Box>
-                            <Box sx={{ display: 'flex', gap: 1, marginTop: 2, justifyContent: 'center' }}>
-                                <Button
-                                    type="button"
-                                    variant="outlined"
-                                    sx={{ width: '50%', margin: '0 auto', marginTop: 1 }}
-                                    onClick={() => reset(setOpen)}
-                                >
-                                    Cancelar
-                                </Button>
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    sx={{ width: '50%', margin: '0 auto', marginTop: 1, color: '#fff' }}
-                                    disabled={disabled}
-                                >
-                                    Guardar
-                                </Button>
-                            </Box>
                         </form>
-                    </ModalComponent>
-                    <ModalComponent open={open === 'DELETE'} onClose={() => reset(setOpen)}>
-                        <Typography variant="h6" sx={{ marginBottom: 1, textAlign: 'center' }}>
-                            {`¿Desea borrar el registro del evento #${formData.id}?`}
-                        </Typography>
-                        <Box sx={{ display: 'flex', gap: 1 }}>
-                            <Button
-                                type="button"
-                                variant="outlined"
-                                sx={{
-                                    width: '50%',
-                                    margin: '0 auto',
-                                    marginTop: 1
-                                }}
-                                onClick={() => reset(setOpen)}
-                            >
-                                Cancelar
-                            </Button>
-                            <Button
-                                type="button"
-                                variant="contained"
-                                sx={{
-                                    width: '50%',
-                                    margin: '0 auto',
-                                    marginTop: 1,
-                                    color: '#fff'
-                                }}
-                                disabled={disabled}
-                                onClick={() => handleDelete(formData, reset, setDisabled)}
-                            >
-                                Confirmar
-                            </Button>
-                        </Box>
-                    </ModalComponent>
-                    <ModalComponent open={open === 'VIEW'} onClose={() => setOpen(null)} reduceWidth={400}>
-                        <Typography variant="h6" sx={{ marginBottom: 1, textAlign: 'center' }}>
-                            {`Detalles del evento #${formData.id}`}
-                        </Typography>
-                        <TableContainer component={Paper}>
-                            <Table>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell align="center">Fecha creación</TableCell>
-                                        <TableCell align="center">Modificado por</TableCell>
-                                        <TableCell align="center">Fecha modificación</TableCell>
-                                        <TableCell align="center">Ubicación toma QR</TableCell>
-                                        <TableCell align="center">Observaciones</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    <TableRow>
-                                        <TableCell align="center">
-                                            {format(new Date(formData.created_at ?? Date.now()), 'dd/MM/yyyy HH:mm:ss')}
-                                        </TableCell>
-                                        <TableCell align="center">{formData.updated_by}</TableCell>
-                                        <TableCell align="center">
-                                            {format(new Date(formData.updated_at ?? Date.now()), 'dd/MM/yyyy HH:mm:ss')}
-                                        </TableCell>
-                                        <TableCell align="center">
-                                            <Link
-                                                target="_blank"
-                                                style={{ textDecoration: 'none', color: '#176ECA' }}
-                                                to={`https://www.google.com.ar/maps?q=${formData.lat} ${formData.lng}`}
-                                            >
-                                                {formData.lat && formData.lat !== '-24.875551' &&
-                                                    formData.lng && formData.lng !== '-65.538401' &&
-                                                    `https://www.google.com.ar/maps?q=${formData.lat} ${formData.lng}`
-                                                }
-                                            </Link>
-                                        </TableCell>
-                                        <TableCell align="center">{formData.observations}</TableCell>
-                                    </TableRow>
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                        <Box sx={{ display: 'flex', gap: 1 }}>
-                            <Button
-                                type="button"
-                                variant="outlined"
-                                sx={{
-                                    width: '20%',
-                                    margin: '0 auto',
-                                    marginTop: 2
-                                }}
-                                onClick={() => setOpen(null)}
-                            >
-                                Cerrar
-                            </Button>
-                        </Box>
                     </ModalComponent>
                 </DataGrid>
             }
         </>
-    )
+    );
 }

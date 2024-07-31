@@ -25,7 +25,8 @@ export function ModalComponent({ children, open, onClose, reduceWidth = 800 }) {
         boxShadow: 24,
         padding: 3,
         borderRadius: 1,
-        width: screenWidth
+        width: screenWidth,
+        maxWidth: 1300
     }
 
     return (

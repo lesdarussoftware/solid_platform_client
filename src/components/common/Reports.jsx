@@ -104,19 +104,34 @@ export function Reports() {
                                 <TableCell align="center">DNI</TableCell>
                                 <TableCell align="center">CUIL</TableCell>
                                 <TableCell align="center">Horas</TableCell>
+                                <TableCell align="center">Observaciones</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {siteStatusRows.length === 0 ?
-                                <TableCell colSpan={2} align="center">No hay registros para mostrar.</TableCell> :
-                                siteStatusRows.map(ssr => (
-                                    <TableRow key={ssr.id}>
-                                        <TableCell align="center">{ssr.worker}</TableCell>
-                                        <TableCell align="center">{ssr.dni}</TableCell>
-                                        <TableCell align="center">{ssr.cuil}</TableCell>
-                                        <TableCell align="center">{ssr.hours}</TableCell>
-                                    </TableRow>
-                                ))}
+                                <TableCell colSpan={5} align="center">No hay registros para mostrar.</TableCell> :
+                                siteStatusRows.map(ssr => {
+                                    const color = ssr.observations.length > 0 ? 'red' : '';
+                                    return (
+                                        <TableRow key={ssr.id}>
+                                            <TableCell align="center" sx={{ color }}>
+                                                {ssr.worker}
+                                            </TableCell>
+                                            <TableCell align="center" sx={{ color }}>
+                                                {ssr.dni}
+                                            </TableCell>
+                                            <TableCell align="center" sx={{ color }}>
+                                                {ssr.cuil}
+                                            </TableCell>
+                                            <TableCell align="center" sx={{ color }}>
+                                                {ssr.hours}
+                                            </TableCell>
+                                            <TableCell align="center" sx={{ color }}>
+                                                {ssr.observations}
+                                            </TableCell>
+                                        </TableRow>
+                                    )
+                                })}
                         </TableBody>
                     </Table>
                 </TableContainer>
