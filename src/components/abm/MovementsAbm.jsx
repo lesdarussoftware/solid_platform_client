@@ -1,6 +1,6 @@
 import { useContext, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Autocomplete, Box, Button, FormControl, Input, InputLabel, LinearProgress, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, Button, FormControl, InputLabel, LinearProgress, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { es } from "date-fns/locale";
@@ -29,7 +29,7 @@ export function MovementsAbm() {
         defaultData: {
             id: '',
             type: '',
-            date: new Date(Date.now()),
+            date: '',
             worker_id: '',
             site_id: '',
             observations: ''
@@ -76,7 +76,7 @@ export function MovementsAbm() {
             numeric: false,
             disablePadding: true,
             label: "Fecha y hora",
-            accessor: (row) => format(new Date(row.date), 'dd/MM/yy HH:mm:ss')
+            accessor: (row) => format(new Date(row.date), 'dd/MM/yy HH:mm')
         },
         {
             id: "worker",
@@ -178,7 +178,7 @@ export function MovementsAbm() {
                                         <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
                                             <DateTimePicker
                                                 label="Fecha y hora"
-                                                value={formData.date}
+                                                value={formData.date.length === 0 ? new Date(Date.now()) : new Date(formData.date)}
                                                 name="date"
                                                 onChange={value => handleChange({ target: { name: 'date', value: new Date(value) } })}
                                                 renderInput={(params) => <TextField {...params} />}
@@ -251,6 +251,95 @@ export function MovementsAbm() {
                                 </Box>
                             </Box>
                         </form>
+                    </ModalComponent>
+                    <ModalComponent open={open === 'DELETE'} onClose={() => reset(setOpen)}>
+                        <Typography variant="h6" sx={{ marginBottom: 1, textAlign: 'center' }}>
+                            {`¿Desea borrar el registro del evento #${formData.id}?`}
+                        </Typography>
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                            <Button
+                                type="button"
+                                variant="outlined"
+                                sx={{
+                                    width: '50%',
+                                    margin: '0 auto',
+                                    marginTop: 1
+                                }}
+                                onClick={() => reset(setOpen)}
+                            >
+                                Cancelar
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="contained"
+                                sx={{
+                                    width: '50%',
+                                    margin: '0 auto',
+                                    marginTop: 1,
+                                    color: '#fff'
+                                }}
+                                disabled={disabled}
+                                onClick={() => handleDelete(formData, reset, setDisabled)}
+                            >
+                                Confirmar
+                            </Button>
+                        </Box>
+                    </ModalComponent>
+                    <ModalComponent open={open === 'VIEW'} onClose={() => setOpen(null)} reduceWidth={400}>
+                        <Typography variant="h6" sx={{ marginBottom: 1, textAlign: 'center' }}>
+                            {`Detalles del evento #${formData.id}`}
+                        </Typography>
+                        <TableContainer component={Paper}>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell align="center">Fecha creación</TableCell>
+                                        <TableCell align="center">Modificado por</TableCell>
+                                        <TableCell align="center">Fecha modificación</TableCell>
+                                        <TableCell align="center">Ubicación toma QR</TableCell>
+                                        <TableCell align="center">Observaciones</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    <TableRow>
+                                        <TableCell align="center">
+                                            {format(new Date(formData.created_at ?? Date.now()), 'dd/MM/yyyy HH:mm')}
+                                        </TableCell>
+                                        <TableCell align="center">{formData.updated_by}</TableCell>
+                                        <TableCell align="center">
+                                            {format(new Date(formData.updated_at ?? Date.now()), 'dd/MM/yyyy HH:mm')}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            <Link
+                                                target="_blank"
+                                                style={{ textDecoration: 'none', color: '#176ECA' }}
+                                                to={`https://www.google.com.ar/maps?q=${formData.lat} ${formData.lng}`}
+                                            >
+                                                {formData.lat && formData.lat !== '-24.875551' &&
+                                                    formData.lng && formData.lng !== '-65.538401' &&
+                                                    `https://www.google.com.ar/maps?q=${formData.lat} ${formData.lng}`
+                                                }
+                                            </Link>
+                                        </TableCell>
+                                        <TableCell align="center">{formData.observations}</TableCell>
+                                    </TableRow>
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                            <Button
+                                type="button"
+                                variant="outlined"
+                                sx={{
+                                    width: '20%',
+                                    margin: '0 auto',
+                                    marginTop: 2
+                                }}
+                                onClick={() => setOpen(null)}
+                            >
+                                Cerrar
+                            </Button>
+                        </Box>
                     </ModalComponent>
                 </DataGrid>
             }

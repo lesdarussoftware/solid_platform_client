@@ -1,18 +1,17 @@
 import { useContext } from "react";
 import { Autocomplete, Box, Button, FormControl, LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers"
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns"
-import { es } from "date-fns/locale"
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { es } from "date-fns/locale";
 
 import { DataContext } from "../../providers/DataProvider";
 import { useForm } from "../../hooks/useForm";
 import { useReports } from "../../hooks/useReports";
 
 export function Reports() {
+    const { state } = useContext(DataContext);
 
-    const { state } = useContext(DataContext)
-
-    const { getSiteStatusRows, siteStatusRows, printSiteStatus, loadingSiteStatus } = useReports()
+    const { getSiteStatusRows, siteStatusRows, printSiteStatus, loadingSiteStatus } = useReports();
     const {
         formData: siteStatusData,
         errors: siteStatusErrors,
@@ -21,16 +20,23 @@ export function Reports() {
         disabled: siteStatusDisabled,
         setDisabled: setSiteStatusDisabled
     } = useForm({
-        defaultData: { site: '', from: new Date(Date.now()), to: new Date(Date.now()) },
+        defaultData: {
+            site: '',
+            from: new Date(Date.now()),
+            to: new Date(Date.now()),
+            referenceInHour: '08:00',
+            referenceOutHour: '16:00',
+            toleranceMinutes: 0
+        },
         rules: { site: { required: true } }
-    })
+    });
 
     return (
         <>
             <Box sx={{ margin: 1 }}>
                 <Typography variant="h5" marginBottom={1}>Estado de obra</Typography>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'start', gap: 1 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'start', gap: 1, flexWrap: 'wrap', width: '40%' }}>
                         <FormControl sx={{ width: '30%' }}>
                             <Autocomplete
                                 disablePortal
@@ -67,6 +73,53 @@ export function Reports() {
                                     onChange={value => siteStatusChange({ target: { name: 'to', value: new Date(value.toISOString()) } })}
                                 />
                             </LocalizationProvider>
+                        </FormControl>
+                        <FormControl sx={{ width: '30%' }}>
+                            <TextField
+                                label="Hora de Ingreso de Referencia"
+                                type="time"
+                                name="referenceInHour"
+                                value={siteStatusData.referenceInHour}
+                                onChange={siteStatusChange}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                inputProps={{
+                                    step: 300, // 5 min
+                                }}
+                            />
+                        </FormControl>
+                        <FormControl sx={{ width: '30%' }}>
+                            <TextField
+                                label="Hora de Egreso de Referencia"
+                                type="time"
+                                name="referenceOutHour"
+                                value={siteStatusData.referenceOutHour}
+                                onChange={siteStatusChange}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                inputProps={{
+                                    step: 300, // 5 min
+                                }}
+                            />
+                        </FormControl>
+                        <FormControl sx={{ width: '30%' }}>
+                            <TextField
+                                label="Minutos de Tolerancia"
+                                type="number"
+                                name="toleranceMinutes"
+                                value={siteStatusData.toleranceMinutes}
+                                onChange={e => siteStatusChange({
+                                    target: {
+                                        name: 'toleranceMinutes',
+                                        value: parseInt(e.target.value) <= 0 ? 0 : Math.abs(e.target.value)
+                                    }
+                                })}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                            />
                         </FormControl>
                         <Button
                             type="button"
@@ -146,5 +199,5 @@ export function Reports() {
                 </TableContainer>
             </Box>
         </>
-    )
+    );
 }
