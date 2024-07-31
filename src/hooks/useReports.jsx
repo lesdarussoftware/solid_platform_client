@@ -3,6 +3,7 @@ import { useContext, useState } from "react";
 import { useQuery } from "./useQuery";
 
 import { AuthContext } from "../providers/AuthProvider";
+import { MessageContext } from "../providers/MessageProvider";
 
 import { MOVEMENT_URL, REPORT_URL } from "../helpers/urls";
 import { STATUS_CODES } from "../helpers/statusCodes";
@@ -10,6 +11,7 @@ import { STATUS_CODES } from "../helpers/statusCodes";
 export function useReports() {
 
     const { auth } = useContext(AuthContext)
+    const { setSeverity, setOpenMessage, setMessage } = useContext(MessageContext)
 
     const { handleQuery } = useQuery()
 
@@ -26,7 +28,13 @@ export function useReports() {
                 setSiteStatusRows(data)
                 setDisabled(false)
                 setLoadingSiteStatus(false)
+                setSeverity('success')
+                setMessage('Datos actualizados.')
+            } else {
+                setSeverity('error')
+                setMessage('Ocurrió un error.')
             }
+            setOpenMessage(true)
         }
     }
 
