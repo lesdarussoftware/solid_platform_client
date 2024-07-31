@@ -29,7 +29,7 @@ export function MovementsAbm() {
         defaultData: {
             id: '',
             type: '',
-            date: '',
+            date: new Date(Date.now()),
             worker_id: '',
             site_id: '',
             observations: ''
@@ -315,8 +315,8 @@ export function MovementsAbm() {
                                                 style={{ textDecoration: 'none', color: '#176ECA' }}
                                                 to={`https://www.google.com.ar/maps?q=${formData.lat} ${formData.lng}`}
                                             >
-                                                {formData.lat && formData.lat !== '-24.875551' &&
-                                                    formData.lng && formData.lng !== '-65.538401' &&
+                                                {formData.lat && formData.lat !== '-24.87' &&
+                                                    formData.lng && formData.lng !== '-65.53' &&
                                                     `https://www.google.com.ar/maps?q=${formData.lat} ${formData.lng}`
                                                 }
                                             </Link>
