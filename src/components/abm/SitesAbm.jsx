@@ -57,7 +57,7 @@ export function SitesAbm() {
                     showEditAction
                     showDeleteAction
                     contentHeader={
-                        <Box sx={{ display: 'flex', justifyContent: 'end' }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: 1, marginBottom: 1 }}>
                             <Button type="button" variant="contained" onClick={() => setOpen('NEW')}>
                                 Agregar
                             </Button>

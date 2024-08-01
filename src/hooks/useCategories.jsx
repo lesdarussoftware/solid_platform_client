@@ -4,7 +4,7 @@ import { DataContext } from "../providers/DataProvider";
 import { MessageContext } from "../providers/MessageProvider";
 import { useQuery } from "./useQuery";
 
-import { CATEGORY_URL } from "../helpers/urls";
+import { CATEGORY_RATE_URL, CATEGORY_URL } from "../helpers/urls";
 import { STATUS_CODES } from "../helpers/statusCodes";
 
 export function useCategories() {
@@ -84,6 +84,40 @@ export function useCategories() {
         setOpenMessage(true)
     }
 
+    async function handleSubmitRate(e, validate, formData, reset) {
+        e.preventDefault()
+        if (validate()) {
+            const { status, data } = await handleQuery({
+                url: CATEGORY_RATE_URL,
+                method: 'POST',
+                body: JSON.stringify({ ...formData, category_id: workOn.id })
+            })
+            if (status === STATUS_CODES.CREATED) {
+                dispatch({
+                    type: 'CATEGORIES',
+                    payload: [
+                        ...state.categories.filter(c => c.id !== data.category_id),
+                        {
+                            ...state.categories.find(c => c.id === data.category_id),
+                            rates: [
+                                ...state.categories.find(c => c.id === data.category_id).rates,
+                                data
+                            ]
+                        }
+                    ]
+                })
+                setWorkOn({ ...workOn, rates: [...workOn.rates, data] })
+                setMessage('Cotización registrada correctamente.')
+                setSeverity('success')
+                reset(setOpen)
+            } else {
+                setMessage(data.message)
+                setSeverity('error')
+            }
+            setOpenMessage(true)
+        }
+    }
+
     return {
         getCategories,
         open,
@@ -95,6 +129,7 @@ export function useCategories() {
         setFilter,
         loadingCategories,
         workOn,
-        setWorkOn
+        setWorkOn,
+        handleSubmitRate
     }
 }

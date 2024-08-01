@@ -31,7 +31,8 @@ export function DataGrid({
     showDeleteAction,
     filter,
     setFilter,
-    count
+    count,
+    minWidth = 750
 }) {
 
     const [order, setOrder] = useState(defaultOrder);
@@ -62,13 +63,11 @@ export function DataGrid({
 
     return (
         <Box sx={{ width: '100%', backgroundColor: '#fff' }}>
-            <Box sx={{ marginBottom: 3 }}>
-                {contentHeader}
-            </Box>
+            {contentHeader}
             <Paper sx={{ mb: 2 }}>
                 <TableContainer>
                     <Table
-                        sx={{ minWidth: 750, fontWeight: "bold" }}
+                        sx={{ minWidth, fontWeight: "bold" }}
                         aria-labelledby="tableTitle"
                         size="small"
                     >

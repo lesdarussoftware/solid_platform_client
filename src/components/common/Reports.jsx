@@ -125,6 +125,7 @@ export function Reports() {
                             type="button"
                             variant="contained"
                             disabled={siteStatusDisabled}
+                            sx={{ marginBottom: 1 }}
                             onClick={() => getSiteStatusRows(siteStatusData, siteStatusValidate, setSiteStatusDisabled)}
                         >
                             Calcular

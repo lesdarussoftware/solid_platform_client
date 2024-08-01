@@ -181,7 +181,7 @@ export function WorkersAbm() {
                     showDeleteAction
                     showViewAction
                     contentHeader={
-                        <Box sx={{ display: 'flex', justifyContent: 'end', gap: 1 }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'end', gap: 1, marginTop: 1, marginBottom: 1 }}>
                             <Button type="button" variant="contained" onClick={() => setOpen('GENERATE-QR')}>
                                 Generar QR
                             </Button>
