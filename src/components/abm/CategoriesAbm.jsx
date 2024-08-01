@@ -356,23 +356,25 @@ export function CategoriesAbm() {
                                     <Button
                                         type="button"
                                         variant="outlined"
-                                        sx={{ width: '33%', marginTop: 1 }}
+                                        sx={{ width: open === 'EDIT-RATE' ? '33%' : '50%', marginTop: 1 }}
                                         onClick={() => resetRate(setOpen)}
                                     >
                                         Cancelar
                                     </Button>
-                                    <Button
-                                        type="button"
-                                        variant="outlined"
-                                        sx={{ width: '33%', marginTop: 1 }}
-                                        onClick={() => setOpen('DELETE-RATE')}
-                                    >
-                                        Eliminar
-                                    </Button>
+                                    {open === 'EDIT-RATE' &&
+                                        <Button
+                                            type="button"
+                                            variant="outlined"
+                                            sx={{ width: '33%', marginTop: 1 }}
+                                            onClick={() => setOpen('DELETE-RATE')}
+                                        >
+                                            Eliminar
+                                        </Button>
+                                    }
                                     <Button
                                         type="button"
                                         variant="contained"
-                                        sx={{ width: '33%', marginTop: 1 }}
+                                        sx={{ width: open === 'EDIT-RATE' ? '33%' : '50%', marginTop: 1 }}
                                         disabled={disabled}
                                         onClick={(e) => handleSubmitRate(e, validateRate, newRate, resetRate)}
                                     >
