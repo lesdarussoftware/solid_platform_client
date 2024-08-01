@@ -14,7 +14,7 @@ export function CategoriesAbm() {
 
     const { getCategories, open, setOpen, handleSubmit, handleDelete, filter, setFilter, count, loadingCategories } = useCategories()
     const { formData, setFormData, handleChange, reset, disabled, setDisabled, errors, validate } = useForm({
-        defaultData: { id: '', name: '', rate: '0' },
+        defaultData: { id: '', name: '' },
         rules: { name: { required: true, maxLength: 191 } }
     })
 
@@ -42,8 +42,13 @@ export function CategoriesAbm() {
             id: "rate",
             numeric: false,
             disablePadding: true,
-            label: "Cotización/hora (UOCRA)",
-            accessor: (row) => `$${row.rate.toFixed(2)}`
+            label: "",
+            disableSorting: true,
+            accessor: (row) => (
+                <Button type="button" variant="contained">
+                    {`Cotiz. ${row.name}`}
+                </Button>
+            )
         }
     ], [])
 
@@ -77,26 +82,20 @@ export function CategoriesAbm() {
                             {open === 'EDIT' && `Editar categoría #${formData.id}`}
                         </Typography>
                         <form onChange={handleChange} onSubmit={(e) => handleSubmit(e, validate, formData, setDisabled, reset)}>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                                <FormControl sx={{ width: '100%' }}>
-                                    <InputLabel htmlFor="name">Nombre</InputLabel>
-                                    <Input id="name" type="text" name="name" value={formData.name} />
-                                    {errors.name?.type === 'required' &&
-                                        <Typography variant="caption" color="red" marginTop={1}>
-                                            * El nombre es requerido.
-                                        </Typography>
-                                    }
-                                    {errors.name?.type === 'maxLength' &&
-                                        <Typography variant="caption" color="red" marginTop={1}>
-                                            * El nombre es demasiado largo.
-                                        </Typography>
-                                    }
-                                </FormControl>
-                                <FormControl sx={{ width: '100%' }}>
-                                    <InputLabel htmlFor="rate">Cotización/hora (UOCRA)</InputLabel>
-                                    <Input id="rate" type="number" name="rate" value={formData.rate} />
-                                </FormControl>
-                            </Box>
+                            <FormControl sx={{ width: '100%' }}>
+                                <InputLabel htmlFor="name">Nombre</InputLabel>
+                                <Input id="name" type="text" name="name" value={formData.name} />
+                                {errors.name?.type === 'required' &&
+                                    <Typography variant="caption" color="red" marginTop={1}>
+                                        * El nombre es requerido.
+                                    </Typography>
+                                }
+                                {errors.name?.type === 'maxLength' &&
+                                    <Typography variant="caption" color="red" marginTop={1}>
+                                        * El nombre es demasiado largo.
+                                    </Typography>
+                                }
+                            </FormControl>
                             <Box sx={{ display: 'flex', gap: 1, marginTop: 2, justifyContent: 'center' }}>
                                 <Button
                                     type="button"

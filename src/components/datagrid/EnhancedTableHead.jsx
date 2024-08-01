@@ -8,7 +8,6 @@ export function EnhancedTableHead({
     order,
     orderBy,
     onRequestSort,
-    disableSorting,
     addCell
 }) {
 
@@ -27,7 +26,7 @@ export function EnhancedTableHead({
                         padding={headCell.disablePadding ? 'none' : 'normal'}
                         sortDirection={orderBy === headCell.id ? order : false}
                     >
-                        {disableSorting ? headCell.label :
+                        {headCell.disableSorting ? headCell.label :
                             <TableSortLabel
                                 active={orderBy === headCell.id}
                                 direction={orderBy === headCell.id ? order : 'asc'}
