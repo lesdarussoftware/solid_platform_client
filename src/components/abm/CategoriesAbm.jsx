@@ -27,7 +27,8 @@ export function CategoriesAbm() {
         loadingCategories,
         workOn,
         setWorkOn,
-        handleSubmitRate
+        handleSubmitRate,
+        handleDeleteRate
     } = useCategories()
     const { formData, setFormData, handleChange, reset, disabled, setDisabled, errors, validate } = useForm({
         defaultData: { id: '', name: '' },
@@ -35,6 +36,7 @@ export function CategoriesAbm() {
     })
     const {
         formData: newRate,
+        setFormData: setNewRate,
         handleChange: changeRate,
         reset: resetRate,
         errors: errorsRate,
@@ -232,10 +234,25 @@ export function CategoriesAbm() {
                                                     <TableRow key={year}>
                                                         <TableCell align="center">{year}</TableCell>
                                                         {MONTHS.map(m => {
-                                                            const value = workOn.rates.find(r => r.year === year && r.month === m)?.rate
+                                                            const value = workOn.rates.find(r => r.year === year && r.month === m)
+                                                            const rate = value?.rate
                                                             return (
-                                                                <TableCell align="center" key={`${m}-${year}`}>
-                                                                    {`${value ? value : ''}`}
+                                                                <TableCell
+                                                                    align="center"
+                                                                    key={`${m}-${year}`}
+                                                                    onClick={() => {
+                                                                        setNewRate(value)
+                                                                        setOpen('EDIT-RATE')
+                                                                    }}
+                                                                    sx={{
+                                                                        cursor: rate ? 'pointer' : '',
+                                                                        ':hover': {
+                                                                            color: rate ? '#FFF' : '',
+                                                                            backgroundColor: rate ? '#BDBDBD' : ''
+                                                                        }
+                                                                    }}
+                                                                >
+                                                                    {`${rate ? rate : ''}`}
                                                                 </TableCell>
                                                             )
                                                         })}
@@ -262,51 +279,60 @@ export function CategoriesAbm() {
                                 />
                             </Box>
                         }
-                        <ModalComponent open={open === 'NEW-RATE'} reduceWidth={900} onClose={() => resetRate(setOpen)}>
+                        <ModalComponent
+                            open={open === 'NEW-RATE' || open === 'EDIT-RATE'}
+                            reduceWidth={900}
+                            onClose={() => resetRate(setOpen)}
+                        >
                             <Typography variant="h6" sx={{ marginBottom: 1, fontSize: { xs: 18, sm: 18, md: 20 } }}>
-                                {`Nueva cotización de ${workOn?.name}`}
+                                {open === 'NEW-RATE' && `Nueva cotización de ${workOn?.name}`}
+                                {open === 'EDIT-RATE' && `Editar cotización de ${workOn?.name} (${newRate.month}/${newRate.year})`}
                             </Typography>
                             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
                                 <Box sx={{ display: 'flex', gap: 2 }}>
-                                    <FormControl sx={{ width: '70%' }}>
-                                        <InputLabel id="month-select">Mes</InputLabel>
-                                        <Select
-                                            labelId="month-select"
-                                            id="month"
-                                            value={newRate.month}
-                                            label="Mes"
-                                            name="month"
-                                            onChange={e => changeRate({ target: { name: 'month', value: e.target.value } })}
-                                        >
-                                            <MenuItem value="">Seleccione</MenuItem>
-                                            {MONTHS.map(m => (
-                                                <MenuItem key={m} value={m}>{m}</MenuItem>
-                                            ))}
-                                        </Select>
-                                        {errorsRate.month?.type === 'required' &&
-                                            <Typography variant="caption" color="red" marginTop={1}>
-                                                * El mes es requerido.
-                                            </Typography>
-                                        }
-                                    </FormControl>
-                                    <FormControl sx={{ width: '70%' }}>
-                                        <InputLabel htmlFor="year">Año</InputLabel>
-                                        <Input
-                                            id="year"
-                                            type="number"
-                                            name="year"
-                                            value={newRate.year}
-                                            onChange={e => {
-                                                const value = parseInt(e.target.value) < 1 ? 1 : parseInt(e.target.value)
-                                                changeRate({ target: { name: 'year', value } })
-                                            }}
-                                        />
-                                        {errorsRate.year?.type === 'required' &&
-                                            <Typography variant="caption" color="red" marginTop={1}>
-                                                * El año es requerido.
-                                            </Typography>
-                                        }
-                                    </FormControl>
+                                    {open === 'NEW-RATE' &&
+                                        <>
+                                            <FormControl sx={{ width: '70%' }}>
+                                                <InputLabel id="month-select">Mes</InputLabel>
+                                                <Select
+                                                    labelId="month-select"
+                                                    id="month"
+                                                    value={newRate.month}
+                                                    label="Mes"
+                                                    name="month"
+                                                    onChange={e => changeRate({ target: { name: 'month', value: e.target.value } })}
+                                                >
+                                                    <MenuItem value="">Seleccione</MenuItem>
+                                                    {MONTHS.map(m => (
+                                                        <MenuItem key={m} value={m}>{m}</MenuItem>
+                                                    ))}
+                                                </Select>
+                                                {errorsRate.month?.type === 'required' &&
+                                                    <Typography variant="caption" color="red" marginTop={1}>
+                                                        * El mes es requerido.
+                                                    </Typography>
+                                                }
+                                            </FormControl>
+                                            <FormControl sx={{ width: '70%' }}>
+                                                <InputLabel htmlFor="year">Año</InputLabel>
+                                                <Input
+                                                    id="year"
+                                                    type="number"
+                                                    name="year"
+                                                    value={newRate.year}
+                                                    onChange={e => {
+                                                        const value = parseInt(e.target.value) < 1 ? 1 : parseInt(e.target.value)
+                                                        changeRate({ target: { name: 'year', value } })
+                                                    }}
+                                                />
+                                                {errorsRate.year?.type === 'required' &&
+                                                    <Typography variant="caption" color="red" marginTop={1}>
+                                                        * El año es requerido.
+                                                    </Typography>
+                                                }
+                                            </FormControl>
+                                        </>
+                                    }
                                     <FormControl sx={{ width: '70%' }}>
                                         <InputLabel htmlFor="rate">Monto</InputLabel>
                                         <Input
@@ -330,30 +356,53 @@ export function CategoriesAbm() {
                                     <Button
                                         type="button"
                                         variant="outlined"
-                                        sx={{
-                                            width: '50%',
-                                            margin: '0 auto',
-                                            marginTop: 1
-                                        }}
+                                        sx={{ width: '33%', marginTop: 1 }}
                                         onClick={() => resetRate(setOpen)}
                                     >
                                         Cancelar
                                     </Button>
                                     <Button
                                         type="button"
+                                        variant="outlined"
+                                        sx={{ width: '33%', marginTop: 1 }}
+                                        onClick={() => setOpen('DELETE-RATE')}
+                                    >
+                                        Eliminar
+                                    </Button>
+                                    <Button
+                                        type="button"
                                         variant="contained"
-                                        sx={{
-                                            width: '50%',
-                                            margin: '0 auto',
-                                            marginTop: 1,
-                                            color: '#fff'
-                                        }}
+                                        sx={{ width: '33%', marginTop: 1 }}
                                         disabled={disabled}
                                         onClick={(e) => handleSubmitRate(e, validateRate, newRate, resetRate)}
                                     >
                                         Confirmar
                                     </Button>
                                 </Box>
+                            </Box>
+                        </ModalComponent>
+                        <ModalComponent open={open === 'DELETE-RATE'} onClose={() => reset(setOpen)}>
+                            <Typography variant="h6" sx={{ marginBottom: 1, textAlign: 'center' }}>
+                                {`¿Desea borrar el registro de la cotización de ${workOn?.name} (${newRate.month}/${newRate.year})?`}
+                            </Typography>
+                            <Box sx={{ display: 'flex', gap: 1 }}>
+                                <Button
+                                    type="button"
+                                    variant="outlined"
+                                    sx={{ width: '50%', marginTop: 1 }}
+                                    onClick={() => reset(setOpen)}
+                                >
+                                    Cancelar
+                                </Button>
+                                <Button
+                                    type="button"
+                                    variant="contained"
+                                    sx={{ width: '50%', marginTop: 1, color: '#fff' }}
+                                    disabled={disabled}
+                                    onClick={() => handleDeleteRate(newRate, reset)}
+                                >
+                                    Confirmar
+                                </Button>
                             </Box>
                         </ModalComponent>
                     </Box>

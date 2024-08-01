@@ -87,9 +87,10 @@ export function useCategories() {
     async function handleSubmitRate(e, validate, formData, reset) {
         e.preventDefault()
         if (validate()) {
+            const urls = { 'NEW-RATE': CATEGORY_RATE_URL, 'EDIT-RATE': `${CATEGORY_RATE_URL}/${formData.id}` }
             const { status, data } = await handleQuery({
-                url: CATEGORY_RATE_URL,
-                method: 'POST',
+                url: urls[open],
+                method: open === 'NEW-RATE' ? 'POST' : open === 'EDIT-RATE' ? 'PUT' : 'GET',
                 body: JSON.stringify({ ...formData, category_id: workOn.id })
             })
             if (status === STATUS_CODES.CREATED) {
@@ -108,14 +109,62 @@ export function useCategories() {
                 })
                 setWorkOn({ ...workOn, rates: [...workOn.rates, data] })
                 setMessage('Cotización registrada correctamente.')
-                setSeverity('success')
-                reset(setOpen)
+            } else if (status === STATUS_CODES.OK) {
+                dispatch({
+                    type: 'CATEGORIES',
+                    payload: [
+                        ...state.categories.filter(c => c.id !== data.category_id),
+                        {
+                            ...state.categories.find(c => c.id === data.category_id),
+                            rates: [
+                                ...state.categories.find(c => c.id === data.category_id).rates
+                                    .filter(r => r.id !== data.id),
+                                data
+                            ]
+                        }
+                    ]
+                })
+                setWorkOn({ ...workOn, rates: [...workOn.rates.filter(r => r.id !== data.id), data] })
+                setMessage('Cotización editada correctamente.')
             } else {
                 setMessage(data.message)
                 setSeverity('error')
+                setDisabled(false)
+            }
+            if (status === STATUS_CODES.CREATED || status === STATUS_CODES.OK) {
+                setSeverity('success')
+                reset(setOpen)
             }
             setOpenMessage(true)
         }
+    }
+
+    async function handleDeleteRate(formData, reset) {
+        const { status, data } = await handleQuery({ url: `${CATEGORY_RATE_URL}/${formData.id}`, method: 'DELETE' })
+        if (status === STATUS_CODES.OK) {
+            dispatch({
+                type: 'CATEGORIES',
+                payload: [
+                    ...state.categories.filter(c => c.id !== data.category_id),
+                    {
+                        ...state.categories.find(c => c.id === data.category_id),
+                        rates: [
+                            ...state.categories.find(c => c.id === data.category_id).rates
+                                .filter(r => r.id !== data.id)
+                        ]
+                    }
+                ]
+            })
+            setWorkOn({ ...workOn, rates: [...workOn.rates.filter(r => r.id !== data.id).filter(r => r.id !== data.id)] })
+            setSeverity('success')
+            setMessage('Cotización eliminada correctamente.')
+            reset(setOpen)
+        }
+        if (status === STATUS_CODES.SERVER_ERROR) {
+            setSeverity('error')
+            setMessage(data.message)
+        }
+        setOpenMessage(true)
     }
 
     return {
@@ -130,6 +179,7 @@ export function useCategories() {
         loadingCategories,
         workOn,
         setWorkOn,
-        handleSubmitRate
+        handleSubmitRate,
+        handleDeleteRate
     }
 }
