@@ -17,6 +17,7 @@ export function useCategories() {
     const [loadingCategories, setLoadingCategories] = useState(true)
     const [open, setOpen] = useState(null)
     const [count, setCount] = useState(0)
+    const [workOn, setWorkOn] = useState(null)
     const [filter, setFilter] = useState({
         page: 0,
         offset: 60
@@ -83,5 +84,17 @@ export function useCategories() {
         setOpenMessage(true)
     }
 
-    return { getCategories, open, setOpen, handleSubmit, handleDelete, count, filter, setFilter, loadingCategories }
+    return {
+        getCategories,
+        open,
+        setOpen,
+        handleSubmit,
+        handleDelete,
+        count,
+        filter,
+        setFilter,
+        loadingCategories,
+        workOn,
+        setWorkOn
+    }
 }
