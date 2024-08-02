@@ -195,8 +195,8 @@ export function MovementsAbm() {
                                             noOptionsText="No hay operarios disponibles."
                                             onChange={(_, value) => handleChange({ target: { name: 'worker_id', value: value?.id || '' } })}
                                             renderInput={(params) => <TextField {...params} label="Operario" />}
-                                            value={state.workers.find(w => w.id === formData.worker_id)?.label || ''}
-                                            isOptionEqualToValue={(option, value) => value.length === 0 || option.id === value.id}
+                                            value={formData.worker_id.toString().length > 0 ? `${state.workers.find(w => w.id === parseInt(formData.worker_id)).first_name} ${state.workers.find(w => w.id === parseInt(formData.worker_id)).last_name}` : ''}
+                                            isOptionEqualToValue={(option, value) => value.length === 0 || option.label === value}
                                         />
                                         {errors.worker_id?.type === 'required' &&
                                             <Typography variant="caption" color="red" marginTop={1}>
@@ -212,8 +212,8 @@ export function MovementsAbm() {
                                             noOptionsText="No hay obras disponibles."
                                             onChange={(_, value) => handleChange({ target: { name: 'site_id', value: value?.id || '' } })}
                                             renderInput={(params) => <TextField {...params} label="Obra" />}
-                                            value={state.sites.find(s => s.id === formData.site_id)?.label || ''}
-                                            isOptionEqualToValue={(option, value) => value.length === 0 || option.id === value.id}
+                                            value={formData.site_id.toString().length > 0 ? state.sites.find(s => s.id === parseInt(formData.site_id)).name : ''}
+                                            isOptionEqualToValue={(option, value) => value.length === 0 || option.label === value}
                                         />
                                         {errors.site_id?.type === 'required' &&
                                             <Typography variant="caption" color="red" marginTop={1}>
