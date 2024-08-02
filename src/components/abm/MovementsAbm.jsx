@@ -131,7 +131,7 @@ export function MovementsAbm() {
                             justifyContent: 'space-between',
                             alignItems: 'start',
                             flexWrap: 'wrap',
-                            paddingTop: 0.3,
+                            paddingTop: 2,
                             gap: { xs: 1, lg: 0 }
                         }}>
                             <MovementFilter filter={filter} setFilter={setFilter} />

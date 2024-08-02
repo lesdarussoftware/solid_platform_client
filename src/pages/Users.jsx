@@ -1,34 +1,21 @@
 import { useContext } from "react"
-import { useNavigate } from "react-router-dom"
-import { Box, Button, Typography } from "@mui/material"
+import { Box, Typography } from "@mui/material"
 
 import { AuthContext } from "../providers/AuthProvider"
+
 import { LoginForm } from "../components/common/LoginForm"
+import { UsersAbm } from "../components/abm/UsersAbm"
 import { Layout } from "../components/common/Layout"
 
-export function Error() {
+export function Users() {
 
     const { auth } = useContext(AuthContext)
-
-    const navigate = useNavigate()
 
     return (
         <>
             {auth ?
                 <Layout>
-                    <Box sx={{ paddingX: 2 }}>
-                        <Typography variant="h4" align="center" marginTop={3}>
-                            404 - Página no encontrada.
-                        </Typography>
-                        <Button
-                            type="button"
-                            variant="outlined"
-                            sx={{ display: 'block', margin: '0 auto', marginTop: 2 }}
-                            onClick={() => navigate('/tarjas')}
-                        >
-                            Volver
-                        </Button>
-                    </Box>
+                    <UsersAbm />
                 </Layout> :
                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90vh' }}>
                     <Box sx={{ width: '30%' }}>

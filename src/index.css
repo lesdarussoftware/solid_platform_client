@@ -35,8 +35,15 @@ body {
     }
 }
 
+@media (max-width: 599px) {
+    .menuLogo {
+        display: none;
+    }
+}
+
 @media (min-width: 2001px) {
+
     body {
-        margin: 0 auto;
+        margin: 0 auto !important;
     }
 }

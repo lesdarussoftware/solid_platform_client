@@ -1,11 +1,11 @@
 import { useContext, useState } from "react";
-import { Avatar, Box, Typography } from "@mui/material";
+import { Avatar, Box } from "@mui/material";
 
 import { AuthContext } from "../../providers/AuthProvider";
 
 import { UserDropdown } from "./UserDropdown";
 
-import Logo from '../../assets/logo.jpeg'
+import Logo from '../../assets/logo-white.jpeg'
 
 export function Header() {
 

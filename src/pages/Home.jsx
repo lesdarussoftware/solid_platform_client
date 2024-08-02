@@ -6,7 +6,7 @@ import { AuthContext } from "../providers/AuthProvider";
 
 import { LoginForm } from "../components/common/LoginForm";
 
-import Logo from '../assets/logo.jpeg'
+import Logo from '../assets/logo-white.jpeg'
 
 export function Home() {
 
@@ -15,7 +15,7 @@ export function Home() {
     const navigate = useNavigate()
 
     useEffect(() => {
-        if (auth) navigate('/dashboard')
+        if (auth) navigate('/tarjas')
     }, [auth])
 
     return (
@@ -27,7 +27,7 @@ export function Home() {
             flexDirection: 'column'
         }}>
             <img src={Logo} width={180} />
-            <LoginForm submitAction={() => navigate('/dashboard')} />
+            <LoginForm submitAction={() => navigate('/tarjas')} />
         </Box>
     )
 }

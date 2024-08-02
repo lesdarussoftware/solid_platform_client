@@ -57,7 +57,10 @@ export function SitesAbm() {
                     showEditAction
                     showDeleteAction
                     contentHeader={
-                        <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: 1, marginBottom: 1 }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: { xs: 5, sm: 2 }  }}>
+                            <Typography variant="h6">
+                                Obras
+                            </Typography>
                             <Button type="button" variant="contained" onClick={() => setOpen('NEW')}>
                                 Agregar
                             </Button>

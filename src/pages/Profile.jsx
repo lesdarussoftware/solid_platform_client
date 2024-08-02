@@ -6,7 +6,7 @@ import { AuthContext } from "../providers/AuthProvider";
 import { useForm } from "../hooks/useForm";
 import { useUsers } from "../hooks/useUsers";
 
-import { Header } from "../components/common/Header";
+import { Layout } from "../components/common/Layout";
 
 export function Profile() {
 
@@ -90,11 +90,10 @@ export function Profile() {
     return (
         <>
             {auth ?
-                <Box sx={{ padding: 1 }}>
-                    <Header />
-                    <Box sx={{ margin: 2 }}>
-                        <Button type="button" variant="contained" sx={{ marginBottom: 2 }} onClick={() => navigate('/dashboard')}>
-                            Volver al dashboard
+                <Layout>
+                    <Box sx={{ margin: 2, marginTop: { xs: 5, sm: 2 } }}>
+                        <Button type="button" variant="contained" sx={{ marginBottom: 2 }} onClick={() => navigate('/tarjas')}>
+                            Volver a tarjas
                         </Button>
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: { xs: 2, md: 0 } }}>
                             <Box sx={{ width: { xs: '100%', md: '45%' }, border: '1px solid gray', borderRadius: 1, padding: 2 }}>
@@ -243,7 +242,7 @@ export function Profile() {
                             </Box>
                         </Box>
                     </Box>
-                </Box> :
+                </Layout> :
                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90vh' }}>
                     <Box sx={{ width: '30%' }}>
                         <Typography variant="h6" align="center" marginBottom={1}>
