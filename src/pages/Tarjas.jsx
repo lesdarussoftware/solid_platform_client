@@ -5,10 +5,10 @@ import { AuthContext } from "../providers/AuthProvider"
 
 import { MovementsAbm } from "../components/abm/MovementsAbm"
 import { WorkersAbm } from "../components/abm/WorkersAbm"
-import { Header } from "../components/common/Header"
 import { LoginForm } from "../components/common/LoginForm"
 import { CategoriesAbm } from "../components/abm/CategoriesAbm"
 import { Reports } from "../components/common/Reports"
+import { Layout } from "../components/common/Layout"
 
 function CustomTabPanel(props) {
 
@@ -34,7 +34,7 @@ function a11yProps(index) {
     }
 }
 
-export function Dashboard() {
+export function Tarjas() {
 
     const { auth } = useContext(AuthContext)
 
@@ -47,8 +47,7 @@ export function Dashboard() {
     return (
         <>
             {auth ?
-                <Box>
-                    <Header />
+                <Layout>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <Tabs
                             value={value}
@@ -58,7 +57,7 @@ export function Dashboard() {
                             scrollButtons="auto"
                             sx={{ marginY: { xs: 3, sm: 0 } }}
                         >
-                            <Tab label="Tarjas" {...a11yProps(0)} />
+                            <Tab label="Ing./Egr." {...a11yProps(0)} />
                             <Tab label="Personal" {...a11yProps(1)} />
                             <Tab label="Categorías" {...a11yProps(2)} />
                             <Tab label="Reportes" {...a11yProps(3)} />
@@ -76,7 +75,7 @@ export function Dashboard() {
                     <CustomTabPanel value={value} index={3}>
                         <Reports />
                     </CustomTabPanel>
-                </Box> :
+                </Layout> :
                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90vh' }}>
                     <Box sx={{ width: '30%' }}>
                         <Typography variant="h6" align="center" marginBottom={1}>

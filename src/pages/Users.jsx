@@ -3,9 +3,9 @@ import { Box, Typography } from "@mui/material"
 
 import { AuthContext } from "../providers/AuthProvider"
 
-import { Header } from "../components/common/Header"
 import { LoginForm } from "../components/common/LoginForm"
 import { UsersAbm } from "../components/abm/UsersAbm"
+import { Layout } from "../components/common/Layout"
 
 export function Users() {
 
@@ -14,10 +14,9 @@ export function Users() {
     return (
         <>
             {auth ?
-                <Box>
-                    <Header />
+                <Layout>
                     <UsersAbm />
-                </Box> :
+                </Layout> :
                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90vh' }}>
                     <Box sx={{ width: '30%' }}>
                         <Typography variant="h6" align="center" marginBottom={1}>

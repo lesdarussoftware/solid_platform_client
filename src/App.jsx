@@ -8,7 +8,7 @@ import { MessageProvider } from "./providers/MessageProvider"
 // import { NotificationsProvider } from "./providers/NotificationsProvider"
 
 import { Home } from "./pages/Home"
-import { Dashboard } from "./pages/Dashboard"
+import { Tarjas } from "./pages/Tarjas"
 import { Sites } from "./pages/Sites"
 import { Users } from "./pages/Users"
 import { Scan } from "./pages/Scan"
@@ -34,7 +34,7 @@ function App() {
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/tarjas" element={<Tarjas />} />
                 <Route path="/obras" element={<Sites />} />
                 <Route path="/usuarios" element={<Users />} />
                 <Route path="/scanner" element={<Scan />} />
