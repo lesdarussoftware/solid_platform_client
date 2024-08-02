@@ -8,8 +8,6 @@ import { WorkersAbm } from "../components/abm/WorkersAbm"
 import { Header } from "../components/common/Header"
 import { LoginForm } from "../components/common/LoginForm"
 import { CategoriesAbm } from "../components/abm/CategoriesAbm"
-import { SitesAbm } from "../components/abm/SitesAbm"
-import { UsersAbm } from "../components/abm/UsersAbm"
 import { Reports } from "../components/common/Reports"
 
 function CustomTabPanel(props) {
@@ -63,9 +61,7 @@ export function Dashboard() {
                             <Tab label="Tarjas" {...a11yProps(0)} />
                             <Tab label="Personal" {...a11yProps(1)} />
                             <Tab label="Categorías" {...a11yProps(2)} />
-                            <Tab label="Obras" {...a11yProps(3)} />
-                            <Tab label="Usuarios" {...a11yProps(4)} />
-                            <Tab label="Reportes" {...a11yProps(5)} />
+                            <Tab label="Reportes" {...a11yProps(3)} />
                         </Tabs>
                     </Box>
                     <CustomTabPanel value={value} index={0}>
@@ -78,12 +74,6 @@ export function Dashboard() {
                         <CategoriesAbm />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={3}>
-                        <SitesAbm />
-                    </CustomTabPanel>
-                    <CustomTabPanel value={value} index={4}>
-                        <UsersAbm />
-                    </CustomTabPanel>
-                    <CustomTabPanel value={value} index={5}>
                         <Reports />
                     </CustomTabPanel>
                 </Box> :
