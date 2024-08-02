@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -29,14 +29,15 @@ export function Layout({ window, children }) {
     const { auth } = useContext(AuthContext);
 
     const navigate = useNavigate()
+    const { pathname } = useLocation()
 
     const [mobileOpen, setMobileOpen] = useState(false);
     const [showUserDropdown, setShowUserDropdown] = useState(false);
 
     const navItems = [
-        { label: 'Tarjas', action: () => navigate('/tarjas') },
-        { label: 'Obras', action: () => navigate('/obras') },
-        { label: 'Usuarios', action: () => navigate('/usuarios') }
+        { label: 'Tarjas', pathname: '/tarjas', action: () => navigate('/tarjas') },
+        { label: 'Obras', pathname: '/obras', action: () => navigate('/obras') },
+        { label: 'Usuarios', pathname: '/usuarios', action: () => navigate('/usuarios') }
     ];
 
     const handleDrawerToggle = () => {
@@ -81,7 +82,16 @@ export function Layout({ window, children }) {
                             {navItems.map((item) => (
                                 <Button
                                     key={item.label}
-                                    sx={{ color: '#fff', mr: 1, ml: 1 }}
+                                    sx={{
+                                        backgroundColor: pathname === item.pathname ? '#fff' : '#000',
+                                        color: pathname === item.pathname ? '#000' : '#fff',
+                                        mr: 1,
+                                        ml: 1,
+                                        ':hover': {
+                                            backgroundColor: '#fff',
+                                            color: '#000'
+                                        }
+                                    }}
                                     onClick={() => item.action()}
                                 >
                                     {item.label}
@@ -116,7 +126,11 @@ export function Layout({ window, children }) {
                     {drawer}
                 </Drawer>
             </nav>
-            <Box sx={{ p: 3, pt: { xs: 4, sm: 9 } }}>
+            <Box sx={{
+                pl: { xs: 1, md: 3 },
+                pr: { xs: 1, md: 3 },
+                pt: { xs: 4, sm: 8 }
+            }}>
                 {children}
             </Box>
         </Box>

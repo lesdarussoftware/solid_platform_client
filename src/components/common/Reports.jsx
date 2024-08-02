@@ -35,8 +35,20 @@ export function Reports() {
         <>
             <Box sx={{ margin: 1 }}>
                 <Typography variant="h5" marginBottom={1}>Estado de obra</Typography>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'start', gap: 1, flexWrap: 'wrap', width: '40%' }}>
+                <Box sx={{
+                    display: 'flex',
+                    flexDirection: { xs: 'column', md: 'row' },
+                    flexWrap: 'wrap',
+                    justifyContent: { xs: 'center', md: 'space-between' }
+                }}>
+                    <Box sx={{
+                        display: 'flex',
+                        alignItems: 'start',
+                        justifyContent: 'space-between',
+                        gap: 1,
+                        flexWrap: 'wrap',
+                        width: { xs: '100%', md: '60%', lg: '40%' }
+                    }}>
                         <FormControl sx={{ width: '30%' }}>
                             <Autocomplete
                                 disablePortal
@@ -131,10 +143,17 @@ export function Reports() {
                             Calcular
                         </Button>
                     </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'start', gap: 1, justifyContent: 'end' }}>
+                    <Box sx={{
+                        display: 'flex',
+                        alignItems: 'start',
+                        gap: 1,
+                        justifyContent: 'end',
+                        marginBottom: { xs: 1, md: 0 }
+                    }}>
                         <Button
                             type="button"
                             variant="contained"
+                            sx={{ width: { xs: '50%', sm: 'auto' } }}
                             disabled={siteStatusRows.length === 0}
                             onClick={() => printSiteStatus('PDF', siteStatusValidate, siteStatusData)}
                         >
@@ -143,6 +162,7 @@ export function Reports() {
                         <Button
                             type="button"
                             variant="contained"
+                            sx={{ width: { xs: '50%', sm: 'auto' } }}
                             disabled={siteStatusRows.length === 0}
                             onClick={() => printSiteStatus('EXCEL', siteStatusValidate, siteStatusData)}
                         >

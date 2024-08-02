@@ -91,7 +91,7 @@ export function Profile() {
         <>
             {auth ?
                 <Layout>
-                    <Box sx={{ margin: 2 }}>
+                    <Box sx={{ margin: 2, marginTop: { xs: 5, sm: 2 } }}>
                         <Button type="button" variant="contained" sx={{ marginBottom: 2 }} onClick={() => navigate('/tarjas')}>
                             Volver a tarjas
                         </Button>

@@ -22,7 +22,7 @@ function CustomTabPanel(props) {
             aria-labelledby={`simple-tab-${index}`}
             {...other}
         >
-            {value === index && <Box sx={{ paddingTop: 1 }}>{children}</Box>}
+            {value === index && <Box>{children}</Box>}
         </div>
     )
 }
@@ -48,20 +48,26 @@ export function Tarjas() {
         <>
             {auth ?
                 <Layout>
-                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                        <Tabs
-                            value={value}
-                            onChange={handleChange}
-                            aria-label="basic tabs example"
-                            variant="scrollable"
-                            scrollButtons="auto"
-                            sx={{ marginY: { xs: 3, sm: 0 } }}
-                        >
-                            <Tab label="Ing./Egr." {...a11yProps(0)} />
-                            <Tab label="Personal" {...a11yProps(1)} />
-                            <Tab label="Categorías" {...a11yProps(2)} />
-                            <Tab label="Reportes" {...a11yProps(3)} />
-                        </Tabs>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                        <Box sx={{
+                            borderBottom: 1,
+                            borderColor: 'divider',
+                            overflow: { xs: 'scroll', sm: 'auto' }
+                        }}>
+                            <Tabs
+                                value={value}
+                                onChange={handleChange}
+                                aria-label="basic tabs example"
+                                variant="scrollable"
+                                scrollButtons="auto"
+                                sx={{ marginY: { xs: 3, sm: 0 } }}
+                            >
+                                <Tab label="Ing./Egr." {...a11yProps(0)} />
+                                <Tab label="Personal" {...a11yProps(1)} />
+                                <Tab label="Categorías" {...a11yProps(2)} />
+                                <Tab label="Reportes" {...a11yProps(3)} />
+                            </Tabs>
+                        </Box>
                     </Box>
                     <CustomTabPanel value={value} index={0}>
                         <MovementsAbm />
