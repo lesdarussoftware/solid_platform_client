@@ -8,7 +8,7 @@ import { REFRESH_URL } from '../helpers/urls'
 
 export function useQuery() {
 
-    const { auth, setAuth, setOpenModal } = useContext(AuthContext)
+    const { auth, setAuth, setSessionExpired } = useContext(AuthContext)
 
     async function handleQuery({ url, method = 'GET', body, token }) {
         const res = await fetch(url, {
@@ -50,7 +50,7 @@ export function useQuery() {
             if (refreshStatus === STATUS_CODES.UNAUTHORIZED &&
                 (refreshData.message === STATUS_MESSAGES.INVALID_TOKEN ||
                     refreshData.message === STATUS_MESSAGES.TOKEN_REVOKED)) {
-                setOpenModal(true);
+                setSessionExpired(true);
                 console.log({ status: refreshStatus, data: refreshData });
                 return { status: refreshStatus, data: refreshData };
             } else {

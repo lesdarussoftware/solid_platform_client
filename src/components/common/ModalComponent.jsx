@@ -1,8 +1,8 @@
+import { useState } from 'react';
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
-import { useState } from 'react';
 
 export function ModalComponent({ children, open, onClose, reduceWidth = 800 }) {
 

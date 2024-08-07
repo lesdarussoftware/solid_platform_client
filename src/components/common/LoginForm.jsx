@@ -10,7 +10,7 @@ import { STATUS_CODES } from "../../helpers/statusCodes"
 
 export function LoginForm({ submitAction }) {
 
-    const { setAuth, openModal, setOpenModal } = useContext(AuthContext)
+    const { setAuth } = useContext(AuthContext)
     const { setOpenMessage, setSeverity, setMessage } = useContext(MessageContext)
     const { formData, errors, disabled, setDisabled, handleChange, validate } = useForm({
         defaultData: { username: '', password: '' },
@@ -28,13 +28,8 @@ export function LoginForm({ submitAction }) {
             const { status, data } = await login({ username, password })
             if (status === STATUS_CODES.OK) {
                 setAuth(data)
-                if (openModal) {
-                    setOpenModal(false)
-                }
                 localStorage.setItem('solid_auth', JSON.stringify(data))
-                if (submitAction) {
-                    submitAction()
-                }
+                if (submitAction) submitAction()
             } else {
                 if (status === STATUS_CODES.UNAUTHORIZED) {
                     setMessage('Credenciales inválidas.')
