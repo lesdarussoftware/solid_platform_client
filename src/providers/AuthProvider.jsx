@@ -41,9 +41,8 @@ export function AuthProvider({ children }) {
                 body: JSON.stringify(formData)
             })
             if (status === STATUS_CODES.OK) {
-                setAuth(data)
-                setSessionExpired(false)
                 localStorage.setItem('solid_auth', JSON.stringify(data))
+                window.location.reload()
             } else {
                 if (status === STATUS_CODES.UNAUTHORIZED) {
                     setMessage('Credenciales inválidas.')
