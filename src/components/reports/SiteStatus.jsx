@@ -217,7 +217,9 @@ export function SiteStatus({ setShow }) {
                                                 {ssr.hours}
                                             </TableCell>
                                             <TableCell align="center" sx={{ color }}>
-                                                {ssr.observations}
+                                                <Typography whiteSpace="pre-wrap">
+                                                    {ssr.observations}
+                                                </Typography>
                                             </TableCell>
                                         </TableRow>
                                     )
