@@ -1,8 +1,8 @@
-function descendingComparator(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
+function descendingComparator(a, b, orderBy, sorter) {
+    if ((b[orderBy] ? b[orderBy] : sorter(b)) < (a[orderBy] ? a[orderBy] : sorter(a))) {
         return -1;
     }
-    if (b[orderBy] > a[orderBy]) {
+    if ((b[orderBy] ? b[orderBy] : sorter(b)) > (a[orderBy] ? a[orderBy] : sorter(a))) {
         return 1;
     }
     return 0;
