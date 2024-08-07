@@ -1,8 +1,8 @@
 import { useState } from "react";
+import { Box, Typography } from "@mui/material";
 
 import { SiteStatus } from "./SiteStatus";
-import { Box, boxClasses, Typography } from "@mui/material";
-
+import { WorkersStatus } from "./WorkersStatus";
 
 export function ReportsMenu() {
 
@@ -31,7 +31,7 @@ export function ReportsMenu() {
                             Permite calcular el total de obras trabajadas por operario por obra.
                         </Typography>
                     </Box>
-                    <Box sx={boxStyles}>
+                    <Box sx={boxStyles} onClick={() => setShow('WORKERS_STATUS')}>
                         <Typography variant="h6" marginBottom={1}>Estado de operario</Typography>
                         <Typography variant="body1">
                             Permite ver si un operario está en obra o no.
@@ -40,6 +40,7 @@ export function ReportsMenu() {
                 </Box>
             }
             {show === 'SITE_STATUS' && <SiteStatus setShow={setShow} />}
+            {show === 'WORKERS_STATUS' && <WorkersStatus setShow={setShow} />}
         </>
     );
 }

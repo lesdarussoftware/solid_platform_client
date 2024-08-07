@@ -9,6 +9,7 @@ import { useForm } from "../../hooks/useForm";
 import { useReports } from "../../hooks/useReports";
 
 export function SiteStatus({ setShow }) {
+
     const { state } = useContext(DataContext);
 
     const { getSiteStatusRows, siteStatusRows, printSiteStatus, loadingSiteStatus } = useReports();
@@ -35,7 +36,7 @@ export function SiteStatus({ setShow }) {
         <>
             <Box sx={{ margin: 1 }}>
                 <Breadcrumbs aria-label="breadcrumb" sx={{ display: 'flex', justifyContent: 'end' }}>
-                    <Link underline="hover" color="inherit" href="#" onClick={() => setShow(null)}>
+                    <Link underline="hover" color="inherit" sx={{ cursor: 'pointer' }} onClick={() => setShow(null)}>
                         Volver a reportes
                     </Link>
                     <Typography color="text.primary">Estado de obra</Typography>
