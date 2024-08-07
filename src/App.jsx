@@ -27,9 +27,9 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <AuthProvider>
-        <DataProvider>
-          <MessageProvider>
+      <MessageProvider>
+        <AuthProvider>
+          <DataProvider>
             {/* <NotificationsProvider> */}
             <BrowserRouter>
               <Routes>
@@ -43,9 +43,9 @@ function App() {
               </Routes>
             </BrowserRouter>
             {/* </NotificationsProvider> */}
-          </MessageProvider>
-        </DataProvider>
-      </AuthProvider>
+          </DataProvider>
+        </AuthProvider>
+      </MessageProvider>
     </ThemeProvider>
   )
 }
