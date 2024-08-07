@@ -7,7 +7,7 @@ import { MovementsAbm } from "../components/abm/MovementsAbm"
 import { WorkersAbm } from "../components/abm/WorkersAbm"
 import { LoginForm } from "../components/common/LoginForm"
 import { CategoriesAbm } from "../components/abm/CategoriesAbm"
-import { Reports } from "../components/common/Reports"
+import { ReportsMenu } from "../components/reports/ReportsMenu"
 import { Layout } from "../components/common/Layout"
 
 function CustomTabPanel(props) {
@@ -79,7 +79,7 @@ export function Tarjas() {
                         <CategoriesAbm />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={3}>
-                        <Reports />
+                        <ReportsMenu />
                     </CustomTabPanel>
                 </Layout> :
                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90vh' }}>
