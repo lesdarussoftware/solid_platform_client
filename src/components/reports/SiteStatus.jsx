@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Autocomplete, Box, Button, FormControl, LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, Breadcrumbs, Button, FormControl, LinearProgress, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { es } from "date-fns/locale";
@@ -8,7 +8,7 @@ import { DataContext } from "../../providers/DataProvider";
 import { useForm } from "../../hooks/useForm";
 import { useReports } from "../../hooks/useReports";
 
-export function Reports() {
+export function SiteStatus({ setShow }) {
     const { state } = useContext(DataContext);
 
     const { getSiteStatusRows, siteStatusRows, printSiteStatus, loadingSiteStatus } = useReports();
@@ -34,6 +34,12 @@ export function Reports() {
     return (
         <>
             <Box sx={{ margin: 1 }}>
+                <Breadcrumbs aria-label="breadcrumb" sx={{ display: 'flex', justifyContent: 'end' }}>
+                    <Link underline="hover" color="inherit" href="#" onClick={() => setShow(null)}>
+                        Volver a reportes
+                    </Link>
+                    <Typography color="text.primary">Estado de obra</Typography>
+                </Breadcrumbs>
                 <Typography variant="h5" marginBottom={1}>Estado de obra</Typography>
                 <Box sx={{
                     display: 'flex',
