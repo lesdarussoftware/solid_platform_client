@@ -32,7 +32,7 @@ export function ReportsMenu() {
                         </Typography>
                     </Box>
                     <Box sx={boxStyles} onClick={() => setShow('WORKERS_STATUS')}>
-                        <Typography variant="h6" marginBottom={1}>Estado de operario</Typography>
+                        <Typography variant="h6" marginBottom={1}>Estado de operarios</Typography>
                         <Typography variant="body1">
                             Permite ver si un operario está en obra o no.
                         </Typography>
