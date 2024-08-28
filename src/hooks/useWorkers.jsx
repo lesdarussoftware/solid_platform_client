@@ -19,11 +19,13 @@ export function useWorkers() {
     const [open, setOpen] = useState(null)
     const [count, setCount] = useState(0)
     const [newQrs, setNewQrs] = useState([])
-    const [workersForQr, setWorkersForQr] = useState([])
+    const [allWorkers, setAllWorkers] = useState([])
     const [disabled, setDisabled] = useState(false)
     const [filter, setFilter] = useState({
         page: 0,
-        offset: 60
+        offset: 60,
+        worker_name: '',
+        site_name: ''
     })
 
     async function getWorkers(params) {
@@ -41,9 +43,9 @@ export function useWorkers() {
         }
     }
 
-    async function getWorkersForQr() {
+    async function getAllWorkers() {
         const { status, data } = await handleQuery({ url: WORKER_URL })
-        if (status === STATUS_CODES.OK) setWorkersForQr(data[0].sort((a, b) => {
+        if (status === STATUS_CODES.OK) setAllWorkers(data[0].sort((a, b) => {
             if (a.last_name > b.last_name) return 1
             if (a.last_name < b.last_name) return -1
             return 0
@@ -185,8 +187,8 @@ export function useWorkers() {
         newQrs,
         setNewQrs,
         handleGenerateQr,
-        workersForQr,
-        getWorkersForQr,
+        allWorkers,
+        getAllWorkers,
         disabled,
         setDisabled,
         getScanners

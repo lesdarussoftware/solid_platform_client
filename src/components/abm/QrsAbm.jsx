@@ -12,10 +12,10 @@ export function QrsAbm({ open, setOpen }) {
 
     const { auth } = useContext(AuthContext)
 
-    const { newQrs, setNewQrs, handleGenerateQr, workersForQr, getWorkersForQr, disabled } = useWorkers()
+    const { newQrs, setNewQrs, handleGenerateQr, allWorkers, getAllWorkers, disabled } = useWorkers()
 
     useEffect(() => {
-        getWorkersForQr()
+        getAllWorkers()
     }, [])
 
     const handleClose = () => {
@@ -44,7 +44,7 @@ export function QrsAbm({ open, setOpen }) {
                         }}
                     >
                         <MenuItem value="">Seleccione</MenuItem>
-                        {workersForQr
+                        {allWorkers
                             .filter(w => !newQrs.includes(w.id))
                             .sort((a, b) => a.first_name - b.first_name)
                             .map(w => (
@@ -55,10 +55,10 @@ export function QrsAbm({ open, setOpen }) {
                 <FormControlLabel
                     control={<Checkbox />}
                     label="Seleccionar todos"
-                    checked={newQrs.length === workersForQr.length}
+                    checked={newQrs.length === allWorkers.length}
                     onChange={e => {
                         if (e.target.checked) {
-                            setNewQrs(workersForQr.map(w => w.id))
+                            setNewQrs(allWorkers.map(w => w.id))
                         } else {
                             setNewQrs([])
                         }
@@ -75,10 +75,10 @@ export function QrsAbm({ open, setOpen }) {
                 borderRadius: 1
             }}>
                 <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                    {newQrs.length < workersForQr.length &&
+                    {newQrs.length < allWorkers.length &&
                         newQrs.map(nqr => (
                             <Chip
-                                label={`${workersForQr.find(w => w.id === nqr).first_name} ${workersForQr.find(w => w.id === nqr).last_name}`}
+                                label={`${allWorkers.find(w => w.id === nqr).first_name} ${allWorkers.find(w => w.id === nqr).last_name}`}
                                 onDelete={() => setNewQrs(prev => [...prev.filter(item => item !== nqr)])}
                             />
                         ))
@@ -101,7 +101,7 @@ export function QrsAbm({ open, setOpen }) {
                     disabled={newQrs.length === 0 || disabled}
                     onClick={e => {
                         if (open === 'GENERATE-QR') handleGenerateQr(e, setOpen)
-                        if (open === 'PRINT-QR') window.open(`${REPORT_URL}/lista-qr/${auth?.refresh_token}${newQrs.length > 0 && newQrs.length < workersForQr.length ? `?ids=${JSON.stringify(newQrs)}` : ''}`, '_blank')
+                        if (open === 'PRINT-QR') window.open(`${REPORT_URL}/lista-qr/${auth?.refresh_token}${newQrs.length > 0 && newQrs.length < allWorkers.length ? `?ids=${JSON.stringify(newQrs)}` : ''}`, '_blank')
                     }}
                 >
                     {open === 'GENERATE-QR' && 'Guardar'}

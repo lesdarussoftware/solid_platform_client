@@ -1,5 +1,5 @@
 import { useContext, useEffect, useMemo } from "react";
-import { Box, Breadcrumbs, LinearProgress, Link, Typography } from "@mui/material";
+import { Box, Breadcrumbs, Link, Typography, Autocomplete, FormControl, TextField } from "@mui/material";
 
 import { DataContext } from "../../providers/DataProvider";
 import { useWorkers } from "../../hooks/useWorkers";
@@ -10,11 +10,17 @@ export function WorkersStatus({ setShow }) {
 
     const { state } = useContext(DataContext);
 
-    const { getWorkers, loadingWorkers, count, filter, setFilter } = useWorkers();
+    const { getWorkers, count, filter, setFilter, allWorkers, getAllWorkers } = useWorkers();
 
     useEffect(() => {
-        const { page, offset } = filter
-        getWorkers(`?page=${page}&offset=${offset}&in_site=true`)
+        getAllWorkers()
+    }, [])
+
+    useEffect(() => {
+        const { page, offset, worker_name, site_name } = filter
+        if (worker_name.length > 0 || site_name.length > 0) {
+            getWorkers(`?page=${page}&offset=${offset}&in_site=true${worker_name.length > 0 ? `&worker_name=${worker_name}` : ''}${site_name.length > 0 ? `&site_name=${site_name}` : ''}`)
+        }
     }, [filter])
 
     const headCells = useMemo(() => [
@@ -93,18 +99,45 @@ export function WorkersStatus({ setShow }) {
                     <Typography color="text.primary">Estado de operarios</Typography>
                 </Breadcrumbs>
                 <Typography variant="h5" marginBottom={1}>Estado de operarios</Typography>
-                {loadingWorkers ?
-                    <Box sx={{ width: '100%' }}>
-                        <LinearProgress />
-                    </Box> :
-                    <DataGrid
-                        headCells={headCells}
-                        rows={state.workers}
-                        filter={filter}
-                        setFilter={setFilter}
-                        count={count}
-                    />
-                }
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 1, width: { xs: '100%', md: '30%' } }}>
+                    <FormControl sx={{ width: '50%' }}>
+                        <Autocomplete
+                            disablePortal
+                            id="worker-autocomplete"
+                            options={allWorkers.map(w => ({ label: `${w.last_name} ${w.first_name}`, id: w.id }))}
+                            noOptionsText="No hay operarios disponibles."
+                            onChange={(_, value) => setFilter({
+                                ...filter,
+                                worker_name: value?.label ?? ''
+                            })}
+                            renderInput={(params) => <TextField {...params} label="Operario" />}
+                            value={filter.worker_name}
+                            isOptionEqualToValue={(option, value) => value.length === 0 || option.label === value}
+                        />
+                    </FormControl>
+                    <FormControl sx={{ width: '50%' }}>
+                        <Autocomplete
+                            disablePortal
+                            id="site-autocomplete"
+                            options={state.sites.map(s => ({ label: s.name, id: s.id }))}
+                            noOptionsText="No hay obras disponibles."
+                            onChange={(_, value) => setFilter({
+                                ...filter,
+                                site_name: value?.label ?? ''
+                            })}
+                            renderInput={(params) => <TextField {...params} label="Obra" />}
+                            value={filter.site_name}
+                            isOptionEqualToValue={(option, value) => value.length === 0 || option.label === value}
+                        />
+                    </FormControl>
+                </Box>
+                <DataGrid
+                    headCells={headCells}
+                    rows={filter.site_name.length > 0 || filter.worker_name.length > 0 ? state.workers : []}
+                    filter={filter}
+                    setFilter={setFilter}
+                    count={count}
+                />
             </Box>
         </>
     );
