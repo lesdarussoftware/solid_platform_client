@@ -26,7 +26,7 @@ export function useCategories() {
     async function getCategories(params) {
         const { status, data } = await handleQuery({ url: `${CATEGORY_URL}${params ? `${params}` : ''}` })
         if (status === STATUS_CODES.OK) {
-            dispatch({ type: 'CATEGORIES', payload: data[0] })
+            dispatch({ type: 'CATEGORIES', payload: data[0].sort((a, b) => a.name - b.name) })
             setCount(data[1])
             setLoadingCategories(false)
         }
@@ -42,13 +42,19 @@ export function useCategories() {
                 body: JSON.stringify(formData)
             })
             if (status === STATUS_CODES.CREATED) {
-                dispatch({ type: 'CATEGORIES', payload: [data, ...state.categories] })
+                dispatch({
+                    type: 'CATEGORIES',
+                    payload: [data, ...state.categories].sort((a, b) => a.name - b.name)
+                })
                 setCount(count + 1)
                 setMessage('Categoría registrada correctamente.')
             } else if (status === STATUS_CODES.OK) {
                 dispatch({
                     type: 'CATEGORIES',
-                    payload: [data, ...state.categories.filter(item => item.id !== data.id)]
+                    payload: [
+                        data,
+                        ...state.categories.filter(item => item.id !== data.id)
+                    ].sort((a, b) => a.name - b.name)
                 })
                 setMessage('Categoría editada correctamente.')
             } else {
@@ -105,7 +111,7 @@ export function useCategories() {
                                 data
                             ]
                         }
-                    ]
+                    ].sort((a, b) => a.name - b.name)
                 })
                 setWorkOn({ ...workOn, rates: [...workOn.rates, data] })
                 setMessage('Cotización registrada correctamente.')
@@ -122,7 +128,7 @@ export function useCategories() {
                                 data
                             ]
                         }
-                    ]
+                    ].sort((a, b) => a.name - b.name)
                 })
                 setWorkOn({ ...workOn, rates: [...workOn.rates.filter(r => r.id !== data.id), data] })
                 setMessage('Cotización editada correctamente.')
@@ -153,7 +159,7 @@ export function useCategories() {
                                 .filter(r => r.id !== data.id)
                         ]
                     }
-                ]
+                ].sort((a, b) => a.name - b.name)
             })
             setWorkOn({ ...workOn, rates: [...workOn.rates.filter(r => r.id !== data.id).filter(r => r.id !== data.id)] })
             setSeverity('success')

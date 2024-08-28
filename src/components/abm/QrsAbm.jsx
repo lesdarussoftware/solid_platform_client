@@ -48,7 +48,7 @@ export function QrsAbm({ open, setOpen }) {
                             .filter(w => !newQrs.includes(w.id))
                             .sort((a, b) => a.first_name - b.first_name)
                             .map(w => (
-                                <MenuItem key={w.id} value={w.id}>{`${w.first_name} ${w.last_name}`}</MenuItem>
+                                <MenuItem key={w.id} value={w.id}>{` ${w.last_name} ${w.first_name}`}</MenuItem>
                             ))}
                     </Select>
                 </FormControl>

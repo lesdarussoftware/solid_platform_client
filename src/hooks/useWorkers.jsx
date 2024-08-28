@@ -29,7 +29,13 @@ export function useWorkers() {
     async function getWorkers(params) {
         const { status, data } = await handleQuery({ url: `${WORKER_URL}${params ? `${params}` : ''}` })
         if (status === STATUS_CODES.OK) {
-            dispatch({ type: 'WORKERS', payload: data[0] })
+            dispatch({
+                type: 'WORKERS', payload: data[0].sort((a, b) => {
+                    if (a.last_name > b.last_name) return 1
+                    if (a.last_name < b.last_name) return -1
+                    return 0
+                })
+            })
             setCount(data[1])
             setLoadingWorkers(false)
         }
@@ -37,13 +43,23 @@ export function useWorkers() {
 
     async function getWorkersForQr() {
         const { status, data } = await handleQuery({ url: WORKER_URL })
-        if (status === STATUS_CODES.OK) setWorkersForQr(data[0])
+        if (status === STATUS_CODES.OK) setWorkersForQr(data[0].sort((a, b) => {
+            if (a.last_name > b.last_name) return 1
+            if (a.last_name < b.last_name) return -1
+            return 0
+        }))
     }
 
     async function getScanners() {
         const { status, data } = await handleQuery({ url: WORKER_URL + '/scanners' })
         if (status === STATUS_CODES.OK) {
-            dispatch({ type: 'SCANNERS', payload: data[0] })
+            dispatch({
+                type: 'SCANNERS', payload: data[0].sort((a, b) => {
+                    if (a.last_name > b.last_name) return 1
+                    if (a.last_name < b.last_name) return -1
+                    return 0
+                })
+            })
             localStorage.setItem('solid_scanners_storage', JSON.stringify(data[0]))
         }
     }
@@ -58,13 +74,23 @@ export function useWorkers() {
                 body: JSON.stringify({ ...formData, dni: parseInt(formData.dni) })
             })
             if (status === STATUS_CODES.CREATED) {
-                dispatch({ type: 'WORKERS', payload: [data, ...state.workers] })
+                dispatch({
+                    type: 'WORKERS', payload: [data, ...state.workers].sort((a, b) => {
+                        if (a.last_name > b.last_name) return 1
+                        if (a.last_name < b.last_name) return -1
+                        return 0
+                    })
+                })
                 setCount(count + 1)
                 setMessage('Operario registrado correctamente.')
             } else if (status === STATUS_CODES.OK) {
                 dispatch({
                     type: 'WORKERS',
-                    payload: [data, ...state.workers.filter(item => item.id !== data.id)]
+                    payload: [data, ...state.workers.filter(item => item.id !== data.id)].sort((a, b) => {
+                        if (a.last_name > b.last_name) return 1
+                        if (a.last_name < b.last_name) return -1
+                        return 0
+                    })
                 })
                 setMessage('Operario editado correctamente.')
             } else {
@@ -128,7 +154,11 @@ export function useWorkers() {
                             ]
                         }
                     })
-                ]
+                ].sort((a, b) => {
+                    if (a.last_name > b.last_name) return 1
+                    if (a.last_name < b.last_name) return -1
+                    return 0
+                })
             })
             setSeverity('success')
             setMessage('QRs generados correctamente.')

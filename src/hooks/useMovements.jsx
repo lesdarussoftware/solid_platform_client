@@ -53,13 +53,16 @@ export function useMovements() {
                 body: JSON.stringify({ ...formData, ...additionalData })
             })
             if (status === STATUS_CODES.CREATED) {
-                dispatch({ type: 'MOVEMENTS', payload: [data, ...state.movements] })
+                dispatch({
+                    type: 'MOVEMENTS',
+                    payload: [data, ...state.movements].sort((a, b) => a.id - b.id)
+                })
                 setCount(count + 1)
                 setMessage('Evento registrado correctamente.')
             } else if (status === STATUS_CODES.OK) {
                 dispatch({
                     type: 'MOVEMENTS',
-                    payload: [data, ...state.movements.filter(item => item.id !== data.id)]
+                    payload: [data, ...state.movements.filter(item => item.id !== data.id)].sort((a, b) => a.id - b.id)
                 })
                 setMessage('Evento editado correctamente.')
             } else {

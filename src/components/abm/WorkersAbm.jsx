@@ -1,9 +1,6 @@
 import { useContext, useEffect, useMemo } from "react"
-import { Box, Button, FormControl, Input, InputLabel, LinearProgress, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material"
+import { Box, Button, LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material"
 import { format } from "date-fns"
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers"
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns"
-import { es } from "date-fns/locale"
 
 import { DataContext } from "../../providers/DataProvider"
 import { useCategories } from "../../hooks/useCategories"

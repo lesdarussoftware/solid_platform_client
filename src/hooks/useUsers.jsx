@@ -27,7 +27,7 @@ export function useUsers() {
     async function getUsers(params) {
         const { status, data } = await handleQuery({ url: `${USER_URL}${params ? `${params}` : ''}` })
         if (status === STATUS_CODES.OK) {
-            dispatch({ type: 'USERS', payload: data[0] })
+            dispatch({ type: 'USERS', payload: data[0].sort((a, b) => a.username - b.username) })
             setCount(data[1])
             setLoadingUsers(false)
         }
@@ -43,13 +43,13 @@ export function useUsers() {
                 body: JSON.stringify(formData)
             })
             if (status === STATUS_CODES.CREATED) {
-                dispatch({ type: 'USERS', payload: [data, ...state.users] })
+                dispatch({ type: 'USERS', payload: [data, ...state.users].sort((a, b) => a.username - b.username) })
                 setCount(count + 1)
                 setMessage('Usuario registrado correctamente.')
             } else if (status === STATUS_CODES.OK) {
                 dispatch({
                     type: 'USERS',
-                    payload: [data, ...state.users.filter(item => item.id !== data.id)]
+                    payload: [data, ...state.users.filter(item => item.id !== data.id)].sort((a, b) => a.username - b.username)
                 })
                 setMessage('Usuario editado correctamente.')
             } else {

@@ -25,7 +25,13 @@ export function useSites() {
     async function getSites(params) {
         const { status, data } = await handleQuery({ url: `${SITE_URL}${params ? `${params}` : ''}` })
         if (status === STATUS_CODES.OK) {
-            dispatch({ type: 'SITES', payload: data[0] })
+            dispatch({
+                type: 'SITES', payload: data[0].sort((a, b) => {
+                    if (a.name > b.name) return 1
+                    if (a.name < b.name) return -1
+                    return 0
+                })
+            })
             setCount(data[1])
             setLoadingSites(false)
             localStorage.setItem('solid_sites_storage', JSON.stringify(data[0]))
@@ -42,13 +48,23 @@ export function useSites() {
                 body: JSON.stringify(formData)
             })
             if (status === STATUS_CODES.CREATED) {
-                dispatch({ type: 'SITES', payload: [data, ...state.sites] })
+                dispatch({
+                    type: 'SITES', payload: [data, ...state.sites].sort((a, b) => {
+                        if (a.name > b.name) return 1
+                        if (a.name < b.name) return -1
+                        return 0
+                    })
+                })
                 setCount(count + 1)
                 setMessage('Obra registrada correctamente.')
             } else if (status === STATUS_CODES.OK) {
                 dispatch({
                     type: 'SITES',
-                    payload: [data, ...state.sites.filter(item => item.id !== data.id)]
+                    payload: [data, ...state.sites.filter(item => item.id !== data.id)].sort((a, b) => {
+                        if (a.name > b.name) return 1
+                        if (a.name < b.name) return -1
+                        return 0
+                    })
                 })
                 setMessage('Obra editada correctamente.')
             } else {
