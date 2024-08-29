@@ -12,47 +12,34 @@ export function ActivityFilter({ filter, setFilter }) {
 
     return (
         <Box sx={{
-            width: { xs: '100%', lg: '40%' },
+            width: { xs: '100%', lg: '50%' },
             display: 'flex',
             justifyContent: 'space-between',
-            gap: 0.1,
+            gap: 1,
             alignItems: 'start',
             flexWrap: 'wrap'
         }}>
-            <Box sx={{ width: { xs: '100%', sm: '40%' }, display: 'flex', flexDirection: 'column', gap: 1 }}>
-                <FormControl>
-                    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
-                        <DatePicker
-                            label="Desde"
-                            value={filter.from.length === 0 ? new Date(Date.now()) : new Date(filter.from)}
-                            onChange={value => setFilter({ ...filter, from: new Date(value.toISOString()) })}
-                        />
-                    </LocalizationProvider>
-                </FormControl>
-                <FormControl>
-                    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
-                        <DatePicker
-                            label="Hasta"
-                            value={filter.to.length === 0 ? new Date(Date.now()) : new Date(filter.to)}
-                            onChange={value => setFilter({ ...filter, to: new Date(value.toISOString()) })}
-                        />
-                    </LocalizationProvider>
-                </FormControl>
-            </Box>
-            <Box sx={{ width: { xs: '100%', sm: '40%' }, display: 'flex', flexDirection: 'column', gap: 1 }}>
-                <FormControl>
-                    <Autocomplete
-                        disablePortal
-                        id="worker-autocomplete"
-                        options={state.workers.map(w => `${w.last_name} ${w.first_name}`)}
-                        noOptionsText="No hay operarios disponibles."
-                        onChange={(_, value) => setFilter({ ...filter, worker: value ?? '' })}
-                        renderInput={(params) => <TextField {...params} label="Operario" />}
-                        value={filter.worker}
-                        isOptionEqualToValue={(option, value) => value.length === 0 || option === value}
+            <FormControl sx={{ width: { xs: '100%', sm: '43%' } }}>
+                <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
+                    <DatePicker
+                        label="Fecha"
+                        value={filter.date.length === 0 ? new Date(Date.now()) : new Date(filter.date)}
+                        onChange={value => setFilter({ ...filter, date: new Date(value.toISOString()) })}
                     />
-                </FormControl>
-            </Box>
+                </LocalizationProvider>
+            </FormControl>
+            <FormControl sx={{ width: { xs: '100%', sm: '43%' } }}>
+                <Autocomplete
+                    disablePortal
+                    id="worker-autocomplete"
+                    options={state.workers.map(w => `${w.last_name} ${w.first_name}`)}
+                    noOptionsText="No hay operarios disponibles."
+                    onChange={(_, value) => setFilter({ ...filter, worker: value ?? '' })}
+                    renderInput={(params) => <TextField {...params} label="Operario" />}
+                    value={filter.worker}
+                    isOptionEqualToValue={(option, value) => value.length === 0 || option === value}
+                />
+            </FormControl>
             <Button
                 type="button"
                 variant="outlined"

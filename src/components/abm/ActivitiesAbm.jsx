@@ -56,14 +56,12 @@ export function ActivitiesAbm() {
 
     useEffect(() => {
         getWorkers();
-        getActivities()
     }, []);
 
     useEffect(() => {
-        const { from, to, page, offset, worker_id } = filter;
-        const fromIsNotString = typeof from !== 'string';
-        const toIsNotString = typeof to !== 'string';
-        getActivities(`?page=${page}&offset=${offset}&from=${fromIsNotString ? new Date(from).toISOString() : ''}&to=${toIsNotString ? new Date(to).toISOString() : ''}&worker_id=${worker_id}`);
+        const { date, page, offset, worker_id } = filter;
+        const dateIsNotString = typeof date !== 'string';
+        getActivities(`?page=${page}&offset=${offset}${dateIsNotString ? `&date=${new Date(date).toISOString()}` : ''}&worker_id=${worker_id}`);
     }, [filter]);
 
     const headCells = useMemo(() => [
@@ -166,6 +164,8 @@ export function ActivitiesAbm() {
                                                 renderInput={(params) => <TextField {...params} />}
                                             />
                                         </LocalizationProvider>
+                                    </FormControl>
+                                    <FormControl sx={{ width: '50%' }}>
                                         <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
                                             <DateTimePicker
                                                 label="Salida"
@@ -197,7 +197,7 @@ export function ActivitiesAbm() {
                                     </FormControl>
                                     <FormControl sx={{ width: '50%' }}>
                                         <InputLabel htmlFor="hours">Horas</InputLabel>
-                                        <Input id="hours" type="number" name="hours" value={formData.hours} />
+                                        <Input id="hours" type="number" name="hours" value={formData.hours} onChange={handleChange} />
                                         {errors.hours?.type === 'required' &&
                                             <Typography variant="caption" color="red" marginTop={1}>
                                                 * Las cantidad de horas extra es requerida.

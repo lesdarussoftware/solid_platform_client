@@ -19,8 +19,7 @@ export function useActivities() {
     const [filter, setFilter] = useState({
         page: 0,
         offset: 60,
-        from: new Date(Date.now()),
-        to: new Date(Date.now()),
+        date: '',
         worker_id: ''
     })
 
@@ -36,6 +35,7 @@ export function useActivities() {
     async function handleSubmit(e, validate, formData, setDisabled, reset) {
         e.preventDefault()
         if (validate()) {
+            formData.hours = parseInt(formData.hours)
             const urls = { 'NEW': ACTIVITY_URL, 'EDIT': `${ACTIVITY_URL}/${formData.id}` }
             const { status, data } = await handleQuery({
                 url: urls[open],
