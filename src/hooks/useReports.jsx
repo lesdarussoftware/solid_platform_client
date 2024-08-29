@@ -22,7 +22,7 @@ export function useReports() {
         if (validate()) {
             setLoadingSiteStatus(true)
             const { status, data } = await handleQuery({
-                url: MOVEMENT_URL + `/site-status/${formData.site}/${formData.from.toISOString()}/${formData.to.toISOString()}/${formData.referenceInHour}/${formData.referenceOutHour}/${formData.toleranceMinutes}`
+                url: MOVEMENT_URL + `/site-status/${formData.site}/${formData.from.toISOString()}/${formData.to.toISOString()}`
             })
             if (status === STATUS_CODES.OK) {
                 setSiteStatusRows(data)

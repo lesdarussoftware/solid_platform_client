@@ -64,7 +64,7 @@ export function Tarjas() {
                                 sx={{ marginY: { xs: 3, sm: 0 } }}
                             >
                                 <Tab label="Ing./Egr." {...a11yProps(0)} />
-                                <Tab label="H. Extra" {...a11yProps(1)} />
+                                <Tab label="Hs. Extra" {...a11yProps(1)} />
                                 <Tab label="Personal" {...a11yProps(2)} />
                                 <Tab label="Categorías" {...a11yProps(3)} />
                                 <Tab label="Reportes" {...a11yProps(4)} />
