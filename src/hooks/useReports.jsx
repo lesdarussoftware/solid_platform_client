@@ -41,10 +41,10 @@ export function useReports() {
     const printSiteStatus = (type, validate, formData) => {
         if (validate()) {
             if (type === 'PDF') {
-                window.open(`${REPORT_URL}/estado-obra-pdf/${auth?.refresh_token}/${formData.site}/${formData.from.toISOString()}/${formData.to.toISOString()}/${formData.referenceInHour}/${formData.referenceOutHour}/${formData.toleranceMinutes}`, '_blank')
+                window.open(`${REPORT_URL}/estado-obra-pdf/${auth?.refresh_token}/${formData.site}/${formData.from.toISOString()}/${formData.to.toISOString()}`, '_blank')
             }
             if (type === 'EXCEL') {
-                window.open(`${REPORT_URL}/estado-obra-excel/${auth?.refresh_token}/${formData.site}/${formData.from.toISOString()}/${formData.to.toISOString()}/${formData.referenceInHour}/${formData.referenceOutHour}/${formData.toleranceMinutes}`, '_blank')
+                window.open(`${REPORT_URL}/estado-obra-excel/${auth?.refresh_token}/${formData.site}/${formData.from.toISOString()}/${formData.to.toISOString()}`, '_blank')
             }
         }
     }
