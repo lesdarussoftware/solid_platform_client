@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo } from "react"
+import { useContext, useEffect, useMemo, useState } from "react"
 import { Box, Button, FormControl, Input, InputLabel, LinearProgress, Typography } from "@mui/material"
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 
@@ -19,6 +19,8 @@ export function SitesAbm() {
         defaultData: { id: '', name: '', },
         rules: { name: { required: true, maxLength: 191 } }
     })
+
+    const [workOnFortnight, setWorkOnFortnight] = useState(null)
 
     useEffect(() => {
         const { page, offset } = filter
@@ -48,7 +50,7 @@ export function SitesAbm() {
             accessor: (row) => (
                 <Button variant="contained" onClick={() => {
                     setFormData(row)
-                    setOpen('DETAILS')
+                    setOpen('FORTNIGHTS')
                 }}>
                     <SettingsRoundedIcon />
                 </Button>
@@ -63,10 +65,11 @@ export function SitesAbm() {
                     <LinearProgress />
                 </Box> :
                 <>
-                    {open === 'DETAILS' ?
+                    {open === 'FORTNIGHTS' ?
                         <SiteDetails
                             site={formData}
                             setOpenSite={setOpen}
+                            setWorkOnFortnight={setWorkOnFortnight}
                         /> :
                         <DataGrid
                             headCells={headCells}
