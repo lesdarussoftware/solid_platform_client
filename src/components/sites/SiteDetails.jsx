@@ -107,7 +107,7 @@ export function SiteDetails({ site, setOpenSite, setWorkOnFortnight }) {
             label: "Reglas",
             accessor: (row) => (
                 <Button variant="contained" onClick={() => {
-                    setWorkOnFortnight(row.id)
+                    setWorkOnFortnight(row)
                     setOpenSite('RULES')
                 }}>
                     <SettingsRoundedIcon />

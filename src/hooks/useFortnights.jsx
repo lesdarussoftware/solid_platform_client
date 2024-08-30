@@ -3,7 +3,7 @@ import { useContext, useState } from "react";
 import { MessageContext } from "../providers/MessageProvider";
 import { useQuery } from "./useQuery";
 
-import { FORTNIGHT_URL } from "../helpers/urls";
+import { FORTNIGHT_URL, RULE_URL } from "../helpers/urls";
 import { STATUS_CODES } from "../helpers/statusCodes";
 import { format } from "date-fns";
 
@@ -81,6 +81,48 @@ export function useFortnights() {
         setOpenMessage(true)
     }
 
+    async function handleSubmitRule(e, formData, setDisabled, reset, workOnFortnight, setWorkOnFortnight) {
+        e.preventDefault()
+        const urls = { 'NEW': RULE_URL, 'EDIT': `${RULE_URL}/${formData.id}` }
+        const { status, data } = await handleQuery({
+            url: urls[open],
+            method: open === 'NEW' ? 'POST' : open === 'EDIT' ? 'PUT' : 'GET',
+            body: JSON.stringify(formatNewData(formData))
+        })
+        if (status === STATUS_CODES.CREATED) {
+            setWorkOnFortnight({
+                ...workOnFortnight,
+                rules: [...workOnFortnight.rules, data]
+                    .sort((a, b) => {
+                        if (a.date > b.date) return 1
+                        if (a.date < b.date) return -1
+                        return 0
+                    })
+            })
+            setMessage('Regla registrada correctamente.')
+        } else if (status === STATUS_CODES.OK) {
+            setWorkOnFortnight({
+                ...workOnFortnight,
+                rules: [...workOnFortnight.rules.filter(r => r.id !== data.id), data]
+                    .sort((a, b) => {
+                        if (a.date > b.date) return 1
+                        if (a.date < b.date) return -1
+                        return 0
+                    })
+            })
+            setMessage('Regla editada correctamente.')
+        } else {
+            setMessage(data.message)
+            setSeverity('error')
+            setDisabled(false)
+        }
+        if (status === STATUS_CODES.CREATED || status === STATUS_CODES.OK) {
+            setSeverity('success')
+            reset(setOpen)
+        }
+        setOpenMessage(true)
+    }
+
     async function handleDelete(formData, reset, setDisabled) {
         const { status, data } = await handleQuery({ url: `${FORTNIGHT_URL}/${formData.id}`, method: 'DELETE' })
         if (status === STATUS_CODES.OK) {
@@ -88,6 +130,25 @@ export function useFortnights() {
             setCount(count - 1)
             setSeverity('success')
             setMessage('Quincena eliminada correctamente.')
+            reset(setOpen)
+        }
+        if (status === STATUS_CODES.SERVER_ERROR) {
+            setMessage(data.message)
+            setSeverity('error')
+            setDisabled(false)
+        }
+        setOpenMessage(true)
+    }
+
+    async function handleDeleteRule(formData, reset, setDisabled, workOnFortnight, setWorkOnFortnight) {
+        const { status, data } = await handleQuery({ url: `${RULE_URL}/${formData.id}`, method: 'DELETE' })
+        if (status === STATUS_CODES.OK) {
+            setWorkOnFortnight({
+                ...workOnFortnight,
+                rules: [...workOnFortnight.rules.filter(r => r.id !== data.id)]
+            })
+            setSeverity('success')
+            setMessage('Regla eliminada correctamente.')
             reset(setOpen)
         }
         if (status === STATUS_CODES.SERVER_ERROR) {
@@ -109,6 +170,8 @@ export function useFortnights() {
         fortnights,
         getFortnights,
         loadingFortnights,
-        setLoadingFortnights
+        setLoadingFortnights,
+        handleSubmitRule,
+        handleDeleteRule
     }
 }
