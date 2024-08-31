@@ -12,3 +12,5 @@ export const CATEGORY_URL = `${BASE_URL}/categories`
 export const CATEGORY_RATE_URL = `${BASE_URL}/category-rates`
 export const REPORT_URL = `${BASE_URL}/reports`
 export const ACTIVITY_URL = `${BASE_URL}/activities`
+export const FORTNIGHT_URL = `${BASE_URL}/fortnights`
+export const RULE_URL = `${BASE_URL}/rules`

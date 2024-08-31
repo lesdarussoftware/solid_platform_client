@@ -24,10 +24,7 @@ export function SiteStatus({ setShow }) {
         defaultData: {
             site: '',
             from: new Date(Date.now()),
-            to: new Date(Date.now()),
-            referenceInHour: '08:00',
-            referenceOutHour: '16:00',
-            toleranceMinutes: 0
+            to: new Date(Date.now())
         },
         rules: { site: { required: true } }
     });
@@ -56,7 +53,7 @@ export function SiteStatus({ setShow }) {
                         flexWrap: 'wrap',
                         width: { xs: '100%', md: '60%', lg: '40%' }
                     }}>
-                        <FormControl sx={{ width: '30%' }}>
+                        <FormControl sx={{ width: { xs: '100%', sm: '32%' } }}>
                             <Autocomplete
                                 disablePortal
                                 id="site-autocomplete"
@@ -73,7 +70,7 @@ export function SiteStatus({ setShow }) {
                                 </Typography>
                             }
                         </FormControl>
-                        <FormControl sx={{ width: '30%' }}>
+                        <FormControl sx={{ width: { xs: '100%', sm: '32%' } }}>
                             <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
                                 <DatePicker
                                     label="Desde"
@@ -83,7 +80,7 @@ export function SiteStatus({ setShow }) {
                                 />
                             </LocalizationProvider>
                         </FormControl>
-                        <FormControl sx={{ width: '30%' }}>
+                        <FormControl sx={{ width: { xs: '100%', sm: '32%' } }}>
                             <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
                                 <DatePicker
                                     label="Hasta"
@@ -92,53 +89,6 @@ export function SiteStatus({ setShow }) {
                                     onChange={value => siteStatusChange({ target: { name: 'to', value: new Date(value.toISOString()) } })}
                                 />
                             </LocalizationProvider>
-                        </FormControl>
-                        <FormControl sx={{ width: '30%' }}>
-                            <TextField
-                                label="Hora de Ingreso de Referencia"
-                                type="time"
-                                name="referenceInHour"
-                                value={siteStatusData.referenceInHour}
-                                onChange={siteStatusChange}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                inputProps={{
-                                    step: 300, // 5 min
-                                }}
-                            />
-                        </FormControl>
-                        <FormControl sx={{ width: '30%' }}>
-                            <TextField
-                                label="Hora de Egreso de Referencia"
-                                type="time"
-                                name="referenceOutHour"
-                                value={siteStatusData.referenceOutHour}
-                                onChange={siteStatusChange}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                inputProps={{
-                                    step: 300, // 5 min
-                                }}
-                            />
-                        </FormControl>
-                        <FormControl sx={{ width: '30%' }}>
-                            <TextField
-                                label="Minutos de Tolerancia"
-                                type="number"
-                                name="toleranceMinutes"
-                                value={siteStatusData.toleranceMinutes}
-                                onChange={e => siteStatusChange({
-                                    target: {
-                                        name: 'toleranceMinutes',
-                                        value: parseInt(e.target.value) <= 0 ? 0 : Math.abs(e.target.value)
-                                    }
-                                })}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                            />
                         </FormControl>
                         <Button
                             type="button"

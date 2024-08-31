@@ -196,8 +196,21 @@ export function ActivitiesAbm() {
                                         }
                                     </FormControl>
                                     <FormControl sx={{ width: '50%' }}>
-                                        <InputLabel htmlFor="hours">Horas</InputLabel>
-                                        <Input id="hours" type="number" name="hours" value={formData.hours} onChange={handleChange} />
+                                        <TextField
+                                            label="Horas"
+                                            type="number"
+                                            name="hours"
+                                            value={formData.hours}
+                                            onChange={e => handleChange({
+                                                target: {
+                                                    name: 'hours',
+                                                    value: parseInt(e.target.value) <= 0 ? 0 : Math.abs(e.target.value)
+                                                }
+                                            })}
+                                            InputLabelProps={{
+                                                shrink: true,
+                                            }}
+                                        />
                                         {errors.hours?.type === 'required' &&
                                             <Typography variant="caption" color="red" marginTop={1}>
                                                 * Las cantidad de horas extra es requerida.
