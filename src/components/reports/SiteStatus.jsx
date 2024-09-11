@@ -39,6 +39,12 @@ export function SiteStatus({ setShow }) {
                     <Typography color="text.primary">Estado de obra</Typography>
                 </Breadcrumbs>
                 <Typography variant="h5" marginBottom={1}>Estado de obra</Typography>
+                <Box sx={{ p: 1, borderRadius: 1, border: '1px solid #000', width: 'fit-content', mb: 2 }}>
+                    <Typography variant="body1" marginBottom={1}>Valores de cálculo por defecto</Typography>
+                    <Typography variant="body2" marginBottom={1}>- Entrada: 8hs</Typography>
+                    <Typography variant="body2" marginBottom={1}>- Salida: 18hs (sábados 13hs)</Typography>
+                    <Typography variant="body2" marginBottom={1}>- No se incluye la hora de almuerzo</Typography>
+                </Box>
                 <Box sx={{
                     display: 'flex',
                     flexDirection: { xs: 'column', md: 'row' },
