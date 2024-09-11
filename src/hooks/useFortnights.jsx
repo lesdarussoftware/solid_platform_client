@@ -81,6 +81,25 @@ export function useFortnights() {
         setOpenMessage(true)
     }
 
+    async function handleSubmitSeveralFortnights(e, formData, setDisabled, reset) {
+        e.preventDefault()
+        const { status, data } = await handleQuery({
+            url: FORTNIGHT_URL,
+            method: 'POST',
+            body: JSON.stringify(formData.map(fd => formatNewData(fd)))
+        })
+        if (status === STATUS_CODES.CREATED) {
+            setMessage('Configuración general registrada correctamente.')
+            setSeverity('success')
+            reset(setOpen)
+        } else {
+            setMessage(data.message)
+            setSeverity('error')
+            setDisabled(false)
+        }
+        setOpenMessage(true)
+    }
+
     async function handleSubmitRule(e, formData, setDisabled, reset, workOnFortnight, setWorkOnFortnight) {
         e.preventDefault()
         const urls = { 'NEW': RULE_URL, 'EDIT': `${RULE_URL}/${formData.id}` }
@@ -172,6 +191,7 @@ export function useFortnights() {
         loadingFortnights,
         setLoadingFortnights,
         handleSubmitRule,
-        handleDeleteRule
+        handleDeleteRule,
+        handleSubmitSeveralFortnights
     }
 }

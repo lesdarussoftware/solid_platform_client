@@ -28,11 +28,6 @@ export function FortnightDetails({ site, setOpenSite, setWorkOnFortnight, workOn
     })
 
     useEffect(() => {
-        const { page, offset } = filter
-
-    }, [filter])
-
-    useEffect(() => {
         if (open === 'EDIT') {
             const [inH, inM] = formData.in_hour.split(':')
             const [outH, outM] = formData.out_hour.split(':')
