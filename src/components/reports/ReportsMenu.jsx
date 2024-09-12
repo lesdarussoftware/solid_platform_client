@@ -26,9 +26,9 @@ export function ReportsMenu() {
             {!show &&
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', padding: 2, gap: 2 }}>
                     <Box sx={boxStyles} onClick={() => setShow('SITE_STATUS')}>
-                        <Typography variant="h6" marginBottom={1}>Estado de obra</Typography>
+                        <Typography variant="h6" marginBottom={1}>Cálculo de horas</Typography>
                         <Typography variant="body1">
-                            Permite calcular el total de obras trabajadas por operario por obra.
+                            Permite calcular el total de horas trabajadas por operario por obra.
                         </Typography>
                     </Box>
                     <Box sx={boxStyles} onClick={() => setShow('WORKERS_STATUS')}>

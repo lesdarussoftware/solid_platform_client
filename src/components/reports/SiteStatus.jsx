@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Autocomplete, Box, Breadcrumbs, Button, FormControl, LinearProgress, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -15,7 +15,6 @@ export function SiteStatus({ setShow }) {
     const { getSiteStatusRows, siteStatusRows, printSiteStatus, loadingSiteStatus } = useReports();
     const {
         formData: siteStatusData,
-        errors: siteStatusErrors,
         handleChange: siteStatusChange,
         validate: siteStatusValidate,
         disabled: siteStatusDisabled,
@@ -23,11 +22,16 @@ export function SiteStatus({ setShow }) {
     } = useForm({
         defaultData: {
             site: '',
+            worker: '',
             from: new Date(Date.now()),
             to: new Date(Date.now())
         },
-        rules: { site: { required: true } }
+        rules: {}
     });
+
+    useEffect(() => {
+        console.log(siteStatusData)
+    }, [siteStatusData])
 
     return (
         <>
@@ -57,26 +61,33 @@ export function SiteStatus({ setShow }) {
                         justifyContent: 'space-between',
                         gap: 1,
                         flexWrap: 'wrap',
-                        width: { xs: '100%', md: '60%', lg: '40%' }
+                        width: { xs: '100%', md: '80%', lg: '60%' }
                     }}>
-                        <FormControl sx={{ width: { xs: '100%', sm: '32%' } }}>
+                        <FormControl sx={{ width: { xs: '100%', md: '24%' } }}>
                             <Autocomplete
                                 disablePortal
                                 id="site-autocomplete"
                                 options={state.sites.map(s => ({ label: s.name, name: s.name }))}
                                 noOptionsText="No hay obras disponibles."
-                                onChange={(_, value) => siteStatusChange({ target: { name: 'site', value: value.name } })}
+                                onChange={(_, value) => siteStatusChange({ target: { name: 'site', value: value?.name ?? '' } })}
                                 renderInput={(params) => <TextField {...params} label="Obra" />}
-                                value={siteStatusData.site.toString().length > 0 ? state.sites.find(s => s.name === siteStatusData.site).name : ''}
+                                value={siteStatusData.site?.toString().length > 0 ? state.sites.find(s => s.name === siteStatusData.site).name : ''}
                                 isOptionEqualToValue={(option, value) => value.length === 0 || option.name === value}
                             />
-                            {siteStatusErrors.site?.type === 'required' &&
-                                <Typography variant="caption" color="red" marginTop={1}>
-                                    * La obra es requerida.
-                                </Typography>
-                            }
                         </FormControl>
-                        <FormControl sx={{ width: { xs: '100%', sm: '32%' } }}>
+                        <FormControl sx={{ width: { xs: '100%', md: '24%' } }}>
+                            <Autocomplete
+                                disablePortal
+                                id="worker-autocomplete"
+                                options={state.workers.map(w => ({ label: `${w.last_name} ${w.first_name}`, id: w.id }))}
+                                noOptionsText="No hay operarios disponibles."
+                                onChange={(_, value) => siteStatusChange({ target: { name: 'worker', value: value?.id || '' } })}
+                                renderInput={(params) => <TextField {...params} label="Operario" />}
+                                value={siteStatusData.worker.toString().length > 0 ? `${state.workers.find(w => w.id === parseInt(siteStatusData.worker)).last_name} ${state.workers.find(w => w.id === parseInt(siteStatusData.worker)).first_name}` : ''}
+                                isOptionEqualToValue={(option, value) => value.length === 0 || option.label === value}
+                            />
+                        </FormControl>
+                        <FormControl sx={{ width: { xs: '100%', md: '24%' } }}>
                             <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
                                 <DatePicker
                                     label="Desde"
@@ -86,7 +97,7 @@ export function SiteStatus({ setShow }) {
                                 />
                             </LocalizationProvider>
                         </FormControl>
-                        <FormControl sx={{ width: { xs: '100%', sm: '32%' } }}>
+                        <FormControl sx={{ width: { xs: '100%', md: '24%' } }}>
                             <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
                                 <DatePicker
                                     label="Hasta"
@@ -99,7 +110,7 @@ export function SiteStatus({ setShow }) {
                         <Button
                             type="button"
                             variant="contained"
-                            disabled={siteStatusDisabled}
+                            disabled={siteStatusDisabled || (siteStatusData.site?.length === 0 && siteStatusData.worker?.toString().length === 0)}
                             sx={{ marginBottom: 1 }}
                             onClick={() => getSiteStatusRows(siteStatusData, siteStatusValidate, setSiteStatusDisabled)}
                         >
