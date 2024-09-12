@@ -32,31 +32,50 @@ export function useActivities() {
         }
     }
 
-    async function handleSubmit(e, validate, formData, setDisabled, reset) {
+    async function handleCreate(e, validate, formData, newActivities, setDisabled, reset, setOpen, setNewActivities) {
+        e.preventDefault()
+        if (validate()) {
+            const result = await Promise.all(newActivities.map(na => handleQuery({
+                url: ACTIVITY_URL,
+                method: 'POST',
+                body: JSON.stringify({ ...formData, hours: parseInt(formData.hours), worker_id: na })
+            })))
+            if (result.every(r => r.status === STATUS_CODES.CREATED)) {
+                setActivities([
+                    ...activities,
+                    ...result.map(r => r.data)
+                ])
+                setMessage('Actividades registradas correctamente.')
+                setSeverity('success')
+                reset(setOpen)
+                setNewActivities([])
+            } else {
+                setMessage(`Ocurrió un error con los operarios n°: ${result.filter(r => r.status !== STATUS_CODES.CREATED).map(r => r.data.id).join()}.`)
+                setSeverity('error')
+                setDisabled(false)
+            }
+            setOpenMessage(true)
+        }
+    }
+
+    async function handleEdit(e, validate, formData, setDisabled, reset) {
         e.preventDefault()
         if (validate()) {
             formData.hours = parseInt(formData.hours)
-            const urls = { 'NEW': ACTIVITY_URL, 'EDIT': `${ACTIVITY_URL}/${formData.id}` }
             const { status, data } = await handleQuery({
-                url: urls[open],
-                method: open === 'NEW' ? 'POST' : open === 'EDIT' ? 'PUT' : 'GET',
+                url: `${ACTIVITY_URL}/${formData.id}`,
+                method: 'PUT',
                 body: JSON.stringify(formData)
             })
-            if (status === STATUS_CODES.CREATED) {
-                setActivities([data, ...activities])
-                setCount(count + 1)
-                setMessage('Actividad registrada correctamente.')
-            } else if (status === STATUS_CODES.OK) {
+            if (status === STATUS_CODES.OK) {
+                setSeverity('success')
                 setActivities([data, ...activities.filter(a => a.id !== data.id)])
                 setMessage('Actividad editada correctamente.')
+                reset(setOpen)
             } else {
                 setMessage(data.message)
                 setSeverity('error')
                 setDisabled(false)
-            }
-            if (status === STATUS_CODES.CREATED || status === STATUS_CODES.OK) {
-                setSeverity('success')
-                reset(setOpen)
             }
             setOpenMessage(true)
         }
@@ -84,7 +103,8 @@ export function useActivities() {
         getActivities,
         open,
         setOpen,
-        handleSubmit,
+        handleEdit,
+        handleCreate,
         handleDelete,
         count,
         filter,

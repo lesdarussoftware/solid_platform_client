@@ -94,7 +94,7 @@ export function useFortnights() {
             reset(setOpen)
             setNewFortnights([])
         } else {
-            setMessage(`Ocurrió un error en las obras n°: ${result.filter(r => r.status !== STATUS_CODES.CREATED).map(r => r.id).join()}.`)
+            setMessage(`Ocurrió un error en las obras n°: ${result.filter(r => r.status !== STATUS_CODES.CREATED).map(r => r.data.id).join()}.`)
             setSeverity('error')
             setDisabled(false)
         }

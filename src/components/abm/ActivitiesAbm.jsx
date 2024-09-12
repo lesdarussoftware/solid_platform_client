@@ -1,11 +1,10 @@
-import { useContext, useEffect, useMemo } from "react";
-import { Autocomplete, Box, Button, FormControl, InputLabel, LinearProgress, TextField, Typography, Input } from "@mui/material";
+import { useEffect, useMemo, useState } from "react";
+import { Box, Button, FormControl, InputLabel, LinearProgress, TextField, Typography, FormControlLabel, Checkbox, Select, MenuItem, Chip } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { es } from "date-fns/locale";
 import { format } from 'date-fns';
 
-import { DataContext } from "../../providers/DataProvider";
 import { useForm } from "../../hooks/useForm";
 import { useWorkers } from "../../hooks/useWorkers";
 import { useActivities } from "../../hooks/useActivities";
@@ -16,27 +15,25 @@ import { ModalComponent } from "../common/ModalComponent";
 
 export function ActivitiesAbm() {
 
-    const { state } = useContext(DataContext);
-
     const {
         activities,
         getActivities,
         open,
         setOpen,
-        handleSubmit,
+        handleEdit,
+        handleCreate,
         handleDelete,
         filter,
         setFilter,
         count,
         loadingActivities
     } = useActivities();
-    const { getWorkers, loadingWorkers } = useWorkers();
+    const { loadingWorkers, getAllWorkers, allWorkers, getWorkers } = useWorkers();
     const { formData, setFormData, reset, handleChange, errors, validate, disabled, setDisabled } = useForm({
         defaultData: {
             id: '',
             in_date: new Date(Date.now()),
             out_date: new Date(Date.now()),
-            worker_id: '',
             description: '',
             hours: ''
         },
@@ -54,8 +51,11 @@ export function ActivitiesAbm() {
         }
     });
 
+    const [newActivities, setNewActivities] = useState([])
+
     useEffect(() => {
         getWorkers();
+        getAllWorkers();
     }, []);
 
     useEffect(() => {
@@ -63,6 +63,11 @@ export function ActivitiesAbm() {
         const dateIsNotString = typeof date !== 'string';
         getActivities(`?page=${page}&offset=${offset}${dateIsNotString ? `&date=${new Date(date).toISOString()}` : ''}&worker_id=${worker_id}`);
     }, [filter]);
+
+    const handleClose = () => {
+        setNewActivities([])
+        reset(setOpen)
+    }
 
     const headCells = useMemo(() => [
         {
@@ -146,15 +151,79 @@ export function ActivitiesAbm() {
                         </Box>
                     }
                 >
-                    <ModalComponent open={open === 'NEW' || open === 'EDIT'} reduceWidth={500} onClose={() => reset(setOpen)}>
+                    <ModalComponent open={open === 'NEW' || open === 'EDIT'} reduceWidth={500} onClose={handleClose}>
                         <Typography variant="h6" sx={{ marginBottom: 1, fontSize: { xs: 18, sm: 18, md: 20 } }}>
                             {open === 'NEW' && 'Nuevo registro'}
                             {open === 'EDIT' && `Editar registro #${formData.id}`}
                         </Typography>
-                        <form onSubmit={(e) => handleSubmit(e, validate, formData, setDisabled, reset)}>
+                        {open === 'NEW' &&
+                            <>
+                                <Box sx={{ display: 'flex', gap: 2, marginTop: 1, mb: 1 }}>
+                                    <FormControl sx={{ width: '30%' }}>
+                                        <InputLabel id="worker-select">Operario</InputLabel>
+                                        <Select
+                                            labelId="worker-select"
+                                            label="Operario"
+                                            id="worker-select"
+                                            onChange={e => {
+                                                if (e.target.value.toString().length > 0) {
+                                                    setNewActivities([parseInt(e.target.value), ...newActivities])
+                                                    document.getElementById("worker-select").value = ''
+                                                }
+                                            }}
+                                        >
+                                            <MenuItem value="">Seleccione</MenuItem>
+                                            {allWorkers
+                                                .filter(w => !newActivities.includes(w.id))
+                                                .sort((a, b) => a.first_name - b.first_name)
+                                                .map(w => (
+                                                    <MenuItem key={w.id} value={w.id}>{` ${w.last_name} ${w.first_name}`}</MenuItem>
+                                                ))}
+                                        </Select>
+                                    </FormControl>
+                                    <FormControlLabel
+                                        control={<Checkbox />}
+                                        label="Seleccionar todos"
+                                        checked={newActivities.length === allWorkers.length}
+                                        onChange={e => {
+                                            if (e.target.checked) {
+                                                setNewActivities(allWorkers.map(w => w.id))
+                                            } else {
+                                                setNewActivities([])
+                                            }
+                                        }}
+                                    />
+                                </Box>
+                                <Box sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    flexWrap: 'wrap',
+                                    height: 200,
+                                    border: '1px solid gray',
+                                    padding: 1,
+                                    borderRadius: 1,
+                                    mb: 2
+                                }}>
+                                    <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                                        {newActivities.length < allWorkers.length &&
+                                            newActivities.map(na => (
+                                                <Chip
+                                                    label={`${allWorkers.find(w => w.id === na).first_name} ${allWorkers.find(w => w.id === na).last_name}`}
+                                                    onDelete={() => setNewActivities(prev => [...prev.filter(item => item !== na)])}
+                                                />
+                                            ))
+                                        }
+                                    </Box>
+                                </Box>
+                            </>
+                        }
+                        <form onSubmit={(e) => {
+                            if (open === 'NEW') handleCreate(e, validate, formData, newActivities, setDisabled, reset, setOpen, setNewActivities)
+                            if (open === 'EDIT') handleEdit(e, validate, formData, setDisabled, reset)
+                        }}>
                             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                                 <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 1 }}>
-                                    <FormControl sx={{ width: '50%' }}>
+                                    <FormControl sx={{ width: '33%' }}>
                                         <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
                                             <DateTimePicker
                                                 label="Entrada"
@@ -165,7 +234,7 @@ export function ActivitiesAbm() {
                                             />
                                         </LocalizationProvider>
                                     </FormControl>
-                                    <FormControl sx={{ width: '50%' }}>
+                                    <FormControl sx={{ width: '33%' }}>
                                         <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
                                             <DateTimePicker
                                                 label="Salida"
@@ -176,28 +245,9 @@ export function ActivitiesAbm() {
                                             />
                                         </LocalizationProvider>
                                     </FormControl>
-                                </Box>
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 1 }}>
-                                    <FormControl sx={{ width: '50%' }}>
-                                        <Autocomplete
-                                            disablePortal
-                                            id="worker-autocomplete"
-                                            options={state.workers.map(w => ({ label: `${w.last_name} ${w.first_name}`, id: w.id }))}
-                                            noOptionsText="No hay operarios disponibles."
-                                            onChange={(_, value) => handleChange({ target: { name: 'worker_id', value: value?.id || '' } })}
-                                            renderInput={(params) => <TextField {...params} label="Operario" />}
-                                            value={formData.worker_id.toString().length > 0 ? `${state.workers.find(w => w.id === parseInt(formData.worker_id)).last_name} ${state.workers.find(w => w.id === parseInt(formData.worker_id)).first_name}` : ''}
-                                            isOptionEqualToValue={(option, value) => value.length === 0 || option.label === value}
-                                        />
-                                        {errors.worker_id?.type === 'required' &&
-                                            <Typography variant="caption" color="red" marginTop={1}>
-                                                * El operario es requerido.
-                                            </Typography>
-                                        }
-                                    </FormControl>
-                                    <FormControl sx={{ width: '50%' }}>
+                                    <FormControl sx={{ width: '33%' }}>
                                         <TextField
-                                            label="Horas"
+                                            label="Cant. Hs."
                                             type="number"
                                             name="hours"
                                             value={formData.hours}
@@ -242,10 +292,10 @@ export function ActivitiesAbm() {
                                     </Typography>
                                 }
                                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
-                                    <Button type="button" variant="contained" onClick={() => reset(setOpen)}>
+                                    <Button type="button" variant="contained" onClick={handleClose}>
                                         Cancelar
                                     </Button>
-                                    <Button type="submit" variant="contained" disabled={disabled}>
+                                    <Button type="submit" variant="contained" disabled={disabled || (open === 'NEW' && newActivities.length === 0)}>
                                         {open === 'NEW' && 'Guardar'}
                                         {open === 'EDIT' && 'Actualizar'}
                                     </Button>
@@ -253,7 +303,7 @@ export function ActivitiesAbm() {
                             </Box>
                         </form>
                     </ModalComponent>
-                    <ModalComponent open={open === 'DELETE'} onClose={() => reset(setOpen)}>
+                    <ModalComponent open={open === 'DELETE'} onClose={handleClose}>
                         <Typography variant="h6" sx={{ marginBottom: 1, textAlign: 'center' }}>
                             {`¿Desea borrar el registro #${formData.id}?`}
                         </Typography>
@@ -266,7 +316,7 @@ export function ActivitiesAbm() {
                                     margin: '0 auto',
                                     marginTop: 1
                                 }}
-                                onClick={() => reset(setOpen)}
+                                onClick={handleClose}
                             >
                                 Cancelar
                             </Button>
