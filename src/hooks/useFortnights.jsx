@@ -81,19 +81,20 @@ export function useFortnights() {
         setOpenMessage(true)
     }
 
-    async function handleSubmitSeveralFortnights(e, formData, setDisabled, reset) {
+    async function handleSubmitSeveralFortnights(e, formData, newFortnights, setDisabled, reset, setOpen, setNewFortnights) {
         e.preventDefault()
-        const { status, data } = await handleQuery({
+        const result = await Promise.all(newFortnights.map(nf => handleQuery({
             url: FORTNIGHT_URL,
             method: 'POST',
-            body: JSON.stringify(formData.map(fd => formatNewData(fd)))
-        })
-        if (status === STATUS_CODES.CREATED) {
+            body: JSON.stringify(formatNewData({ ...formData, site_id: nf }))
+        })))
+        if (result.every(r => r.status === STATUS_CODES.CREATED)) {
             setMessage('Configuración general registrada correctamente.')
             setSeverity('success')
             reset(setOpen)
+            setNewFortnights([])
         } else {
-            setMessage(data.message)
+            setMessage(`Ocurrió un error en las obras n°: ${result.filter(r => r.status !== STATUS_CODES.CREATED).map(r => r.id).join()}.`)
             setSeverity('error')
             setDisabled(false)
         }
