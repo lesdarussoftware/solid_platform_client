@@ -17,6 +17,7 @@ export function useReports() {
 
     const [siteStatusRows, setSiteStatusRows] = useState([])
     const [loadingSiteStatus, setLoadingSiteStatus] = useState(false)
+    const [open, setOpen] = useState(null)
 
     function getQuery(formData) {
         let query = '?'
@@ -65,6 +66,8 @@ export function useReports() {
         setSiteStatusRows,
         getSiteStatusRows,
         printSiteStatus,
-        loadingSiteStatus
+        loadingSiteStatus,
+        open,
+        setOpen
     }
 }

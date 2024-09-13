@@ -1,18 +1,22 @@
-import { useContext, useEffect } from "react";
-import { Autocomplete, Box, Breadcrumbs, Button, FormControl, LinearProgress, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
+import { useContext, useState } from "react";
+import { Autocomplete, Box, Breadcrumbs, Button, FormControl, IconButton, LinearProgress, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { es } from "date-fns/locale";
+import SearchSharpIcon from '@mui/icons-material/SearchSharp'
+import { format } from "date-fns";
 
 import { DataContext } from "../../providers/DataProvider";
 import { useForm } from "../../hooks/useForm";
 import { useReports } from "../../hooks/useReports";
 
+import { ModalComponent } from "../common/ModalComponent";
+
 export function SiteStatus({ setShow }) {
 
     const { state } = useContext(DataContext);
 
-    const { getSiteStatusRows, siteStatusRows, printSiteStatus, loadingSiteStatus } = useReports();
+    const { getSiteStatusRows, siteStatusRows, printSiteStatus, loadingSiteStatus, open, setOpen } = useReports();
     const {
         formData: siteStatusData,
         handleChange: siteStatusChange,
@@ -29,9 +33,12 @@ export function SiteStatus({ setShow }) {
         rules: {}
     });
 
-    useEffect(() => {
-        console.log(siteStatusData)
-    }, [siteStatusData])
+    const [workOn, setWorkOn] = useState(null)
+
+    const handelClose = () => {
+        setOpen(null)
+        setWorkOn(null)
+    }
 
     return (
         <>
@@ -144,57 +151,154 @@ export function SiteStatus({ setShow }) {
                         </Button>
                     </Box>
                 </Box>
-                <TableContainer component={Paper}>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell align="center">Operario</TableCell>
-                                <TableCell align="center">DNI</TableCell>
-                                <TableCell align="center">CUIL</TableCell>
-                                <TableCell align="center">Horas</TableCell>
-                                <TableCell align="center">Observaciones</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {siteStatusRows.length === 0 ?
-                                <TableRow>
-                                    <TableCell colSpan={5} align="center">
-                                        <>
-                                            {loadingSiteStatus ?
-                                                <LinearProgress /> :
-                                                <>{'No hay registros para mostrar.'}</>
-                                            }
-                                        </>
-                                    </TableCell>
-                                </TableRow> :
-                                siteStatusRows.map(ssr => {
-                                    const color = ssr.observations.length > 0 ? 'red' : '';
-                                    return (
-                                        <TableRow key={ssr.id}>
-                                            <TableCell align="center" sx={{ color }}>
-                                                {ssr.worker}
-                                            </TableCell>
-                                            <TableCell align="center" sx={{ color }}>
-                                                {ssr.dni}
-                                            </TableCell>
-                                            <TableCell align="center" sx={{ color }}>
-                                                {ssr.cuil}
-                                            </TableCell>
-                                            <TableCell align="center" sx={{ color }}>
-                                                {ssr.hours}
-                                            </TableCell>
-                                            <TableCell align="center" sx={{ color }}>
-                                                <Typography whiteSpace="pre-wrap">
-                                                    {ssr.observations}
-                                                </Typography>
-                                            </TableCell>
-                                        </TableRow>
-                                    )
-                                })}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                <MainTable
+                    siteStatusRows={siteStatusRows}
+                    loadingSiteStatus={loadingSiteStatus}
+                    setWorkOn={setWorkOn}
+                    setOpen={setOpen}
+                />
+                <ModalComponent open={open === 'VIEW'} onClose={handelClose}>
+                    <DetailsTables workOn={workOn} />
+                    <Box sx={{ display: 'flex', gap: 1, mt: 3 }}>
+                        <Button
+                            type="button"
+                            variant="outlined"
+                            sx={{ width: '20%', margin: '0 auto' }}
+                            onClick={handelClose}
+                        >
+                            Cerrar
+                        </Button>
+                    </Box>
+                </ModalComponent>
             </Box>
+        </>
+    );
+}
+
+function MainTable({ siteStatusRows, loadingSiteStatus, setWorkOn, setOpen }) {
+    return (
+        <TableContainer component={Paper}>
+            <Table>
+                <TableHead>
+                    <TableRow>
+                        <TableCell></TableCell>
+                        <TableCell align="center">Operario</TableCell>
+                        <TableCell align="center">DNI</TableCell>
+                        <TableCell align="center">CUIL</TableCell>
+                        <TableCell align="center">Horas</TableCell>
+                        <TableCell align="center">Observaciones</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {siteStatusRows.length === 0 ?
+                        <TableRow>
+                            <TableCell colSpan={5} align="center">
+                                <>
+                                    {loadingSiteStatus ?
+                                        <LinearProgress /> :
+                                        <>{'No hay registros para mostrar.'}</>
+                                    }
+                                </>
+                            </TableCell>
+                        </TableRow> :
+                        siteStatusRows.map(ssr => {
+                            const color = ssr.observations.length > 0 ? 'red' : '';
+                            return (
+                                <TableRow key={ssr.id}>
+                                    <TableCell align="center" sx={{ p: 0 }}>
+                                        <Tooltip title="Detalles" onClick={() => {
+                                            setWorkOn(ssr)
+                                            setOpen("VIEW")
+                                        }}>
+                                            <IconButton sx={{ p: 0 }}>
+                                                <SearchSharpIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </TableCell>
+                                    <TableCell align="center" sx={{ color }}>
+                                        {ssr.worker}
+                                    </TableCell>
+                                    <TableCell align="center" sx={{ color }}>
+                                        {ssr.dni}
+                                    </TableCell>
+                                    <TableCell align="center" sx={{ color }}>
+                                        {ssr.cuil}
+                                    </TableCell>
+                                    <TableCell align="center" sx={{ color }}>
+                                        {ssr.hours}
+                                    </TableCell>
+                                    <TableCell align="center" sx={{ color }}>
+                                        <Typography whiteSpace="pre-wrap">
+                                            {ssr.observations}
+                                        </Typography>
+                                    </TableCell>
+                                </TableRow>
+                            )
+                        })}
+                </TableBody>
+            </Table>
+        </TableContainer>
+    )
+}
+
+function DetailsTables({ workOn }) {
+    return (
+        <>
+            <Typography variant="h6" sx={{ marginBottom: 1 }}>
+                {workOn?.worker} - Ingresos / egresos
+            </Typography>
+            <TableContainer component={Paper} sx={{ maxHeight: 300, overflowY: 'auto' }}>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell align="center">#</TableCell>
+                            <TableCell align="center">Tipo</TableCell>
+                            <TableCell align="center">Fecha</TableCell>
+                            <TableCell align="center">Creado por</TableCell>
+                            <TableCell align="center">Observaciones</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {workOn?.movs.sort((a, b) => new Date(b.date) - new Date(a.date)).map(mov => (
+                            <TableRow key={mov.id}>
+                                <TableCell align="center">{mov.id}</TableCell>
+                                <TableCell align="center">{mov.type}</TableCell>
+                                <TableCell align="center">{format(new Date(mov.date), 'dd/MM/yyyy HH:mm')}</TableCell>
+                                <TableCell align="center">{mov.created_by}</TableCell>
+                                <TableCell align="center">{mov.observations}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+
+            <Typography variant="h6" sx={{ mb: 1, mt: 3 }}>
+                {workOn?.worker} - Horas extra
+            </Typography>
+            <TableContainer component={Paper} sx={{ maxHeight: 300, overflowY: 'auto' }}>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell align="center">#</TableCell>
+                            <TableCell align="center">Detalle</TableCell>
+                            <TableCell align="center">Entrada</TableCell>
+                            <TableCell align="center">Salida</TableCell>
+                            <TableCell align="center">Horas</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {workOn?.activities.sort((a, b) => b.id - a.id).map(act => (
+                            <TableRow key={act.id}>
+                                <TableCell align="center">{act.id}</TableCell>
+                                <TableCell align="center">{act.description}</TableCell>
+                                <TableCell align="center">{format(new Date(act.in_date), 'dd/MM/yyyy HH:mm')}</TableCell>
+                                <TableCell align="center">{format(new Date(act.out_date), 'dd/MM/yyyy HH:mm')}</TableCell>
+                                <TableCell align="center">{act.hours}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
         </>
     );
 }
