@@ -254,7 +254,7 @@ export function ActivitiesAbm() {
                                             onChange={e => handleChange({
                                                 target: {
                                                     name: 'hours',
-                                                    value: parseInt(e.target.value) <= 0 ? 0 : Math.abs(e.target.value)
+                                                    value: parseFloat(e.target.value) <= 0 ? 0 : Math.abs(parseFloat(e.target.value))
                                                 }
                                             })}
                                             InputProps={{
