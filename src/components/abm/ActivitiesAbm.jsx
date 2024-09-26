@@ -257,6 +257,11 @@ export function ActivitiesAbm() {
                                                     value: parseInt(e.target.value) <= 0 ? 0 : Math.abs(e.target.value)
                                                 }
                                             })}
+                                            InputProps={{
+                                                inputProps: {
+                                                    step: 0.25
+                                                }
+                                            }}
                                             InputLabelProps={{
                                                 shrink: true,
                                             }}
