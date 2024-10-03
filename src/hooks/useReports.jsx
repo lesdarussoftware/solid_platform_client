@@ -15,8 +15,8 @@ export function useReports() {
 
     const { handleQuery } = useQuery()
 
-    const [siteStatusRows, setSiteStatusRows] = useState([])
-    const [loadingSiteStatus, setLoadingSiteStatus] = useState(false)
+    const [hoursAmountRows, setHoursAmountRows] = useState([])
+    const [loadingHoursAmount, setLoadingHoursAmount] = useState(false)
     const [open, setOpen] = useState(null)
 
     function getQuery(formData) {
@@ -30,16 +30,16 @@ export function useReports() {
         return query
     }
 
-    async function getSiteStatusRows(formData, validate, setDisabled) {
+    async function getHoursAmountRows(formData, validate, setDisabled) {
         if (validate()) {
-            setLoadingSiteStatus(true)
+            setLoadingHoursAmount(true)
             const { status, data } = await handleQuery({
-                url: MOVEMENT_URL + `/site-status/${formData.from.toISOString()}/${formData.to.toISOString()}${getQuery(formData)}`
+                url: MOVEMENT_URL + `/hours-amount/${formData.from.toISOString()}/${formData.to.toISOString()}${getQuery(formData)}`
             })
             if (status === STATUS_CODES.OK) {
-                setSiteStatusRows(data)
+                setHoursAmountRows(data)
                 setDisabled(false)
-                setLoadingSiteStatus(false)
+                setLoadingHoursAmount(false)
                 setSeverity('success')
                 setMessage('Datos actualizados.')
             } else {
@@ -50,23 +50,23 @@ export function useReports() {
         }
     }
 
-    const printSiteStatus = (type, validate, formData) => {
+    const printHoursAmount = (type, validate, formData) => {
         if (validate()) {
             if (type === 'PDF') {
-                window.open(`${REPORT_URL}/estado-obra-pdf/${auth?.refresh_token}/${formData.from.toISOString()}/${formData.to.toISOString()}${getQuery(formData)}`, '_blank')
+                window.open(`${REPORT_URL}/calculo-horas-pdf/${auth?.refresh_token}/${formData.from.toISOString()}/${formData.to.toISOString()}${getQuery(formData)}`, '_blank')
             }
             if (type === 'EXCEL') {
-                window.open(`${REPORT_URL}/estado-obra-excel/${auth?.refresh_token}/${formData.from.toISOString()}/${formData.to.toISOString()}${getQuery(formData)}`, '_blank')
+                window.open(`${REPORT_URL}/calculo-horas-excel/${auth?.refresh_token}/${formData.from.toISOString()}/${formData.to.toISOString()}${getQuery(formData)}`, '_blank')
             }
         }
     }
 
     return {
-        siteStatusRows,
-        setSiteStatusRows,
-        getSiteStatusRows,
-        printSiteStatus,
-        loadingSiteStatus,
+        hoursAmountRows,
+        setHoursAmountRows,
+        getHoursAmountRows,
+        printHoursAmount,
+        loadingHoursAmount,
         open,
         setOpen
     }

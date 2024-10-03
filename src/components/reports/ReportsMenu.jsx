@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Box, Typography } from "@mui/material";
 
-import { SiteStatus } from "./SiteStatus";
+import { HoursAmount } from "./HoursAmount";
 import { WorkersStatus } from "./WorkersStatus";
 
 export function ReportsMenu() {
@@ -25,7 +25,7 @@ export function ReportsMenu() {
         <>
             {!show &&
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', padding: 2, gap: 2 }}>
-                    <Box sx={boxStyles} onClick={() => setShow('SITE_STATUS')}>
+                    <Box sx={boxStyles} onClick={() => setShow('HOURS_AMOUNT')}>
                         <Typography variant="h6" marginBottom={1}>Cálculo de horas</Typography>
                         <Typography variant="body1">
                             Permite calcular el total de horas trabajadas por operario por obra.
@@ -39,7 +39,7 @@ export function ReportsMenu() {
                     </Box>
                 </Box>
             }
-            {show === 'SITE_STATUS' && <SiteStatus setShow={setShow} />}
+            {show === 'HOURS_AMOUNT' && <HoursAmount setShow={setShow} />}
             {show === 'WORKERS_STATUS' && <WorkersStatus setShow={setShow} />}
         </>
     );

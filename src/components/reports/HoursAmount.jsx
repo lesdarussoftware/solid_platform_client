@@ -12,17 +12,17 @@ import { useReports } from "../../hooks/useReports";
 
 import { ModalComponent } from "../common/ModalComponent";
 
-export function SiteStatus({ setShow }) {
+export function HoursAmount({ setShow }) {
 
     const { state } = useContext(DataContext);
 
-    const { getSiteStatusRows, siteStatusRows, printSiteStatus, loadingSiteStatus, open, setOpen } = useReports();
+    const { getHoursAmountRows, hoursAmountRows, printHoursAmount, loadingHoursAmount, open, setOpen } = useReports();
     const {
-        formData: siteStatusData,
-        handleChange: siteStatusChange,
-        validate: siteStatusValidate,
-        disabled: siteStatusDisabled,
-        setDisabled: setSiteStatusDisabled
+        formData: hoursAmountData,
+        handleChange: hoursAmountChange,
+        validate: hoursAmountValidate,
+        disabled: hoursAmountDisabled,
+        setDisabled: setHoursAmountDisabled
     } = useForm({
         defaultData: {
             site: '',
@@ -47,9 +47,9 @@ export function SiteStatus({ setShow }) {
                     <Link underline="hover" color="inherit" sx={{ cursor: 'pointer' }} onClick={() => setShow(null)}>
                         Volver a reportes
                     </Link>
-                    <Typography color="text.primary">Estado de obra</Typography>
+                    <Typography color="text.primary">Cálculo de horas</Typography>
                 </Breadcrumbs>
-                <Typography variant="h5" marginBottom={1}>Estado de obra</Typography>
+                <Typography variant="h5" marginBottom={1}>Cálculo de horas</Typography>
                 <Box sx={{ p: 1, borderRadius: 1, border: '1px solid #000', width: 'fit-content', mb: 2 }}>
                     <Typography variant="body1" marginBottom={1}>Valores de cálculo por defecto</Typography>
                     <Typography variant="body2" marginBottom={1}>- Entrada: 8hs</Typography>
@@ -76,9 +76,9 @@ export function SiteStatus({ setShow }) {
                                 id="site-autocomplete"
                                 options={state.sites.map(s => ({ label: s.name, name: s.name }))}
                                 noOptionsText="No hay obras disponibles."
-                                onChange={(_, value) => siteStatusChange({ target: { name: 'site', value: value?.name ?? '' } })}
+                                onChange={(_, value) => hoursAmountChange({ target: { name: 'site', value: value?.name ?? '' } })}
                                 renderInput={(params) => <TextField {...params} label="Obra" />}
-                                value={siteStatusData.site?.toString().length > 0 ? state.sites.find(s => s.name === siteStatusData.site).name : ''}
+                                value={hoursAmountData.site?.toString().length > 0 ? state.sites.find(s => s.name === hoursAmountData.site).name : ''}
                                 isOptionEqualToValue={(option, value) => value.length === 0 || option.name === value}
                             />
                         </FormControl>
@@ -88,9 +88,9 @@ export function SiteStatus({ setShow }) {
                                 id="worker-autocomplete"
                                 options={state.workers.map(w => ({ label: `${w.last_name} ${w.first_name}`, id: w.id }))}
                                 noOptionsText="No hay operarios disponibles."
-                                onChange={(_, value) => siteStatusChange({ target: { name: 'worker', value: value?.id || '' } })}
+                                onChange={(_, value) => hoursAmountChange({ target: { name: 'worker', value: value?.id || '' } })}
                                 renderInput={(params) => <TextField {...params} label="Operario" />}
-                                value={siteStatusData.worker.toString().length > 0 ? `${state.workers.find(w => w.id === parseInt(siteStatusData.worker)).last_name} ${state.workers.find(w => w.id === parseInt(siteStatusData.worker)).first_name}` : ''}
+                                value={hoursAmountData.worker.toString().length > 0 ? `${state.workers.find(w => w.id === parseInt(hoursAmountData.worker)).last_name} ${state.workers.find(w => w.id === parseInt(hoursAmountData.worker)).first_name}` : ''}
                                 isOptionEqualToValue={(option, value) => value.length === 0 || option.label === value}
                             />
                         </FormControl>
@@ -98,9 +98,9 @@ export function SiteStatus({ setShow }) {
                             <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
                                 <DatePicker
                                     label="Desde"
-                                    value={new Date(siteStatusData.from)}
+                                    value={new Date(hoursAmountData.from)}
                                     name="from"
-                                    onChange={value => siteStatusChange({ target: { name: 'from', value: new Date(value.toISOString()) } })}
+                                    onChange={value => hoursAmountChange({ target: { name: 'from', value: new Date(value.toISOString()) } })}
                                 />
                             </LocalizationProvider>
                         </FormControl>
@@ -108,18 +108,18 @@ export function SiteStatus({ setShow }) {
                             <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
                                 <DatePicker
                                     label="Hasta"
-                                    value={new Date(siteStatusData.to)}
+                                    value={new Date(hoursAmountData.to)}
                                     name="to"
-                                    onChange={value => siteStatusChange({ target: { name: 'to', value: new Date(value.toISOString()) } })}
+                                    onChange={value => hoursAmountChange({ target: { name: 'to', value: new Date(value.toISOString()) } })}
                                 />
                             </LocalizationProvider>
                         </FormControl>
                         <Button
                             type="button"
                             variant="contained"
-                            disabled={siteStatusDisabled || (siteStatusData.site?.length === 0 && siteStatusData.worker?.toString().length === 0)}
+                            disabled={hoursAmountDisabled || (hoursAmountData.site?.length === 0 && hoursAmountData.worker?.toString().length === 0)}
                             sx={{ marginBottom: 1 }}
-                            onClick={() => getSiteStatusRows(siteStatusData, siteStatusValidate, setSiteStatusDisabled)}
+                            onClick={() => getHoursAmountRows(hoursAmountData, hoursAmountValidate, setHoursAmountDisabled)}
                         >
                             Calcular
                         </Button>
@@ -135,8 +135,8 @@ export function SiteStatus({ setShow }) {
                             type="button"
                             variant="contained"
                             sx={{ width: { xs: '50%', sm: 'auto' } }}
-                            disabled={siteStatusRows.length === 0}
-                            onClick={() => printSiteStatus('PDF', siteStatusValidate, siteStatusData)}
+                            disabled={hoursAmountRows.length === 0}
+                            onClick={() => printHoursAmount('PDF', hoursAmountValidate, hoursAmountData)}
                         >
                             PDF
                         </Button>
@@ -144,16 +144,16 @@ export function SiteStatus({ setShow }) {
                             type="button"
                             variant="contained"
                             sx={{ width: { xs: '50%', sm: 'auto' } }}
-                            disabled={siteStatusRows.length === 0}
-                            onClick={() => printSiteStatus('EXCEL', siteStatusValidate, siteStatusData)}
+                            disabled={hoursAmountRows.length === 0}
+                            onClick={() => printHoursAmount('EXCEL', hoursAmountValidate, hoursAmountData)}
                         >
                             Excel
                         </Button>
                     </Box>
                 </Box>
                 <MainTable
-                    siteStatusRows={siteStatusRows}
-                    loadingSiteStatus={loadingSiteStatus}
+                    hoursAmountRows={hoursAmountRows}
+                    loadingHoursAmount={loadingHoursAmount}
                     setWorkOn={setWorkOn}
                     setOpen={setOpen}
                 />
@@ -175,7 +175,7 @@ export function SiteStatus({ setShow }) {
     );
 }
 
-function MainTable({ siteStatusRows, loadingSiteStatus, setWorkOn, setOpen }) {
+function MainTable({ hoursAmountRows, loadingHoursAmount, setWorkOn, setOpen }) {
     return (
         <TableContainer component={Paper}>
             <Table>
@@ -190,18 +190,18 @@ function MainTable({ siteStatusRows, loadingSiteStatus, setWorkOn, setOpen }) {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {siteStatusRows.length === 0 ?
+                    {hoursAmountRows.length === 0 ?
                         <TableRow>
                             <TableCell colSpan={5} align="center">
                                 <>
-                                    {loadingSiteStatus ?
+                                    {loadingHoursAmount ?
                                         <LinearProgress /> :
                                         <>{'No hay registros para mostrar.'}</>
                                     }
                                 </>
                             </TableCell>
                         </TableRow> :
-                        siteStatusRows.map(ssr => {
+                        hoursAmountRows.map(ssr => {
                             const color = ssr.observations.length > 0 ? 'red' : '';
                             return (
                                 <TableRow key={ssr.id}>
