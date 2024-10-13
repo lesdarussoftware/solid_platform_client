@@ -3,6 +3,7 @@ import { Box, Typography } from "@mui/material";
 
 import { HoursAmount } from "./HoursAmount";
 import { WorkersStatus } from "./WorkersStatus";
+import { Receipts } from "./Receipts";
 
 export function ReportsMenu() {
 
@@ -37,10 +38,17 @@ export function ReportsMenu() {
                             Permite ver si un operario está en obra o no.
                         </Typography>
                     </Box>
+                    <Box sx={boxStyles} onClick={() => setShow('RECEIPTS')}>
+                        <Typography variant="h6" marginBottom={1}>Recibos</Typography>
+                        <Typography variant="body1">
+                            Permite generar recibos en base a cotizaciones de categorías y horas trabajadas.
+                        </Typography>
+                    </Box>
                 </Box>
             }
             {show === 'HOURS_AMOUNT' && <HoursAmount setShow={setShow} />}
             {show === 'WORKERS_STATUS' && <WorkersStatus setShow={setShow} />}
+            {show === 'RECEIPTS' && <Receipts setShow={setShow} />}
         </>
     );
 }
