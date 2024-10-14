@@ -35,7 +35,7 @@ export function HoursAmount({ setShow }) {
 
     const [workOn, setWorkOn] = useState(null)
 
-    const handelClose = () => {
+    const handleClose = () => {
         setOpen(null)
         setWorkOn(null)
     }
@@ -157,14 +157,14 @@ export function HoursAmount({ setShow }) {
                     setWorkOn={setWorkOn}
                     setOpen={setOpen}
                 />
-                <ModalComponent open={open === 'VIEW'} onClose={handelClose}>
+                <ModalComponent open={open === 'VIEW'} onClose={handleClose}>
                     <DetailsTables workOn={workOn} />
                     <Box sx={{ display: 'flex', gap: 1, mt: 3 }}>
                         <Button
                             type="button"
                             variant="outlined"
                             sx={{ width: '20%', margin: '0 auto' }}
-                            onClick={handelClose}
+                            onClick={handleClose}
                         >
                             Cerrar
                         </Button>

@@ -17,15 +17,8 @@ export function Receipts({ setShow }) {
     const { state } = useContext(DataContext);
 
     const { getHoursAmountRows, hoursAmountRows, printHoursAmount, loadingHoursAmount, open, setOpen } = useReports();
-    const {
-        formData: hoursAmountData,
-        handleChange: hoursAmountChange,
-        validate: hoursAmountValidate,
-        disabled: hoursAmountDisabled,
-        setDisabled: setHoursAmountDisabled
-    } = useForm({
+    const { formData, handleChange, validate, disabled, setDisabled } = useForm({
         defaultData: {
-            site: '',
             worker: '',
             from: new Date(Date.now()),
             to: new Date(Date.now())
@@ -35,9 +28,15 @@ export function Receipts({ setShow }) {
 
     const [workOn, setWorkOn] = useState(null)
 
-    const handelClose = () => {
+    const handleClose = () => {
         setOpen(null)
         setWorkOn(null)
+    }
+
+    const handleAdd = value => {
+        if (value.toString().length > 0) {
+            getHoursAmountRows(formData, validate, setDisabled)
+        }
     }
 
     return (
@@ -64,74 +63,48 @@ export function Receipts({ setShow }) {
                         flexWrap: 'wrap',
                         width: { xs: '100%', md: '80%', lg: '60%' }
                     }}>
-                        <FormControl sx={{ width: { xs: '100%', md: '24%' } }}>
+                        <FormControl sx={{ width: { xs: '100%', md: '32%' } }}>
                             <Autocomplete
                                 disablePortal
                                 id="worker-autocomplete"
                                 options={state.workers.map(w => ({ label: `${w.last_name} ${w.first_name}`, id: w.id }))}
                                 noOptionsText="No hay operarios disponibles."
-                                onChange={(_, value) => hoursAmountChange({ target: { name: 'worker', value: value?.id || '' } })}
+                                onChange={(_, value) => handleAdd(value?.id || '')}
                                 renderInput={(params) => <TextField {...params} label="Operario" />}
-                                value={hoursAmountData.worker.toString().length > 0 ? `${state.workers.find(w => w.id === parseInt(hoursAmountData.worker)).last_name} ${state.workers.find(w => w.id === parseInt(hoursAmountData.worker)).first_name}` : ''}
+                                value={formData.worker.toString().length > 0 ? `${state.workers.find(w => w.id === parseInt(formData.worker)).last_name} ${state.workers.find(w => w.id === parseInt(formData.worker)).first_name}` : ''}
                                 isOptionEqualToValue={(option, value) => value.length === 0 || option.label === value}
                             />
                         </FormControl>
-                        <FormControl sx={{ width: { xs: '100%', md: '24%' } }}>
+                        <FormControl sx={{ width: { xs: '100%', md: '32%' } }}>
                             <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
                                 <DatePicker
                                     label="Desde"
-                                    value={new Date(hoursAmountData.from)}
+                                    value={new Date(formData.from)}
                                     name="from"
-                                    onChange={value => hoursAmountChange({ target: { name: 'from', value: new Date(value.toISOString()) } })}
+                                    onChange={value => handleChange({ target: { name: 'from', value: new Date(value.toISOString()) } })}
                                 />
                             </LocalizationProvider>
                         </FormControl>
-                        <FormControl sx={{ width: { xs: '100%', md: '24%' } }}>
+                        <FormControl sx={{ width: { xs: '100%', md: '32%' } }}>
                             <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
                                 <DatePicker
                                     label="Hasta"
-                                    value={new Date(hoursAmountData.to)}
+                                    value={new Date(formData.to)}
                                     name="to"
-                                    onChange={value => hoursAmountChange({ target: { name: 'to', value: new Date(value.toISOString()) } })}
+                                    onChange={value => handleChange({ target: { name: 'to', value: new Date(value.toISOString()) } })}
                                 />
                             </LocalizationProvider>
                         </FormControl>
-                        <Button
-                            type="button"
-                            variant="contained"
-                            disabled={hoursAmountDisabled || (hoursAmountData.site?.length === 0 && hoursAmountData.worker?.toString().length === 0)}
-                            sx={{ marginBottom: 1 }}
-                            onClick={() => getHoursAmountRows(hoursAmountData, hoursAmountValidate, setHoursAmountDisabled)}
-                        >
-                            Calcular
-                        </Button>
                     </Box>
-                    <Box sx={{
-                        display: 'flex',
-                        alignItems: 'start',
-                        gap: 1,
-                        justifyContent: 'end',
-                        marginBottom: { xs: 1, md: 0 }
-                    }}>
-                        <Button
-                            type="button"
-                            variant="contained"
-                            sx={{ width: { xs: '50%', sm: 'auto' } }}
-                            disabled={hoursAmountRows.length === 0}
-                            onClick={() => printHoursAmount('PDF', hoursAmountValidate, hoursAmountData)}
-                        >
-                            PDF
-                        </Button>
-                        <Button
-                            type="button"
-                            variant="contained"
-                            sx={{ width: { xs: '50%', sm: 'auto' } }}
-                            disabled={hoursAmountRows.length === 0}
-                            onClick={() => printHoursAmount('EXCEL', hoursAmountValidate, hoursAmountData)}
-                        >
-                            Excel
-                        </Button>
-                    </Box>
+                    <Button
+                        type="button"
+                        variant="contained"
+                        sx={{ my: { xs: 1, md: 0 } }}
+                        disabled={hoursAmountRows.length === 0}
+                        onClick={() => printHoursAmount('PDF', validate, formData)}
+                    >
+                        Generar PDF
+                    </Button>
                 </Box>
                 <MainTable
                     hoursAmountRows={hoursAmountRows}
@@ -139,14 +112,14 @@ export function Receipts({ setShow }) {
                     setWorkOn={setWorkOn}
                     setOpen={setOpen}
                 />
-                <ModalComponent open={open === 'VIEW'} onClose={handelClose}>
+                <ModalComponent open={open === 'VIEW'} onClose={handleClose}>
                     <DetailsTables workOn={workOn} />
                     <Box sx={{ display: 'flex', gap: 1, mt: 3 }}>
                         <Button
                             type="button"
                             variant="outlined"
                             sx={{ width: '20%', margin: '0 auto' }}
-                            onClick={handelClose}
+                            onClick={handleClose}
                         >
                             Cerrar
                         </Button>
