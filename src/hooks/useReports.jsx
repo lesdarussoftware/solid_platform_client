@@ -5,7 +5,7 @@ import { useQuery } from "./useQuery";
 import { AuthContext } from "../providers/AuthProvider";
 import { MessageContext } from "../providers/MessageProvider";
 
-import { MOVEMENT_URL, REPORT_URL } from "../helpers/urls";
+import { MOVEMENT_URL, REPORT_URL, WORKER_URL } from "../helpers/urls";
 import { STATUS_CODES } from "../helpers/statusCodes";
 
 export function useReports() {
@@ -16,7 +16,8 @@ export function useReports() {
     const { handleQuery } = useQuery()
 
     const [hoursAmountRows, setHoursAmountRows] = useState([])
-    const [loadingHoursAmount, setLoadingHoursAmount] = useState(false)
+    const [receipts, setReceipts] = useState([])
+    const [loading, setLoading] = useState(false)
     const [open, setOpen] = useState(null)
 
     function getQuery(formData) {
@@ -32,14 +33,14 @@ export function useReports() {
 
     async function getHoursAmountRows(formData, validate, setDisabled) {
         if (validate()) {
-            setLoadingHoursAmount(true)
+            setLoading(true)
             const { status, data } = await handleQuery({
                 url: MOVEMENT_URL + `/hours-amount/${formData.from.toISOString()}/${formData.to.toISOString()}${getQuery(formData)}`
             })
             if (status === STATUS_CODES.OK) {
                 setHoursAmountRows(data)
                 setDisabled(false)
-                setLoadingHoursAmount(false)
+                setLoading(false)
                 setSeverity('success')
                 setMessage('Datos actualizados.')
             } else {
@@ -61,13 +62,38 @@ export function useReports() {
         }
     }
 
+    async function getReceiptsRows(formData) {
+        setLoading(true)
+        const { status, data } = await handleQuery({
+            url: WORKER_URL + `/receipts/${formData.from.toISOString()}/${formData.to.toISOString()}`
+        })
+        if (status === STATUS_CODES.OK) {
+            setReceipts(data)
+            setLoading(false)
+            setSeverity('success')
+            setMessage('Datos actualizados.')
+        } else {
+            setSeverity('error')
+            setMessage('Ocurrió un error.')
+        }
+        setOpenMessage(true)
+    }
+
+    const printReceipts = () => {
+        window.open(`${REPORT_URL}/recibos?token=${auth?.refresh_token}&receipts=${JSON.stringify(receipts)}`, '_blank')
+    }
+
     return {
         hoursAmountRows,
         setHoursAmountRows,
         getHoursAmountRows,
         printHoursAmount,
-        loadingHoursAmount,
+        loading,
         open,
-        setOpen
+        setOpen,
+        receipts,
+        setReceipts,
+        getReceiptsRows,
+        printReceipts
     }
 }

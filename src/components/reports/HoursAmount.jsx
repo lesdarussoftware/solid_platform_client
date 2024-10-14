@@ -4,19 +4,19 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { es } from "date-fns/locale";
 import SearchSharpIcon from '@mui/icons-material/SearchSharp'
-import { format } from "date-fns";
 
 import { DataContext } from "../../providers/DataProvider";
 import { useForm } from "../../hooks/useForm";
 import { useReports } from "../../hooks/useReports";
 
 import { ModalComponent } from "../common/ModalComponent";
+import { DetailsTables } from "./DetailsTables";
 
 export function HoursAmount({ setShow }) {
 
     const { state } = useContext(DataContext);
 
-    const { getHoursAmountRows, hoursAmountRows, printHoursAmount, loadingHoursAmount, open, setOpen } = useReports();
+    const { getHoursAmountRows, hoursAmountRows, printHoursAmount, loading, open, setOpen } = useReports();
     const {
         formData: hoursAmountData,
         handleChange: hoursAmountChange,
@@ -153,7 +153,7 @@ export function HoursAmount({ setShow }) {
                 </Box>
                 <MainTable
                     hoursAmountRows={hoursAmountRows}
-                    loadingHoursAmount={loadingHoursAmount}
+                    loading={loading}
                     setWorkOn={setWorkOn}
                     setOpen={setOpen}
                 />
@@ -175,7 +175,7 @@ export function HoursAmount({ setShow }) {
     );
 }
 
-function MainTable({ hoursAmountRows, loadingHoursAmount, setWorkOn, setOpen }) {
+function MainTable({ hoursAmountRows, loading, setWorkOn, setOpen }) {
     return (
         <TableContainer component={Paper}>
             <Table>
@@ -194,7 +194,7 @@ function MainTable({ hoursAmountRows, loadingHoursAmount, setWorkOn, setOpen }) 
                         <TableRow>
                             <TableCell colSpan={5} align="center">
                                 <>
-                                    {loadingHoursAmount ?
+                                    {loading ?
                                         <LinearProgress /> :
                                         <>{'No hay registros para mostrar.'}</>
                                     }
@@ -239,66 +239,4 @@ function MainTable({ hoursAmountRows, loadingHoursAmount, setWorkOn, setOpen }) 
             </Table>
         </TableContainer>
     )
-}
-
-function DetailsTables({ workOn }) {
-    return (
-        <>
-            <Typography variant="h6" sx={{ marginBottom: 1 }}>
-                {workOn?.worker} - Ingresos / egresos
-            </Typography>
-            <TableContainer component={Paper} sx={{ maxHeight: 300, overflowY: 'auto' }}>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell align="center">#</TableCell>
-                            <TableCell align="center">Tipo</TableCell>
-                            <TableCell align="center">Fecha</TableCell>
-                            <TableCell align="center">Creado por</TableCell>
-                            <TableCell align="center">Observaciones</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {workOn?.movs.sort((a, b) => new Date(b.date) - new Date(a.date)).map(mov => (
-                            <TableRow key={mov.id}>
-                                <TableCell align="center">{mov.id}</TableCell>
-                                <TableCell align="center">{mov.type}</TableCell>
-                                <TableCell align="center">{format(new Date(mov.date), 'dd/MM/yyyy HH:mm')}</TableCell>
-                                <TableCell align="center">{mov.created_by}</TableCell>
-                                <TableCell align="center">{mov.observations}</TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-
-            <Typography variant="h6" sx={{ mb: 1, mt: 3 }}>
-                {workOn?.worker} - Horas extra
-            </Typography>
-            <TableContainer component={Paper} sx={{ maxHeight: 300, overflowY: 'auto' }}>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell align="center">#</TableCell>
-                            <TableCell align="center">Detalle</TableCell>
-                            <TableCell align="center">Entrada</TableCell>
-                            <TableCell align="center">Salida</TableCell>
-                            <TableCell align="center">Horas</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {workOn?.activities.sort((a, b) => b.id - a.id).map(act => (
-                            <TableRow key={act.id}>
-                                <TableCell align="center">{act.id}</TableCell>
-                                <TableCell align="center">{act.description}</TableCell>
-                                <TableCell align="center">{format(new Date(act.in_date), 'dd/MM/yyyy HH:mm')}</TableCell>
-                                <TableCell align="center">{format(new Date(act.out_date), 'dd/MM/yyyy HH:mm')}</TableCell>
-                                <TableCell align="center">{act.hours}</TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </>
-    );
 }
