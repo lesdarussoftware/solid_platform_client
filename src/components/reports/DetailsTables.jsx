@@ -1,3 +1,4 @@
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { format } from "date-fns";
 
 export function DetailsTables({ workOn }) {
@@ -30,7 +31,6 @@ export function DetailsTables({ workOn }) {
                     </TableBody>
                 </Table>
             </TableContainer>
-
             <Typography variant="h6" sx={{ mb: 1, mt: 3 }}>
                 {workOn?.worker} - Horas extra
             </Typography>

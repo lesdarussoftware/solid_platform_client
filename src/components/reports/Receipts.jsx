@@ -1,19 +1,16 @@
-import { useContext, useState } from "react";
-import { Box, Breadcrumbs, Button, FormControl, IconButton, LinearProgress, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from "@mui/material";
+import { useState } from "react";
+import { Box, Breadcrumbs, Button, FormControl, IconButton, LinearProgress, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { es } from "date-fns/locale";
 import SearchSharpIcon from '@mui/icons-material/SearchSharp'
 
-import { DataContext } from "../../providers/DataProvider";
 import { useReports } from "../../hooks/useReports";
 
 import { ModalComponent } from "../common/ModalComponent";
 import { DetailsTables } from "./DetailsTables";
 
 export function Receipts({ setShow }) {
-
-    const { state } = useContext(DataContext);
 
     const { getReceiptsRows, receipts, printReceipts, loading, open, setOpen } = useReports();
     const [formData, setFormData] = useState({
@@ -125,14 +122,19 @@ function MainTable({ receipts, loading, setWorkOn, setOpen }) {
                         <TableCell align="center">Operario</TableCell>
                         <TableCell align="center">DNI</TableCell>
                         <TableCell align="center">CUIL</TableCell>
+                        <TableCell align="center">Categoría</TableCell>
+                        <TableCell align="center">Cotiz. actual</TableCell>
                         <TableCell align="center">Horas</TableCell>
-                        <TableCell align="center">Observaciones</TableCell>
+                        <TableCell align="center">Total</TableCell>
+                        <TableCell align="center">En efectivo</TableCell>
+                        <TableCell align="center">Total efect.</TableCell>
+                        <TableCell align="center">Obs.</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {receipts.length === 0 ?
                         <TableRow>
-                            <TableCell colSpan={5} align="center">
+                            <TableCell colSpan={11} align="center">
                                 <>
                                     {loading ?
                                         <LinearProgress /> :
@@ -165,7 +167,21 @@ function MainTable({ receipts, loading, setWorkOn, setOpen }) {
                                         {ssr.cuil}
                                     </TableCell>
                                     <TableCell align="center" sx={{ color }}>
+                                        {ssr.category}
+                                    </TableCell>
+                                    <TableCell align="center" sx={{ color }}>
+                                        ${ssr.rate}
+                                    </TableCell>
+                                    <TableCell align="center" sx={{ color }}>
                                         {ssr.hours}
+                                    </TableCell>
+                                    <TableCell align="center" sx={{ color }}>
+                                        ${ssr.total_payment}
+                                    </TableCell>
+                                    <TableCell align="center" sx={{ color }}>
+                                    </TableCell>
+                                    <TableCell align="center" sx={{ color }}>
+                                        ${ssr.cash_payment}
                                     </TableCell>
                                     <TableCell align="center" sx={{ color }}>
                                         <Typography whiteSpace="pre-wrap">

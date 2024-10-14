@@ -192,7 +192,7 @@ function MainTable({ hoursAmountRows, loading, setWorkOn, setOpen }) {
                 <TableBody>
                     {hoursAmountRows.length === 0 ?
                         <TableRow>
-                            <TableCell colSpan={5} align="center">
+                            <TableCell colSpan={6} align="center">
                                 <>
                                     {loading ?
                                         <LinearProgress /> :
