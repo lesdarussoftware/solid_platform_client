@@ -125,6 +125,7 @@ function MainTable({ receipts, setReceipts, loading, setWorkOn, setOpen }) {
                         <TableCell align="center">CUIL</TableCell>
                         <TableCell align="center">Categoría</TableCell>
                         <TableCell align="center">Cotiz. actual</TableCell>
+                        <TableCell align="center">Obra</TableCell>
                         <TableCell align="center">Horas</TableCell>
                         <TableCell align="center">Total</TableCell>
                         <TableCell align="center">Hs recibo</TableCell>
@@ -174,6 +175,9 @@ function MainTable({ receipts, setReceipts, loading, setWorkOn, setOpen }) {
                                         ${r.rate}
                                     </TableCell>
                                     <TableCell align="center" sx={{ color }}>
+                                        {r.site}
+                                    </TableCell>
+                                    <TableCell align="center" sx={{ color }}>
                                         {r.hours}
                                     </TableCell>
                                     <TableCell align="center" sx={{ color }}>
@@ -190,7 +194,7 @@ function MainTable({ receipts, setReceipts, loading, setWorkOn, setOpen }) {
                                                     setReceipts([
                                                         ...receipts.filter(i => i.idx !== r.idx),
                                                         { ...r, recipe_hours, recipe_payment }
-                                                    ])
+                                                    ].sort((a, b) => a.idx - b.idx))
                                                 }}
                                                 InputProps={{
                                                     inputProps: {
