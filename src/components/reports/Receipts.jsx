@@ -129,7 +129,6 @@ function MainTable({ receipts, setReceipts, loading, setWorkOn, setOpen }) {
                         <TableCell align="center">Total</TableCell>
                         <TableCell align="center">Hs recibo</TableCell>
                         <TableCell align="center">Total recibo</TableCell>
-                        <TableCell align="center">Total efect.</TableCell>
                         <TableCell align="center">Obs.</TableCell>
                     </TableRow>
                 </TableHead>
@@ -188,10 +187,9 @@ function MainTable({ receipts, setReceipts, loading, setWorkOn, setOpen }) {
                                                 onChange={e => {
                                                     const recipe_hours = parseFloat(e.target.value)
                                                     const recipe_payment = (recipe_hours * parseFloat(r.rate)).toFixed(2)
-                                                    const cash_payment = (parseFloat(r.total_payment) - parseFloat(recipe_payment)).toFixed(2)
                                                     setReceipts([
                                                         ...receipts.filter(i => i.idx !== r.idx),
-                                                        { ...r, recipe_hours, recipe_payment, cash_payment }
+                                                        { ...r, recipe_hours, recipe_payment }
                                                     ])
                                                 }}
                                                 InputProps={{
@@ -209,9 +207,6 @@ function MainTable({ receipts, setReceipts, loading, setWorkOn, setOpen }) {
                                     </TableCell>
                                     <TableCell align="center" sx={{ color }}>
                                         ${r.recipe_payment}
-                                    </TableCell>
-                                    <TableCell align="center" sx={{ color }}>
-                                        ${r.cash_payment}
                                     </TableCell>
                                     <TableCell align="center" sx={{ color }}>
                                         <Typography whiteSpace="pre-wrap">
