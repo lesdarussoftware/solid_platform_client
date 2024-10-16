@@ -148,7 +148,7 @@ function MainTable({ receipts, setReceipts, loading, setWorkOn, setOpen }) {
                         receipts.map(r => {
                             const color = r.observations.length > 0 ? 'red' : '';
                             return (
-                                <TableRow key={r.id}>
+                                <TableRow key={r.idx}>
                                     <TableCell align="center" sx={{ p: 0 }}>
                                         <Tooltip title="Detalles" onClick={() => {
                                             setWorkOn(r)
@@ -184,13 +184,13 @@ function MainTable({ receipts, setReceipts, loading, setWorkOn, setOpen }) {
                                         <FormControl>
                                             <TextField
                                                 type="number"
-                                                value={receipts.find(i => i.id === r.id).recipe_hours}
+                                                value={receipts.find(i => i.idx === r.idx).recipe_hours}
                                                 onChange={e => {
                                                     const recipe_hours = parseFloat(e.target.value)
                                                     const recipe_payment = (recipe_hours * parseFloat(r.rate)).toFixed(2)
                                                     const cash_payment = (parseFloat(r.total_payment) - parseFloat(recipe_payment)).toFixed(2)
                                                     setReceipts([
-                                                        ...receipts.filter(i => i.id !== r.id),
+                                                        ...receipts.filter(i => i.idx !== r.idx),
                                                         { ...r, recipe_hours, recipe_payment, cash_payment }
                                                     ])
                                                 }}
