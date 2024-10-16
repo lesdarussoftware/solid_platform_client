@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Breadcrumbs, Button, FormControl, IconButton, LinearProgress, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from "@mui/material";
+import { Box, Breadcrumbs, Button, FormControl, IconButton, LinearProgress, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { es } from "date-fns/locale";
@@ -12,7 +12,7 @@ import { DetailsTables } from "./DetailsTables";
 
 export function Receipts({ setShow }) {
 
-    const { getReceiptsRows, receipts, printReceipts, loading, open, setOpen } = useReports();
+    const { getReceiptsRows, receipts, setReceipts, printReceipts, loading, open, setOpen } = useReports();
     const [formData, setFormData] = useState({
         from: new Date(Date.now()),
         to: new Date(Date.now())
@@ -90,6 +90,7 @@ export function Receipts({ setShow }) {
                 </Box>
                 <MainTable
                     receipts={receipts}
+                    setReceipts={setReceipts}
                     loading={loading}
                     setWorkOn={setWorkOn}
                     setOpen={setOpen}
@@ -112,7 +113,7 @@ export function Receipts({ setShow }) {
     );
 }
 
-function MainTable({ receipts, loading, setWorkOn, setOpen }) {
+function MainTable({ receipts, setReceipts, loading, setWorkOn, setOpen }) {
     return (
         <TableContainer component={Paper}>
             <Table>
@@ -126,7 +127,8 @@ function MainTable({ receipts, loading, setWorkOn, setOpen }) {
                         <TableCell align="center">Cotiz. actual</TableCell>
                         <TableCell align="center">Horas</TableCell>
                         <TableCell align="center">Total</TableCell>
-                        <TableCell align="center">En efectivo</TableCell>
+                        <TableCell align="center">Hs recibo</TableCell>
+                        <TableCell align="center">Total recibo</TableCell>
                         <TableCell align="center">Total efect.</TableCell>
                         <TableCell align="center">Obs.</TableCell>
                     </TableRow>
@@ -143,13 +145,13 @@ function MainTable({ receipts, loading, setWorkOn, setOpen }) {
                                 </>
                             </TableCell>
                         </TableRow> :
-                        receipts.map(ssr => {
-                            const color = ssr.observations.length > 0 ? 'red' : '';
+                        receipts.map(r => {
+                            const color = r.observations.length > 0 ? 'red' : '';
                             return (
-                                <TableRow key={ssr.id}>
+                                <TableRow key={r.id}>
                                     <TableCell align="center" sx={{ p: 0 }}>
                                         <Tooltip title="Detalles" onClick={() => {
-                                            setWorkOn(ssr)
+                                            setWorkOn(r)
                                             setOpen("VIEW")
                                         }}>
                                             <IconButton sx={{ p: 0 }}>
@@ -158,34 +160,62 @@ function MainTable({ receipts, loading, setWorkOn, setOpen }) {
                                         </Tooltip>
                                     </TableCell>
                                     <TableCell align="center" sx={{ color }}>
-                                        {ssr.worker}
+                                        {r.worker}
                                     </TableCell>
                                     <TableCell align="center" sx={{ color }}>
-                                        {ssr.dni}
+                                        {r.dni}
                                     </TableCell>
                                     <TableCell align="center" sx={{ color }}>
-                                        {ssr.cuil}
+                                        {r.cuil}
                                     </TableCell>
                                     <TableCell align="center" sx={{ color }}>
-                                        {ssr.category}
+                                        {r.category}
                                     </TableCell>
                                     <TableCell align="center" sx={{ color }}>
-                                        ${ssr.rate}
+                                        ${r.rate}
                                     </TableCell>
                                     <TableCell align="center" sx={{ color }}>
-                                        {ssr.hours}
+                                        {r.hours}
                                     </TableCell>
                                     <TableCell align="center" sx={{ color }}>
-                                        ${ssr.total_payment}
+                                        ${r.total_payment}
                                     </TableCell>
                                     <TableCell align="center" sx={{ color }}>
+                                        <FormControl>
+                                            <TextField
+                                                type="number"
+                                                value={receipts.find(i => i.id === r.id).recipe_hours}
+                                                onChange={e => {
+                                                    const recipe_hours = parseFloat(e.target.value)
+                                                    const recipe_payment = (recipe_hours * parseFloat(r.rate)).toFixed(2)
+                                                    const cash_payment = (parseFloat(r.total_payment) - parseFloat(recipe_payment)).toFixed(2)
+                                                    setReceipts([
+                                                        ...receipts.filter(i => i.id !== r.id),
+                                                        { ...r, recipe_hours, recipe_payment, cash_payment }
+                                                    ])
+                                                }}
+                                                InputProps={{
+                                                    inputProps: {
+                                                        step: 0.5,
+                                                        min: 0,
+                                                        max: parseFloat(r.hours)
+                                                    }
+                                                }}
+                                                InputLabelProps={{
+                                                    shrink: true,
+                                                }}
+                                            />
+                                        </FormControl>
                                     </TableCell>
                                     <TableCell align="center" sx={{ color }}>
-                                        ${ssr.cash_payment}
+                                        ${r.recipe_payment}
+                                    </TableCell>
+                                    <TableCell align="center" sx={{ color }}>
+                                        ${r.cash_payment}
                                     </TableCell>
                                     <TableCell align="center" sx={{ color }}>
                                         <Typography whiteSpace="pre-wrap">
-                                            {ssr.observations}
+                                            {r.observations}
                                         </Typography>
                                     </TableCell>
                                 </TableRow>

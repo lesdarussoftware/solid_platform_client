@@ -201,13 +201,13 @@ function MainTable({ hoursAmountRows, loading, setWorkOn, setOpen }) {
                                 </>
                             </TableCell>
                         </TableRow> :
-                        hoursAmountRows.map(ssr => {
-                            const color = ssr.observations.length > 0 ? 'red' : '';
+                        hoursAmountRows.map(har => {
+                            const color = har.observations.length > 0 ? 'red' : '';
                             return (
-                                <TableRow key={ssr.id}>
+                                <TableRow key={har.id}>
                                     <TableCell align="center" sx={{ p: 0 }}>
                                         <Tooltip title="Detalles" onClick={() => {
-                                            setWorkOn(ssr)
+                                            setWorkOn(har)
                                             setOpen("VIEW")
                                         }}>
                                             <IconButton sx={{ p: 0 }}>
@@ -216,20 +216,20 @@ function MainTable({ hoursAmountRows, loading, setWorkOn, setOpen }) {
                                         </Tooltip>
                                     </TableCell>
                                     <TableCell align="center" sx={{ color }}>
-                                        {ssr.worker}
+                                        {har.worker}
                                     </TableCell>
                                     <TableCell align="center" sx={{ color }}>
-                                        {ssr.dni}
+                                        {har.dni}
                                     </TableCell>
                                     <TableCell align="center" sx={{ color }}>
-                                        {ssr.cuil}
+                                        {har.cuil}
                                     </TableCell>
                                     <TableCell align="center" sx={{ color }}>
-                                        {ssr.hours}
+                                        {har.hours}
                                     </TableCell>
                                     <TableCell align="center" sx={{ color }}>
                                         <Typography whiteSpace="pre-wrap">
-                                            {ssr.observations}
+                                            {har.observations}
                                         </Typography>
                                     </TableCell>
                                 </TableRow>
