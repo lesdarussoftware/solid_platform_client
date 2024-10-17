@@ -184,7 +184,7 @@ function MainTable({ receipts, setReceipts, loading, setWorkOn, setOpen }) {
                                         ${r.total_payment}
                                     </TableCell>
                                     <TableCell align="center" sx={{ color }}>
-                                        <FormControl>
+                                        <FormControl sx={{ minWidth: 90 }}>
                                             <TextField
                                                 type="number"
                                                 value={receipts.find(i => i.idx === r.idx).recipe_hours}
