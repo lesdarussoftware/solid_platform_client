@@ -80,7 +80,9 @@ export function useReports() {
     }
 
     const printReceipts = () => {
-        window.open(`${REPORT_URL}/recibos?token=${auth?.refresh_token}&receipts=${JSON.stringify(receipts)}`, '_blank')
+        window.open(`${REPORT_URL}/recibos?token=${auth?.refresh_token}&receipts=${JSON.stringify(receipts.map(r => {
+            return { id: r.id }
+        }))}`, '_blank')
     }
 
     return {
