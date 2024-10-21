@@ -83,7 +83,7 @@ export function Receipts({ setShow }) {
                         variant="contained"
                         sx={{ my: { xs: 1, md: 0 } }}
                         disabled={receipts.length === 0}
-                        onClick={() => printReceipts()}
+                        onClick={() => printReceipts(formData)}
                     >
                         Generar PDF
                     </Button>
