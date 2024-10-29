@@ -2,6 +2,11 @@ import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow
 import { format } from "date-fns";
 
 export function DetailsTables({ workOn }) {
+
+    const sortedMovs = workOn?.movs.sort((a, b) => new Date(a.date) - new Date(b.date))
+    const inc = sortedMovs?.filter(m => m.type === 'INGRESO')
+    const out = sortedMovs?.filter(m => m.type === 'EGRESO')
+
     return (
         <>
             {workOn?.movs &&
@@ -16,20 +21,28 @@ export function DetailsTables({ workOn }) {
                                     <TableCell align="center">#</TableCell>
                                     <TableCell align="center">Tipo</TableCell>
                                     <TableCell align="center">Fecha</TableCell>
-                                    <TableCell align="center">Creado por</TableCell>
-                                    <TableCell align="center">Observaciones</TableCell>
+                                    <TableCell align="center">Obs</TableCell>
+                                    <TableCell align="center">Tipo</TableCell>
+                                    <TableCell align="center">Fecha</TableCell>
+                                    <TableCell align="center">Obs</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {workOn?.movs.sort((a, b) => new Date(b.date) - new Date(a.date)).map(mov => (
-                                    <TableRow key={mov.id}>
-                                        <TableCell align="center">{mov.id}</TableCell>
-                                        <TableCell align="center">{mov.type}</TableCell>
-                                        <TableCell align="center">{format(new Date(mov.date), 'dd/MM/yyyy HH:mm')}</TableCell>
-                                        <TableCell align="center">{mov.created_by}</TableCell>
-                                        <TableCell align="center">{mov.observations}</TableCell>
-                                    </TableRow>
-                                ))}
+                                {inc.map((i, idx) => {
+                                    const c = out.find(o => format(new Date(o.date), 'dd/MM/yyyy') === format(new Date(i.date), 'dd/MM/yyyy'))
+                                    const cDate = c ? format(new Date(c.date), 'dd/MM/yyyy HH:mm') : ''
+                                    return (
+                                        <TableRow key={i.id}>
+                                            <TableCell align="center">{idx + 1}</TableCell>
+                                            <TableCell align="center">{i.type}</TableCell>
+                                            <TableCell align="center">{format(new Date(i.date), 'dd/MM/yyyy HH:mm')}</TableCell>
+                                            <TableCell align="center">{i.observations}</TableCell>
+                                            <TableCell align="center">{c?.type}</TableCell>
+                                            <TableCell align="center">{cDate}</TableCell>
+                                            <TableCell align="center">{c?.observations}</TableCell>
+                                        </TableRow>
+                                    )
+                                })}
                             </TableBody>
                         </Table>
                     </TableContainer>
@@ -52,7 +65,7 @@ export function DetailsTables({ workOn }) {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {workOn?.activities.sort((a, b) => b.id - a.id).map(act => (
+                                {workOn?.activities.sort((a, b) => a.id - b.id).map(act => (
                                     <TableRow key={act.id}>
                                         <TableCell align="center">{act.id}</TableCell>
                                         <TableCell align="center">{act.description}</TableCell>
