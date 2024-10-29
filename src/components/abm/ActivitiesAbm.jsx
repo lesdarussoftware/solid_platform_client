@@ -35,7 +35,8 @@ export function ActivitiesAbm() {
             in_date: new Date(Date.now()),
             out_date: new Date(Date.now()),
             description: '',
-            hours: ''
+            hours: '',
+            payment_amount: 0.00
         },
         rules: {
             worker_id: {
@@ -111,6 +112,13 @@ export function ActivitiesAbm() {
             disablePadding: true,
             label: "Cant. hs. extra",
             accessor: 'hours'
+        },
+        {
+            id: "payment_amount",
+            numeric: false,
+            disablePadding: true,
+            label: "Monto pago ($)",
+            accessor: 'payment_amount'
         }
     ], []);
 
@@ -223,7 +231,7 @@ export function ActivitiesAbm() {
                         }}>
                             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                                 <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 1 }}>
-                                    <FormControl sx={{ width: '33%' }}>
+                                    <FormControl sx={{ width: '25%' }}>
                                         <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
                                             <DateTimePicker
                                                 label="Entrada"
@@ -234,7 +242,7 @@ export function ActivitiesAbm() {
                                             />
                                         </LocalizationProvider>
                                     </FormControl>
-                                    <FormControl sx={{ width: '33%' }}>
+                                    <FormControl sx={{ width: '25%' }}>
                                         <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
                                             <DateTimePicker
                                                 label="Salida"
@@ -245,7 +253,7 @@ export function ActivitiesAbm() {
                                             />
                                         </LocalizationProvider>
                                     </FormControl>
-                                    <FormControl sx={{ width: '33%' }}>
+                                    <FormControl sx={{ width: '25%' }}>
                                         <TextField
                                             label="Cant. Hs."
                                             type="number"
@@ -271,6 +279,28 @@ export function ActivitiesAbm() {
                                                 * Las cantidad de horas extra es requerida.
                                             </Typography>
                                         }
+                                    </FormControl>
+                                    <FormControl sx={{ width: '25%' }}>
+                                        <TextField
+                                            label="Monto pago"
+                                            type="number"
+                                            name="payment_amount"
+                                            value={formData.payment_amount}
+                                            onChange={e => handleChange({
+                                                target: {
+                                                    name: 'payment_amount',
+                                                    value: parseFloat(e.target.value) <= 0 ? 0 : Math.abs(parseFloat(e.target.value))
+                                                }
+                                            })}
+                                            InputProps={{
+                                                inputProps: {
+                                                    step: 0.01
+                                                }
+                                            }}
+                                            InputLabelProps={{
+                                                shrink: true,
+                                            }}
+                                        />
                                     </FormControl>
                                 </Box>
                                 <TextField
