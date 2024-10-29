@@ -81,7 +81,7 @@ export function useReports() {
 
     const printReceipts = (formData) => {
         window.open(`${REPORT_URL}/recibos?token=${auth?.refresh_token}&receipts=${JSON.stringify(receipts.map(r => {
-            return { id: r.id, recipe_payment: r.recipe_payment }
+            return { id: r.id, receipt_payment: r.receipt_payment }
         }))}&from=${formData.from.toISOString()}&to=${formData.to.toISOString()}`, '_blank')
     }
 

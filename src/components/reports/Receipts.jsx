@@ -187,13 +187,13 @@ function MainTable({ receipts, setReceipts, loading, setWorkOn, setOpen }) {
                                         <FormControl sx={{ minWidth: 90 }}>
                                             <TextField
                                                 type="number"
-                                                value={receipts.find(i => i.idx === r.idx).recipe_hours}
+                                                value={receipts.find(i => i.idx === r.idx).receipt_hours}
                                                 onChange={e => {
-                                                    const recipe_hours = parseFloat(e.target.value)
-                                                    const recipe_payment = (recipe_hours * parseFloat(r.rate)).toFixed(2)
+                                                    const receipt_hours = parseFloat(e.target.value)
+                                                    const receipt_payment = (receipt_hours * parseFloat(r.rate)).toFixed(2)
                                                     setReceipts([
                                                         ...receipts.filter(i => i.idx !== r.idx),
-                                                        { ...r, recipe_hours, recipe_payment }
+                                                        { ...r, receipt_hours, receipt_payment }
                                                     ].sort((a, b) => a.idx - b.idx))
                                                 }}
                                                 InputProps={{
@@ -210,7 +210,7 @@ function MainTable({ receipts, setReceipts, loading, setWorkOn, setOpen }) {
                                         </FormControl>
                                     </TableCell>
                                     <TableCell align="center" sx={{ color }}>
-                                        ${r.recipe_payment}
+                                        ${r.receipt_payment}
                                     </TableCell>
                                     <TableCell align="center" sx={{ color }}>
                                         <Typography whiteSpace="pre-wrap">
