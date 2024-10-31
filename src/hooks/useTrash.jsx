@@ -31,10 +31,26 @@ export function useTrash() {
         setLoading(false)
     }
 
+    async function handleRestore({ entity, selected, message }) {
+        const { status, data } = await handleQuery({ url: `${TRASH_URL}/${entity}/${selected.id}`, method: 'PUT' })
+        if (status === STATUS_CODES.OK) {
+            setElements([...elements.filter(item => item.id !== data.id)])
+            setCount(count + 1)
+            setSeverity('success')
+            setMessage(message)
+            setOpen(null)
+        }
+        if (status === STATUS_CODES.SERVER_ERROR) {
+            setMessage(data.message)
+            setSeverity('error')
+        }
+        setOpenMessage(true)
+    }
+
     async function handleDelete({ entity, selected, message }) {
         const { status, data } = await handleQuery({ url: `${TRASH_URL}/${entity}/${selected.id}`, method: 'DELETE' })
         if (status === STATUS_CODES.OK) {
-            setElements([...elements.filter(item => item.id === data.id)])
+            setElements([...elements.filter(item => item.id !== data.id)])
             setCount(count - 1)
             setSeverity('success')
             setMessage(message)
@@ -57,6 +73,7 @@ export function useTrash() {
         loading,
         setLoading,
         open,
-        setOpen
+        setOpen,
+        handleRestore
     }
 }

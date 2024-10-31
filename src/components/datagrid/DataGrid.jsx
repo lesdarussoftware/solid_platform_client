@@ -10,7 +10,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import SearchSharpIcon from '@mui/icons-material/SearchSharp'
 import EditIcon from '@mui/icons-material/Edit'
-import CloseIcon from "@mui/icons-material/Close"
+import DeleteSharpIcon from '@mui/icons-material/DeleteSharp';
+import RestoreFromTrashSharpIcon from '@mui/icons-material/RestoreFromTrashSharp';
 
 import { EnhancedTableHead } from './EnhancedTableHead';
 
@@ -29,6 +30,7 @@ export function DataGrid({
     showViewAction,
     showEditAction,
     showDeleteAction,
+    showRestoreAction,
     filter,
     setFilter,
     count,
@@ -115,6 +117,19 @@ export function DataGrid({
                                                             </IconButton>
                                                         </Tooltip>
                                                     }
+                                                    {showRestoreAction &&
+                                                        <Tooltip
+                                                            title="Restaurar"
+                                                            onClick={() => {
+                                                                if (setFormData) setFormData(rows.find((r) => r.id === row.id))
+                                                                if (setOpen) setOpen("RESTORE")
+                                                            }}
+                                                        >
+                                                            <IconButton>
+                                                                <RestoreFromTrashSharpIcon />
+                                                            </IconButton>
+                                                        </Tooltip>
+                                                    }
                                                     {showDeleteAction &&
                                                         <Tooltip
                                                             title="Borrar"
@@ -124,7 +139,7 @@ export function DataGrid({
                                                             }}
                                                         >
                                                             <IconButton>
-                                                                <CloseIcon />
+                                                                <DeleteSharpIcon />
                                                             </IconButton>
                                                         </Tooltip>
                                                     }
