@@ -37,7 +37,8 @@ export function Layout({ window, children }) {
     const navItems = [
         { label: 'Tarjas', pathname: '/tarjas', action: () => navigate('/tarjas') },
         { label: 'Obras', pathname: '/obras', action: () => navigate('/obras') },
-        { label: 'Usuarios', pathname: '/usuarios', action: () => navigate('/usuarios') }
+        { label: 'Usuarios', pathname: '/usuarios', action: () => navigate('/usuarios') },
+        { label: 'Papelera', pathname: '/papelera', action: () => navigate('/papelera') }
     ];
 
     const handleDrawerToggle = () => {
