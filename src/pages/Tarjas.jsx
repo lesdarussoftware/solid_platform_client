@@ -10,30 +10,9 @@ import { LoginForm } from "../components/common/LoginForm"
 import { CategoriesAbm } from "../components/abm/CategoriesAbm"
 import { ReportsMenu } from "../components/reports/ReportsMenu"
 import { Layout } from "../components/common/Layout"
+import { CustomTabPanel } from "../components/common/CustomTabPanel"
 
-function CustomTabPanel(props) {
-
-    const { children, value, index, ...other } = props
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
-            {...other}
-        >
-            {value === index && <Box>{children}</Box>}
-        </div>
-    )
-}
-
-function a11yProps(index) {
-    return {
-        id: `simple-tab-${index}`,
-        'aria-controls': `simple-tabpanel-${index}`,
-    }
-}
+import { a11yProps } from "../helpers/utils"
 
 export function Tarjas() {
 
