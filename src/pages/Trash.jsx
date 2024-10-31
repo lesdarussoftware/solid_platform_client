@@ -6,6 +6,9 @@ import { AuthContext } from "../providers/AuthProvider"
 import { LoginForm } from "../components/common/LoginForm"
 import { Layout } from "../components/common/Layout"
 import { CustomTabPanel } from "../components/common/CustomTabPanel"
+import { WorkersTrash } from "../components/trash/WorkersTrash"
+import { SitesTrash } from "../components/trash/SitesTrash"
+import { UsersTrash } from "../components/trash/UsersTrash"
 
 import { a11yProps } from "../helpers/utils"
 
@@ -13,6 +16,7 @@ export function Trash() {
 
     const { auth } = useContext(AuthContext)
 
+    const [selected, setSelected] = useState(null)
     const [value, setValue] = useState(0)
 
     const handleChange = (_, newValue) => {
@@ -44,10 +48,13 @@ export function Trash() {
                         </Box>
                     </Box>
                     <CustomTabPanel value={value} index={0}>
+                        <WorkersTrash selected={selected} setSelected={setSelected} />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={1}>
+                        <SitesTrash selected={selected} setSelected={setSelected} />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={2}>
+                        <UsersTrash selected={selected} setSelected={setSelected} />
                     </CustomTabPanel>
                 </Layout> :
                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90vh' }}>

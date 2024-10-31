@@ -6,7 +6,7 @@ import { useQuery } from "./useQuery";
 import { TRASH_URL } from "../helpers/urls";
 import { STATUS_CODES } from "../helpers/statusCodes";
 
-export function useSites() {
+export function useTrash() {
 
     const { setMessage, setSeverity, setOpenMessage } = useContext(MessageContext)
 
@@ -31,19 +31,18 @@ export function useSites() {
         setLoading(false)
     }
 
-    async function handleDelete({ entity, formData, reset, setDisabled, message }) {
-        const { status, data } = await handleQuery({ url: `${TRASH_URL}/${entity}/${formData.id}`, method: 'DELETE' })
+    async function handleDelete({ entity, selected, message }) {
+        const { status, data } = await handleQuery({ url: `${TRASH_URL}/${entity}/${selected.id}`, method: 'DELETE' })
         if (status === STATUS_CODES.OK) {
             setElements([...elements.filter(item => item.id === data.id)])
             setCount(count - 1)
             setSeverity('success')
             setMessage(message)
-            reset(setOpen)
+            setOpen(null)
         }
         if (status === STATUS_CODES.SERVER_ERROR) {
             setMessage(data.message)
             setSeverity('error')
-            setDisabled(false)
         }
         setOpenMessage(true)
     }
