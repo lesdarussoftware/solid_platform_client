@@ -14,3 +14,4 @@ export const REPORT_URL = `${BASE_URL}/reports`
 export const ACTIVITY_URL = `${BASE_URL}/activities`
 export const FORTNIGHT_URL = `${BASE_URL}/fortnights`
 export const RULE_URL = `${BASE_URL}/rules`
+export const TRASH_URL = `${BASE_URL}/trash`
