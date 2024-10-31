@@ -28,8 +28,8 @@ export function useCategories() {
         if (status === STATUS_CODES.OK) {
             dispatch({ type: 'CATEGORIES', payload: data[0].sort((a, b) => a.name - b.name) })
             setCount(data[1])
-            setLoadingCategories(false)
         }
+        setLoadingCategories(false)
     }
 
     async function handleSubmit(e, validate, formData, setDisabled, reset) {

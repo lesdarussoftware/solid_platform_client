@@ -28,8 +28,8 @@ export function useActivities() {
         if (status === STATUS_CODES.OK) {
             setActivities(data[0])
             setCount(data[1])
-            setLoadingActivities(false)
         }
+        setLoadingActivities(false)
     }
 
     async function handleCreate(e, validate, formData, newActivities, setDisabled, reset, setOpen, setNewActivities) {

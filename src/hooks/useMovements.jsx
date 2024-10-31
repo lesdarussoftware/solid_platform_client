@@ -38,8 +38,8 @@ export function useMovements() {
         if (status === STATUS_CODES.OK) {
             dispatch({ type: 'MOVEMENTS', payload: data[0] })
             setCount(data[1])
-            setLoadingMovements(false)
         }
+        setLoadingMovements(false)
     }
 
     async function handleSubmit(e, validate, formData, setDisabled, reset) {

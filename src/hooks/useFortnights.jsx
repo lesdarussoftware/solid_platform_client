@@ -27,8 +27,8 @@ export function useFortnights() {
         if (status === STATUS_CODES.OK) {
             setFortnights(data[0])
             setCount(data[1])
-            setLoadingFortnights(false)
         }
+        setLoadingFortnights(false)
     }
 
     function formatNewData(formData) {

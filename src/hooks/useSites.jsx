@@ -33,9 +33,9 @@ export function useSites() {
                 })
             })
             setCount(data[1])
-            setLoadingSites(false)
             localStorage.setItem('solid_sites_storage', JSON.stringify(data[0]))
         }
+        setLoadingSites(false)
     }
 
     async function handleSubmit(e, validate, formData, setDisabled, reset) {

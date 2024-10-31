@@ -39,8 +39,8 @@ export function useWorkers() {
                 })
             })
             setCount(data[1])
-            setLoadingWorkers(false)
         }
+        setLoadingWorkers(false)
     }
 
     async function getAllWorkers() {

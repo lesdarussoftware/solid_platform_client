@@ -29,8 +29,8 @@ export function useUsers() {
         if (status === STATUS_CODES.OK) {
             dispatch({ type: 'USERS', payload: data[0].sort((a, b) => a.username - b.username) })
             setCount(data[1])
-            setLoadingUsers(false)
         }
+        setLoadingUsers(false)
     }
 
     async function handleSubmit(e, validate, formData, setDisabled, reset) {
