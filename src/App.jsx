@@ -13,6 +13,7 @@ import { Sites } from "./pages/Sites"
 import { Users } from "./pages/Users"
 import { Scan } from "./pages/Scan"
 import { Profile } from "./pages/Profile"
+import { Trash } from "./pages/Trash"
 import { Error } from "./pages/Error"
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
                 <Route path="/usuarios" element={<Users />} />
                 <Route path="/scanner" element={<Scan />} />
                 <Route path="/perfil" element={<Profile />} />
+                <Route path="/papelera" element={<Trash />} />
                 <Route path="*" element={<Error />} />
               </Routes>
             </BrowserRouter>
