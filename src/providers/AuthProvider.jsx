@@ -36,9 +36,9 @@ export function AuthProvider({ children }) {
         e.preventDefault()
         if (validate()) {
             const { status, data } = await handleQuery({
-                url: AUTH_URL + '/login',
+                url: LOGIN_URL,
                 method: 'POST',
-                body: formData
+                body: JSON.stringify(formData)
             })
             if (status === STATUS_CODES.OK) {
                 localStorage.setItem('solid_auth', JSON.stringify(data))
