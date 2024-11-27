@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Box, Breadcrumbs, Button, Checkbox, FormControl, FormControlLabel, TextField, Typography } from "@mui/material";
+import { Box, Breadcrumbs, Button, Checkbox, FormControl, FormControlLabel, Typography } from "@mui/material";
 import { format } from "date-fns";
 import { DatePicker, LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -18,9 +18,9 @@ export function FortnightDetails({ site, setOpenSite, setWorkOnFortnight, workOn
     const { formData, setFormData, handleChange, reset, disabled, setDisabled } = useForm({
         defaultData: {
             id: '',
-            date: new Date(Date.now()),
-            in_hour: new Date(Date.now()),
-            out_hour: new Date(Date.now()),
+            date: '',
+            in_hour: '',
+            out_hour: '',
             lunch: true,
             fortnight_id: workOnFortnight.id
         },
@@ -120,9 +120,12 @@ export function FortnightDetails({ site, setOpenSite, setWorkOnFortnight, workOn
                                         <DatePicker
                                             label="Fecha"
                                             value={formData.date.length === 0 ? new Date(Date.now()) : new Date(formData.date)}
-                                            name="date"
-                                            onChange={value => handleChange({ target: { name: 'date', value: new Date(value) } })}
-                                            renderInput={(params) => <TextField {...params} />}
+                                            onChange={value => handleChange({
+                                                target: {
+                                                    name: 'date',
+                                                    value: new Date(value.toISOString())
+                                                }
+                                            })}
                                         />
                                     </LocalizationProvider>
                                 </FormControl>
@@ -132,9 +135,12 @@ export function FortnightDetails({ site, setOpenSite, setWorkOnFortnight, workOn
                                             <TimePicker
                                                 label="Entrada"
                                                 value={formData.in_hour.length === 0 ? new Date(Date.now()) : new Date(formData.in_hour)}
-                                                name="in_our"
-                                                onChange={value => handleChange({ target: { name: 'in_hour', value: new Date(value) } })}
-                                                renderInput={(params) => <TextField {...params} />}
+                                                onChange={value => handleChange({
+                                                    target: {
+                                                        name: 'in_hour',
+                                                        value: new Date(value.toISOString())
+                                                    }
+                                                })}
                                             />
                                         </LocalizationProvider>
                                     </FormControl>
@@ -143,9 +149,12 @@ export function FortnightDetails({ site, setOpenSite, setWorkOnFortnight, workOn
                                             <TimePicker
                                                 label="Salida"
                                                 value={formData.out_hour.length === 0 ? new Date(Date.now()) : new Date(formData.out_hour)}
-                                                name="out_hour"
-                                                onChange={value => handleChange({ target: { name: 'out_hour', value: new Date(value) } })}
-                                                renderInput={(params) => <TextField {...params} />}
+                                                onChange={value => handleChange({
+                                                    target: {
+                                                        name: 'out_hour',
+                                                        value: new Date(value.toISOString())
+                                                    }
+                                                })}
                                             />
                                         </LocalizationProvider>
                                     </FormControl>

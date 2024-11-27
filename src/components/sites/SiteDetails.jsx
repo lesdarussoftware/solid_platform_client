@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Box, Button, Breadcrumbs, FormControl, LinearProgress, Typography, TextField, FormControlLabel, Checkbox } from "@mui/material"
+import { Box, Button, Breadcrumbs, FormControl, LinearProgress, Typography, FormControlLabel, Checkbox } from "@mui/material"
 import { DatePicker, LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { es } from "date-fns/locale";
@@ -30,10 +30,10 @@ export function SiteDetails({ site, setOpenSite, setWorkOnFortnight }) {
     const { formData, setFormData, handleChange, reset, disabled, setDisabled } = useForm({
         defaultData: {
             id: '',
-            start_date: new Date(Date.now()),
-            end_date: new Date(Date.now()),
-            in_hour: new Date(Date.now()),
-            out_hour: new Date(Date.now()),
+            start_date: '',
+            end_date: '',
+            in_hour: '',
+            out_hour: '',
             lunch: true,
             site_id: site.id
         },
@@ -156,9 +156,12 @@ export function SiteDetails({ site, setOpenSite, setWorkOnFortnight }) {
                                                 <DatePicker
                                                     label="Inicio"
                                                     value={formData.start_date.length === 0 ? new Date(Date.now()) : new Date(formData.start_date)}
-                                                    name="start_date"
-                                                    onChange={value => handleChange({ target: { name: 'start_date', value: new Date(value) } })}
-                                                    renderInput={(params) => <TextField {...params} />}
+                                                    onChange={value => handleChange({
+                                                        target: {
+                                                            name: 'start_date',
+                                                            value: new Date(value.toISOString())
+                                                        }
+                                                    })}
                                                 />
                                             </LocalizationProvider>
                                         </FormControl>
@@ -167,9 +170,12 @@ export function SiteDetails({ site, setOpenSite, setWorkOnFortnight }) {
                                                 <DatePicker
                                                     label="Fin"
                                                     value={formData.end_date.length === 0 ? new Date(Date.now()) : new Date(formData.end_date)}
-                                                    name="end_date"
-                                                    onChange={value => handleChange({ target: { name: 'end_date', value: new Date(value) } })}
-                                                    renderInput={(params) => <TextField {...params} />}
+                                                    onChange={value => handleChange({
+                                                        target: {
+                                                            name: 'end_date',
+                                                            value: new Date(value.toISOString())
+                                                        }
+                                                    })}
                                                 />
                                             </LocalizationProvider>
                                         </FormControl>
@@ -180,9 +186,12 @@ export function SiteDetails({ site, setOpenSite, setWorkOnFortnight }) {
                                                 <TimePicker
                                                     label="Entrada"
                                                     value={formData.in_hour.length === 0 ? new Date(Date.now()) : new Date(formData.in_hour)}
-                                                    name="in_our"
-                                                    onChange={value => handleChange({ target: { name: 'in_hour', value: new Date(value) } })}
-                                                    renderInput={(params) => <TextField {...params} />}
+                                                    onChange={value => handleChange({
+                                                        target: {
+                                                            name: 'in_hour',
+                                                            value: new Date(value.toISOString())
+                                                        }
+                                                    })}
                                                 />
                                             </LocalizationProvider>
                                         </FormControl>
@@ -191,9 +200,12 @@ export function SiteDetails({ site, setOpenSite, setWorkOnFortnight }) {
                                                 <TimePicker
                                                     label="Salida"
                                                     value={formData.out_hour.length === 0 ? new Date(Date.now()) : new Date(formData.out_hour)}
-                                                    name="out_hour"
-                                                    onChange={value => handleChange({ target: { name: 'out_hour', value: new Date(value) } })}
-                                                    renderInput={(params) => <TextField {...params} />}
+                                                    onChange={value => handleChange({
+                                                        target: {
+                                                            name: 'out_hour',
+                                                            value: new Date(value.toISOString())
+                                                        }
+                                                    })}
                                                 />
                                             </LocalizationProvider>
                                         </FormControl>
