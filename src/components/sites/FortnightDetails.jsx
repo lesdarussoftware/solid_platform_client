@@ -84,7 +84,7 @@ export function FortnightDetails({ site, setOpenSite, setWorkOnFortnight, workOn
                     Volver a lista de obras
                 </Link>
                 <Link underline="hover" color="inherit" sx={{ cursor: 'pointer' }} onClick={() => setOpenSite('FORTNIGHTS')}>
-                    Volver a quincenas de {site.name}
+                    Volver a períodos de {site.name}
                 </Link>
                 <Typography color="text.primary">
                     Reglas del {format(new Date(workOnFortnight.start_date), 'dd/MM/yyyy')} al {format(new Date(workOnFortnight.end_date), 'dd/MM/yyyy')}

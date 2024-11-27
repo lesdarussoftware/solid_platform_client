@@ -61,14 +61,14 @@ export function useFortnights() {
                 return 0
             }))
             setCount(count + 1)
-            setMessage('Quincena registrada correctamente.')
+            setMessage('Período registrado correctamente.')
         } else if (status === STATUS_CODES.OK) {
             setFortnights([data, ...fortnights.filter(f => f.id !== data.id)].sort((a, b) => {
                 if (a.start_date > b.start_date) return 1
                 if (a.start_date < b.start_date) return -1
                 return 0
             }))
-            setMessage('Quincena editada correctamente.')
+            setMessage('Período editado correctamente.')
         } else {
             setMessage(data.message)
             setSeverity('error')
@@ -149,7 +149,7 @@ export function useFortnights() {
             setFortnights([...fortnights.filter(item => item.id !== data.id)])
             setCount(count - 1)
             setSeverity('success')
-            setMessage('Quincena eliminada correctamente.')
+            setMessage('Período eliminado correctamente.')
             reset(setOpen)
         }
         if (status === STATUS_CODES.SERVER_ERROR) {

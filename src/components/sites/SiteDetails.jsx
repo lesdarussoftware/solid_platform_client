@@ -122,7 +122,7 @@ export function SiteDetails({ site, setOpenSite, setWorkOnFortnight }) {
                 <Link underline="hover" color="inherit" sx={{ cursor: 'pointer' }} onClick={() => setOpenSite(null)}>
                     Volver a lista de obras
                 </Link>
-                <Typography color="text.primary">Quincenas de {site.name}</Typography>
+                <Typography color="text.primary">Períodos de {site.name}</Typography>
             </Breadcrumbs>
             {loadingFortnights ?
                 <Box sx={{ width: '100%' }}>
@@ -145,8 +145,8 @@ export function SiteDetails({ site, setOpenSite, setWorkOnFortnight }) {
                     >
                         <ModalComponent open={open === 'NEW' || open === 'EDIT'} reduceWidth={900} onClose={() => reset(setOpen)}>
                             <Typography variant="h6" sx={{ marginBottom: 2, fontSize: { xs: 18, sm: 18, md: 20 } }}>
-                                {open === 'NEW' && 'Registrar nueva quincena'}
-                                {open === 'EDIT' && 'Editar quincena'}
+                                {open === 'NEW' && 'Registrar nuevo período'}
+                                {open === 'EDIT' && 'Editar período'}
                             </Typography>
                             <form onChange={handleChange} onSubmit={(e) => handleSubmit(e, formData, setDisabled, reset)}>
                                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
