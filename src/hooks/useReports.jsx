@@ -7,6 +7,7 @@ import { MessageContext } from "../providers/MessageProvider";
 
 import { MOVEMENT_URL, REPORT_URL, WORKER_URL } from "../helpers/urls";
 import { STATUS_CODES } from "../helpers/statusCodes";
+import { formatLocalDate } from "../helpers/utils";
 
 export function useReports() {
 
@@ -33,31 +34,36 @@ export function useReports() {
 
     async function getHoursAmountRows(formData, validate, setDisabled) {
         if (validate()) {
-            setLoading(true)
+            setLoading(true);
+            const fromFormatted = formatLocalDate(formData.from);
+            const toFormatted = formatLocalDate(formData.to);
+
             const { status, data } = await handleQuery({
-                url: MOVEMENT_URL + `/hours-amount/${formData.from.toISOString()}/${formData.to.toISOString()}${getQuery(formData)}`
-            })
+                url: MOVEMENT_URL + `/hours-amount/${fromFormatted}/${toFormatted}${getQuery(formData)}`
+            });
+
             if (status === STATUS_CODES.OK) {
-                setHoursAmountRows(data)
-                setDisabled(false)
-                setLoading(false)
-                setSeverity('success')
-                setMessage('Datos actualizados.')
+                setHoursAmountRows(data);
+                setDisabled(false);
+                setLoading(false);
+                setSeverity('success');
+                setMessage('Datos actualizados.');
             } else {
-                setSeverity('error')
-                setMessage('Ocurrió un error.')
+                setSeverity('error');
+                setMessage('Ocurrió un error.');
             }
-            setOpenMessage(true)
+            setOpenMessage(true);
         }
     }
+
 
     const printHoursAmount = (type, validate, formData) => {
         if (validate()) {
             if (type === 'PDF') {
-                window.open(`${REPORT_URL}/calculo-horas-pdf/${auth?.refresh_token}/${formData.from.toISOString()}/${formData.to.toISOString()}${getQuery(formData)}`, '_blank')
+                window.open(`${REPORT_URL}/calculo-horas-pdf/${auth?.refresh_token}/${formatLocalDate(formData.from)}/${formatLocalDate(formData.to)}${getQuery(formData)}`, '_blank')
             }
             if (type === 'EXCEL') {
-                window.open(`${REPORT_URL}/calculo-horas-excel/${auth?.refresh_token}/${formData.from.toISOString()}/${formData.to.toISOString()}${getQuery(formData)}`, '_blank')
+                window.open(`${REPORT_URL}/calculo-horas-excel/${auth?.refresh_token}/${formatLocalDate(formData.from)}/${formatLocalDate(formData.to)}${getQuery(formData)}`, '_blank')
             }
         }
     }
@@ -65,7 +71,7 @@ export function useReports() {
     async function getReceiptsRows(formData) {
         setLoading(true)
         const { status, data } = await handleQuery({
-            url: WORKER_URL + `/receipts/${formData.from.toISOString()}/${formData.to.toISOString()}`
+            url: WORKER_URL + `/receipts/${formatLocalDate(formData.from)}/${formatLocalDate(formData.to)}`
         })
         if (status === STATUS_CODES.OK) {
             setReceipts(data)
@@ -82,7 +88,7 @@ export function useReports() {
     const printReceipts = (formData) => {
         window.open(`${REPORT_URL}/recibos?token=${auth?.refresh_token}&receipts=${JSON.stringify(receipts.map(r => {
             return { id: r.id, receipt_payment: r.receipt_payment }
-        }))}&from=${formData.from.toISOString()}&to=${formData.to.toISOString()}`, '_blank')
+        }))}&from=${formatLocalDate(formData.from)}&to=${formatLocalDate(formData.to)}`, '_blank')
     }
 
     return {
