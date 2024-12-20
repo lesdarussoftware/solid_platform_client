@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Box, Button, Breadcrumbs, FormControl, LinearProgress, Typography, FormControlLabel, Checkbox } from "@mui/material"
+import { Box, Button, Breadcrumbs, FormControl, LinearProgress, Typography, FormControlLabel, Checkbox, TextField } from "@mui/material"
 import { DatePicker, LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { es } from "date-fns/locale";
@@ -35,6 +35,7 @@ export function SiteDetails({ site, setOpenSite, setWorkOnFortnight }) {
             in_hour: '',
             out_hour: '',
             lunch: true,
+            lunch_minutes: 60,
             site_id: site.id
         },
         rules: {}
@@ -98,7 +99,7 @@ export function SiteDetails({ site, setOpenSite, setWorkOnFortnight }) {
             numeric: false,
             disablePadding: true,
             label: "Almuerzo",
-            accessor: (row) => row.lunch ? 'Sí' : 'No'
+            accessor: (row) => row.lunch ? `${row.lunch_minutes} min.` : 'No'
         },
         {
             id: "rules",
@@ -217,6 +218,24 @@ export function SiteDetails({ site, setOpenSite, setWorkOnFortnight }) {
                                             checked={formData.lunch}
                                             onChange={e => handleChange({ target: { name: 'lunch', value: e.target.checked } })}
                                         />
+                                        {formData.lunch &&
+                                            <FormControl sx={{ width: '25%' }}>
+                                                <TextField
+                                                    label="Min. almuerzo"
+                                                    type="number"
+                                                    name="lunch_minutes"
+                                                    value={formData.lunch_minutes}
+                                                    onChange={e => handleChange({
+                                                        target: {
+                                                            name: 'lunch_minutes',
+                                                            value: parseFloat(e.target.value) <= 0 ? 0 : Math.abs(parseFloat(e.target.value))
+                                                        }
+                                                    })}
+                                                    InputProps={{ inputProps: { step: 1 } }}
+                                                    InputLabelProps={{ shrink: true }}
+                                                />
+                                            </FormControl>
+                                        }
                                     </Box>
                                     <Box sx={{ display: 'flex', gap: 1, justifyContent: 'center', width: '60%', m: '0 auto', mt: 1 }}>
                                         <Button

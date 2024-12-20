@@ -54,7 +54,7 @@ export function HoursAmount({ setShow }) {
                     <Typography variant="body1" marginBottom={1}>Valores de cálculo por defecto</Typography>
                     <Typography variant="body2" marginBottom={1}>- Entrada: 8hs</Typography>
                     <Typography variant="body2" marginBottom={1}>- Salida: 18hs (sábados 13hs)</Typography>
-                    <Typography variant="body2" marginBottom={1}>- No se incluye la hora de almuerzo</Typography>
+                    <Typography variant="body2" marginBottom={1}>- No se incluye la hora de almuerzo (por defecto 60 min.)</Typography>
                 </Box>
                 <Box sx={{
                     display: 'flex',

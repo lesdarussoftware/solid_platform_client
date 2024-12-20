@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Box, Button, Checkbox, Chip, FormControl, FormControlLabel, InputLabel, MenuItem, Select, Typography } from "@mui/material";
+import { Box, Button, Checkbox, Chip, FormControl, FormControlLabel, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { DatePicker, LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { es } from "date-fns/locale";
@@ -26,6 +26,7 @@ export function SeveralFortnights({ open, setOpen }) {
             in_hour: '',
             out_hour: '',
             lunch: true,
+            lunch_minutes: 60,
             site_id: ''
         },
         rules: {}
@@ -173,6 +174,24 @@ export function SeveralFortnights({ open, setOpen }) {
                             checked={formData.lunch}
                             onChange={e => handleChange({ target: { name: 'lunch', value: e.target.checked } })}
                         />
+                        {formData.lunch &&
+                            <FormControl sx={{ width: '25%' }}>
+                                <TextField
+                                    label="Min. almuerzo"
+                                    type="number"
+                                    name="lunch_minutes"
+                                    value={formData.lunch_minutes}
+                                    onChange={e => handleChange({
+                                        target: {
+                                            name: 'lunch_minutes',
+                                            value: parseFloat(e.target.value) <= 0 ? 0 : Math.abs(parseFloat(e.target.value))
+                                        }
+                                    })}
+                                    InputProps={{ inputProps: { step: 1 } }}
+                                    InputLabelProps={{ shrink: true }}
+                                />
+                            </FormControl>
+                        }
                     </Box>
                     <Box sx={{ display: 'flex', gap: 1, margin: '0 auto', marginTop: 2, justifyContent: 'center', width: '50%' }}>
                         <Button

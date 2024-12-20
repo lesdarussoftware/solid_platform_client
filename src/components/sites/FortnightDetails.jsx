@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Box, Breadcrumbs, Button, Checkbox, FormControl, FormControlLabel, Typography } from "@mui/material";
+import { Box, Breadcrumbs, Button, Checkbox, FormControl, FormControlLabel, TextField, Typography } from "@mui/material";
 import { format } from "date-fns";
 import { DatePicker, LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -22,6 +22,7 @@ export function FortnightDetails({ site, setOpenSite, setWorkOnFortnight, workOn
             in_hour: '',
             out_hour: '',
             lunch: true,
+            lunch_minutes: 60,
             fortnight_id: workOnFortnight.id
         },
         rules: {}
@@ -73,7 +74,7 @@ export function FortnightDetails({ site, setOpenSite, setWorkOnFortnight, workOn
             numeric: false,
             disablePadding: true,
             label: "Almuerzo",
-            accessor: (row) => row.lunch ? 'Sí' : 'No'
+            accessor: (row) => row.lunch ? `${row.lunch_minutes} min.` : 'No'
         }
     ], [])
 
@@ -105,7 +106,7 @@ export function FortnightDetails({ site, setOpenSite, setWorkOnFortnight, workOn
                     showEditAction
                     showDeleteAction
                 >
-                    <ModalComponent open={open === 'NEW' || open === 'EDIT'} reduceWidth={1200} onClose={() => reset(setOpen)}>
+                    <ModalComponent open={open === 'NEW' || open === 'EDIT'} onClose={() => reset(setOpen)}>
                         <Typography variant="h6" sx={{ marginBottom: 2, fontSize: { xs: 18, sm: 18, md: 20 } }}>
                             {open === 'NEW' && 'Registrar nueva regla'}
                             {open === 'EDIT' && 'Editar regla'}
@@ -159,13 +160,33 @@ export function FortnightDetails({ site, setOpenSite, setWorkOnFortnight, workOn
                                         </LocalizationProvider>
                                     </FormControl>
                                 </Box>
-                                <FormControlLabel
-                                    sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}
-                                    control={<Checkbox />}
-                                    label="Almuerzan"
-                                    checked={formData.lunch}
-                                    onChange={e => handleChange({ target: { name: 'lunch', value: e.target.checked } })}
-                                />
+                                <Box sx={{ display: 'flex', mt: 2, alignItems: 'center', justifyContent: 'center' }}>
+                                    <FormControlLabel
+                                        sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}
+                                        control={<Checkbox />}
+                                        label="Almuerzan"
+                                        checked={formData.lunch}
+                                        onChange={e => handleChange({ target: { name: 'lunch', value: e.target.checked } })}
+                                    />
+                                    {formData.lunch &&
+                                        <FormControl sx={{ width: '25%' }}>
+                                            <TextField
+                                                label="Min. almuerzo"
+                                                type="number"
+                                                name="lunch_minutes"
+                                                value={formData.lunch_minutes}
+                                                onChange={e => handleChange({
+                                                    target: {
+                                                        name: 'lunch_minutes',
+                                                        value: parseFloat(e.target.value) <= 0 ? 0 : Math.abs(parseFloat(e.target.value))
+                                                    }
+                                                })}
+                                                InputProps={{ inputProps: { step: 1 } }}
+                                                InputLabelProps={{ shrink: true }}
+                                            />
+                                        </FormControl>
+                                    }
+                                </Box>
                                 <Box sx={{ display: 'flex', gap: 1, justifyContent: 'center', width: '60%', m: '0 auto', mt: 1 }}>
                                     <Button
                                         type="button"
