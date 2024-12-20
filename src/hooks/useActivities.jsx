@@ -1,4 +1,5 @@
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
+import { format } from "date-fns";
 
 import { MessageContext } from "../providers/MessageProvider";
 import { useQuery } from "./useQuery";
@@ -98,6 +99,58 @@ export function useActivities() {
         setOpenMessage(true)
     }
 
+    const headCells = useMemo(() => [
+        {
+            id: "id",
+            numeric: true,
+            disablePadding: false,
+            label: "#",
+            accessor: 'id'
+        },
+        {
+            id: "worker",
+            numeric: false,
+            disablePadding: true,
+            label: "Operario",
+            accessor: (row) => `${row.worker.first_name} ${row.worker.last_name}`
+        },
+        {
+            id: "description",
+            numeric: false,
+            disablePadding: true,
+            label: "Detalle",
+            accessor: 'description'
+        },
+        {
+            id: "in_date",
+            numeric: false,
+            disablePadding: true,
+            label: "Entrada",
+            accessor: (row) => format(new Date(row.in_date), 'dd/MM/yy HH:mm')
+        },
+        {
+            id: "out_date",
+            numeric: false,
+            disablePadding: true,
+            label: "Salida",
+            accessor: (row) => format(new Date(row.out_date), 'dd/MM/yy HH:mm')
+        },
+        {
+            id: "hours",
+            numeric: false,
+            disablePadding: true,
+            label: "Cant. hs. extra",
+            accessor: 'hours'
+        },
+        {
+            id: "payment_amount",
+            numeric: false,
+            disablePadding: true,
+            label: "Monto pago ($)",
+            accessor: 'payment_amount'
+        }
+    ], []);
+
     return {
         activities,
         getActivities,
@@ -109,6 +162,7 @@ export function useActivities() {
         count,
         filter,
         setFilter,
-        loadingActivities
+        loadingActivities,
+        headCells
     }
 }

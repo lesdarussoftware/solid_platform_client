@@ -1,9 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Button, FormControl, InputLabel, LinearProgress, TextField, Typography, FormControlLabel, Checkbox, Select, MenuItem, Chip } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { es } from "date-fns/locale";
-import { format } from 'date-fns';
 
 import { useForm } from "../../hooks/useForm";
 import { useWorkers } from "../../hooks/useWorkers";
@@ -26,7 +25,8 @@ export function ActivitiesAbm() {
         filter,
         setFilter,
         count,
-        loadingActivities
+        loadingActivities,
+        headCells
     } = useActivities();
     const { loadingWorkers, getAllWorkers, allWorkers, getWorkers } = useWorkers();
     const { formData, setFormData, reset, handleChange, errors, validate, disabled, setDisabled } = useForm({
@@ -69,58 +69,6 @@ export function ActivitiesAbm() {
         setNewActivities([])
         reset(setOpen)
     }
-
-    const headCells = useMemo(() => [
-        {
-            id: "id",
-            numeric: true,
-            disablePadding: false,
-            label: "#",
-            accessor: 'id'
-        },
-        {
-            id: "worker",
-            numeric: false,
-            disablePadding: true,
-            label: "Operario",
-            accessor: (row) => `${row.worker.first_name} ${row.worker.last_name}`
-        },
-        {
-            id: "description",
-            numeric: false,
-            disablePadding: true,
-            label: "Detalle",
-            accessor: 'description'
-        },
-        {
-            id: "in_date",
-            numeric: false,
-            disablePadding: true,
-            label: "Entrada",
-            accessor: (row) => format(new Date(row.in_date), 'dd/MM/yy HH:mm')
-        },
-        {
-            id: "out_date",
-            numeric: false,
-            disablePadding: true,
-            label: "Salida",
-            accessor: (row) => format(new Date(row.out_date), 'dd/MM/yy HH:mm')
-        },
-        {
-            id: "hours",
-            numeric: false,
-            disablePadding: true,
-            label: "Cant. hs. extra",
-            accessor: 'hours'
-        },
-        {
-            id: "payment_amount",
-            numeric: false,
-            disablePadding: true,
-            label: "Monto pago ($)",
-            accessor: 'payment_amount'
-        }
-    ], []);
 
     return (
         <>

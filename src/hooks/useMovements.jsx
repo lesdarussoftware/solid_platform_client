@@ -1,4 +1,5 @@
-import { useContext, useState } from "react"
+import { useContext, useMemo, useState } from "react"
+import { format } from "date-fns";
 
 import { AuthContext } from "../providers/AuthProvider"
 import { MessageContext } from "../providers/MessageProvider"
@@ -179,6 +180,51 @@ export function useMovements() {
         }
     }
 
+    const headCells = useMemo(() => [
+        {
+            id: "id",
+            numeric: true,
+            disablePadding: false,
+            label: "#",
+            accessor: 'id'
+        },
+        {
+            id: "date",
+            numeric: false,
+            disablePadding: true,
+            label: "Fecha y hora",
+            accessor: (row) => format(new Date(row.date), 'dd/MM/yy HH:mm')
+        },
+        {
+            id: "worker",
+            numeric: false,
+            disablePadding: true,
+            label: "Operario",
+            accessor: (row) => `${row.worker.first_name} ${row.worker.last_name}`
+        },
+        {
+            id: "created_by",
+            numeric: false,
+            disablePadding: true,
+            label: "Creado por",
+            accessor: 'created_by'
+        },
+        {
+            id: "type",
+            numeric: false,
+            disablePadding: true,
+            label: "Evento",
+            accessor: 'type'
+        },
+        {
+            id: "site",
+            numeric: false,
+            disablePadding: true,
+            label: "Obra",
+            accessor: (row) => row.site.name
+        }
+    ], []);
+
     return {
         handleScan,
         newMovementWorkerHash,
@@ -193,6 +239,7 @@ export function useMovements() {
         setOpen,
         handleSubmit,
         handleDelete,
-        loadingMovements
+        loadingMovements,
+        headCells
     }
 }

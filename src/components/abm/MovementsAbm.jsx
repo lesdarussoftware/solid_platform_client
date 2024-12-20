@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo } from "react";
+import { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Autocomplete, Box, Button, FormControl, InputLabel, LinearProgress, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -21,7 +21,18 @@ export function MovementsAbm() {
 
     const { state } = useContext(DataContext);
 
-    const { getMovements, open, setOpen, handleSubmit, handleDelete, filter, setFilter, count, loadingMovements } = useMovements();
+    const {
+        getMovements,
+        open,
+        setOpen,
+        handleSubmit,
+        handleDelete,
+        filter,
+        setFilter,
+        count,
+        loadingMovements,
+        headCells
+    } = useMovements();
     const { getCategories, loadingCategories } = useCategories();
     const { getSites, loadingSites } = useSites();
     const { getWorkers, loadingWorkers } = useWorkers();
@@ -62,51 +73,6 @@ export function MovementsAbm() {
         const toIsNotString = typeof to !== 'string';
         getMovements(`?page=${page}&offset=${offset}&from=${fromIsNotString ? new Date(from).toISOString() : ''}&to=${toIsNotString ? new Date(to).toISOString() : ''}&type=${type}&worker=${worker}&site=${site}&category=${category}`);
     }, [filter]);
-
-    const headCells = useMemo(() => [
-        {
-            id: "id",
-            numeric: true,
-            disablePadding: false,
-            label: "#",
-            accessor: 'id'
-        },
-        {
-            id: "date",
-            numeric: false,
-            disablePadding: true,
-            label: "Fecha y hora",
-            accessor: (row) => format(new Date(row.date), 'dd/MM/yy HH:mm')
-        },
-        {
-            id: "worker",
-            numeric: false,
-            disablePadding: true,
-            label: "Operario",
-            accessor: (row) => `${row.worker.first_name} ${row.worker.last_name}`
-        },
-        {
-            id: "created_by",
-            numeric: false,
-            disablePadding: true,
-            label: "Creado por",
-            accessor: 'created_by'
-        },
-        {
-            id: "type",
-            numeric: false,
-            disablePadding: true,
-            label: "Evento",
-            accessor: 'type'
-        },
-        {
-            id: "site",
-            numeric: false,
-            disablePadding: true,
-            label: "Obra",
-            accessor: (row) => row.site.name
-        }
-    ], []);
 
     return (
         <>
