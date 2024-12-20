@@ -25,12 +25,14 @@ export function DetailsTables({ workOn }) {
                                     <TableCell align="center">Tipo</TableCell>
                                     <TableCell align="center">Fecha</TableCell>
                                     <TableCell align="center">Obs</TableCell>
+                                    <TableCell align="center">Horas</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {inc.map((i, idx) => {
                                     const c = out.find(o => format(new Date(o.date), 'dd/MM/yyyy') === format(new Date(i.date), 'dd/MM/yyyy'))
                                     const cDate = c ? format(new Date(c.date), 'dd/MM/yyyy HH:mm') : ''
+                                    const totalHs = workOn?.hours_by_date.find(h => h.date.split('-').reverse().join('/') === cDate.split(' ')[0]).hours
                                     return (
                                         <TableRow key={i.id}>
                                             <TableCell align="center">{idx + 1}</TableCell>
@@ -40,6 +42,7 @@ export function DetailsTables({ workOn }) {
                                             <TableCell align="center">{c?.type}</TableCell>
                                             <TableCell align="center">{cDate}</TableCell>
                                             <TableCell align="center">{c?.observations}</TableCell>
+                                            <TableCell align="center">{totalHs}</TableCell>
                                         </TableRow>
                                     )
                                 })}
