@@ -32,7 +32,7 @@ function App() {
         <AuthProvider>
           <DataProvider>
             {/* <NotificationsProvider> */}
-            <BrowserRouter>
+            <BrowserRouter basename="/app2">
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/tarjas" element={<Tarjas />} />
