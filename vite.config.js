@@ -5,6 +5,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 export default defineConfig({
   plugins: [
     react(),
+    base: '/app2/',
     VitePWA({
       manifest: {
         "name": "Solid Platform",
