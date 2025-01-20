@@ -6,7 +6,7 @@ import { AuthContext } from "../providers/AuthProvider";
 
 import { LoginForm } from "../components/common/LoginForm";
 
-import Logo from '../assets/logo-white.jpeg'
+import Logo from '../assets/logo.png'
 
 export function Home() {
 

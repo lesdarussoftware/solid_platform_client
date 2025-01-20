@@ -47,8 +47,8 @@ export function LoginForm({ submitAction }) {
         <form onChange={handleChange} onSubmit={handleSubmit}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                 <FormControl>
-                    <InputLabel htmlFor="username" sx={{ color: '#000' }}>Usuario</InputLabel>
-                    <Input id="username" type="text" name="username" value={formData.username} sx={{ color: '#000' }} />
+                    <InputLabel htmlFor="username" sx={{ color: '#012561' }}>Usuario</InputLabel>
+                    <Input id="username" type="text" name="username" value={formData.username} sx={{ color: '#012561' }} />
                     {errors.username?.type === 'required' &&
                         <Typography variant="caption" color="red" marginTop={1}>
                             * El nombre de usuario es requerido.
@@ -61,8 +61,8 @@ export function LoginForm({ submitAction }) {
                     }
                 </FormControl>
                 <FormControl>
-                    <InputLabel htmlFor="password" sx={{ color: '#000' }}>Contraseña</InputLabel>
-                    <Input id="password" type="password" name="password" value={formData.password} sx={{ color: '#000' }} autoComplete="" />
+                    <InputLabel htmlFor="password" sx={{ color: '#012561' }}>Contraseña</InputLabel>
+                    <Input id="password" type="password" name="password" value={formData.password} sx={{ color: '#012561' }} autoComplete="" />
                     {errors.password?.type === 'required' &&
                         <Typography variant="caption" color="red" marginTop={1}>
                             * La contraseña es requerida.

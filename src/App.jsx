@@ -21,7 +21,7 @@ function App() {
   const theme = createTheme({
     palette: {
       primary: {
-        main: '#000',
+        main: '#012561',
       }
     },
   })
@@ -32,7 +32,7 @@ function App() {
         <AuthProvider>
           <DataProvider>
             {/* <NotificationsProvider> */}
-            <BrowserRouter basename="/app2">
+            <BrowserRouter basename="/app2/">
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/tarjas" element={<Tarjas />} />

@@ -50,7 +50,7 @@ export function HoursAmount({ setShow }) {
                     <Typography color="text.primary">Cálculo de horas</Typography>
                 </Breadcrumbs>
                 <Typography variant="h5" marginBottom={1}>Cálculo de horas</Typography>
-                <Box sx={{ p: 1, borderRadius: 1, border: '1px solid #000', width: 'fit-content', mb: 2 }}>
+                <Box sx={{ p: 1, borderRadius: 1, border: '1px solid #012561', width: 'fit-content', mb: 2 }}>
                     <Typography variant="body1" marginBottom={1}>Valores de cálculo por defecto</Typography>
                     <Typography variant="body2" marginBottom={1}>- Entrada: 8hs</Typography>
                     <Typography variant="body2" marginBottom={1}>- Salida: 18hs (sábados 13hs)</Typography>

@@ -59,14 +59,14 @@ export function AuthProvider({ children }) {
     return (
         <AuthContext.Provider value={{ auth, setAuth, sessionExpired, setSessionExpired }}>
             <ModalComponent open={sessionExpired} onClose={() => setSessionExpired(false)}>
-                <Typography variant="h6" sx={{ color: '#000', marginBottom: 2 }} align="center">
+                <Typography variant="h6" sx={{ color: '#012561', marginBottom: 2 }} align="center">
                     Tu sesión expiró. Por favor ingresa de nuevo tu usuario y contraseña
                 </Typography>
                 <form onChange={handleChange} onSubmit={handleSubmit}>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, width: '50%', margin: 'auto' }}>
                         <FormControl>
-                            <InputLabel htmlFor="username" sx={{ color: '#000' }}>Usuario</InputLabel>
-                            <Input id="username" type="text" name="username" value={formData.username} sx={{ color: '#000' }} />
+                            <InputLabel htmlFor="username" sx={{ color: '#012561' }}>Usuario</InputLabel>
+                            <Input id="username" type="text" name="username" value={formData.username} sx={{ color: '#012561' }} />
                             {errors.username?.type === 'required' &&
                                 <Typography variant="caption" color="red" marginTop={1}>
                                     * El nombre de usuario es requerido.
@@ -79,8 +79,8 @@ export function AuthProvider({ children }) {
                             }
                         </FormControl>
                         <FormControl>
-                            <InputLabel htmlFor="password" sx={{ color: '#000' }}>Contraseña</InputLabel>
-                            <Input id="password" type="password" name="password" value={formData.password} sx={{ color: '#000' }} autoComplete="" />
+                            <InputLabel htmlFor="password" sx={{ color: '#012561' }}>Contraseña</InputLabel>
+                            <Input id="password" type="password" name="password" value={formData.password} sx={{ color: '#012561' }} autoComplete="" />
                             {errors.password?.type === 'required' &&
                                 <Typography variant="caption" color="red" marginTop={1}>
                                     * La contraseña es requerida.

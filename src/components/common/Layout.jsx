@@ -19,8 +19,7 @@ import { AuthContext } from '../../providers/AuthProvider';
 
 import { UserDropdown } from './UserDropdown';
 
-import LogoWhite from '../../assets/logo-white.jpeg';
-import LogoBlack from '../../assets/logo-black.jpeg';
+import Logo from '../../assets/logo.png';
 
 const drawerWidth = 240;
 
@@ -47,7 +46,7 @@ export function Layout({ window, children }) {
 
     const drawer = (
         <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
-            <img src={LogoWhite} width={60} />
+            <img src={Logo} width={60} />
             <Divider />
             <List>
                 {navItems.map((item) => (
@@ -77,20 +76,20 @@ export function Layout({ window, children }) {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <img src={LogoBlack} width={60} className='menuLogo' />
+                    <img src={Logo} width={60} className='menuLogo' />
                     <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center', gap: 2 }}>
                         <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                             {navItems.map((item) => (
                                 <Button
                                     key={item.label}
                                     sx={{
-                                        backgroundColor: pathname === item.pathname ? '#fff' : '#000',
-                                        color: pathname === item.pathname ? '#000' : '#fff',
+                                        backgroundColor: pathname === item.pathname ? '#fff' : '#012561',
+                                        color: pathname === item.pathname ? '#012561' : '#fff',
                                         mr: 1,
                                         ml: 1,
                                         ':hover': {
                                             backgroundColor: '#fff',
-                                            color: '#000'
+                                            color: '#012561'
                                         }
                                     }}
                                     onClick={() => item.action()}
