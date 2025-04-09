@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
-import { Box, Breadcrumbs, Button, FormControl, IconButton, Select, InputLabel, LinearProgress, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography, MenuItem } from "@mui/material";
+import { useContext, useState } from "react";
+import { Autocomplete, Box, Breadcrumbs, Button, FormControl, IconButton, Select, InputLabel, LinearProgress, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography, MenuItem } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { es } from "date-fns/locale";
 import SearchSharpIcon from '@mui/icons-material/SearchSharp'
 
+import { DataContext } from "../../providers/DataProvider";
 import { useReports } from "../../hooks/useReports";
 
 import { ModalComponent } from "../common/ModalComponent";
@@ -12,13 +13,17 @@ import { DetailsTables } from "./DetailsTables";
 
 export function Receipts({ setShow }) {
 
+    const { state } = useContext(DataContext)
+
     const { getReceiptsRows, receipts, setReceipts, printReceipts, loading, open, setOpen } = useReports();
     const [formData, setFormData] = useState({
         // from: new Date(Date.now()),
         // to: new Date(Date.now())
         month: new Date(Date.now()).getMonth(),
         year: new Date(Date.now()).getFullYear(),
-        fortnight: 1
+        fortnight: 1,
+        worker: '',
+        site: ''
     })
 
     const [workOn, setWorkOn] = useState(null)
@@ -42,7 +47,8 @@ export function Receipts({ setShow }) {
                     display: 'flex',
                     flexDirection: { xs: 'column', md: 'row' },
                     flexWrap: 'wrap',
-                    justifyContent: { xs: 'center', md: 'space-between' }
+                    justifyContent: { xs: 'center', md: 'space-between' },
+                    alignItems: 'start'
                 }}>
                     <Box sx={{
                         display: 'flex',
@@ -52,44 +58,62 @@ export function Receipts({ setShow }) {
                         flexWrap: 'wrap',
                         width: { xs: '100%', md: '70%', lg: '50%' }
                     }}>
-                        <FormControl sx={{ width: { xs: '100%', md: '36%' } }}>
-                            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
-                                <DatePicker
-                                    views={['year', 'month']}
-                                    label="Mes y año"
-                                    value={new Date(formData.year, formData.month)}
-                                    name="month"
-                                    onChange={value => setFormData({
-                                        ...formData,
-                                        month: new Date(value).getMonth(),
-                                        year: new Date(value).getFullYear()
-                                    })}
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, width: { xs: '100%', md: '35%' } }}>
+                            <FormControl>
+                                <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
+                                    <DatePicker
+                                        views={['year', 'month']}
+                                        label="Mes y año"
+                                        value={new Date(formData.year, formData.month)}
+                                        name="month"
+                                        onChange={value => setFormData({
+                                            ...formData,
+                                            month: new Date(value).getMonth(),
+                                            year: new Date(value).getFullYear()
+                                        })}
+                                    />
+                                </LocalizationProvider>
+                            </FormControl>
+                            <FormControl>
+                                <InputLabel id="fortnight-select">Quincena</InputLabel>
+                                <Select
+                                    labelId="fortnight-select"
+                                    label="Quincena"
+                                    id="fortnight-select"
+                                    value={formData.fortnight}
+                                    onChange={e => setFormData({ ...formData, fortnight: parseInt(e.target.value) })}
+                                >
+                                    <MenuItem value="1">1</MenuItem>
+                                    <MenuItem value="2">2</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Box>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, width: { xs: '100%', md: '35%' } }}>
+                            <FormControl>
+                                <Autocomplete
+                                    disablePortal
+                                    id="worker-autocomplete"
+                                    options={state.workers.map(w => ({ label: `${w.last_name} ${w.first_name}`, id: w.id }))}
+                                    noOptionsText="No hay operarios disponibles."
+                                    onChange={(_, value) => setFormData({ ...formData, worker: value?.id || '' })}
+                                    renderInput={(params) => <TextField {...params} label="Operario" />}
+                                    value={formData.worker.toString().length > 0 ? `${state.workers.find(w => w.id === parseInt(formData.worker)).last_name} ${state.workers.find(w => w.id === parseInt(formData.worker)).first_name}` : ''}
+                                    isOptionEqualToValue={(option, value) => value.length === 0 || option.label === value}
                                 />
-                            </LocalizationProvider>
-                        </FormControl>
-                        <FormControl sx={{ width: { xs: '100%', md: '36%' } }}>
-                            <InputLabel id="fortnight-select">Quincena</InputLabel>
-                            <Select
-                                labelId="fortnight-select"
-                                label="Quincena"
-                                id="fortnight-select"
-                                value={formData.fortnight}
-                                onChange={e => setFormData({ ...formData, fortnight: parseInt(e.target.value) })}
-                            >
-                                <MenuItem value="1">1</MenuItem>
-                                <MenuItem value="2">2</MenuItem>
-                            </Select>
-                        </FormControl>
-                        {/* <FormControl sx={{ width: { xs: '100%', md: '36%' } }}>
-                            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
-                                <DatePicker
-                                    label="Hasta"
-                                    value={new Date(formData.to)}
-                                    name="to"
-                                    onChange={value => setFormData({ ...formData, to: new Date(value.toISOString()) })}
+                            </FormControl>
+                            <FormControl>
+                                <Autocomplete
+                                    disablePortal
+                                    id="site-autocomplete"
+                                    options={state.sites.map(s => ({ label: s.name, id: s.id }))}
+                                    noOptionsText="No hay obras disponibles."
+                                    onChange={(_, value) => setFormData({ ...formData, site: value?.id || '' })}
+                                    renderInput={(params) => <TextField {...params} label="Obra" />}
+                                    value={formData.site.toString().length > 0 ? state.sites.find(s => s.id === parseInt(formData.site)).name : ''}
+                                    isOptionEqualToValue={(option, value) => value.length === 0 || option.label === value}
                                 />
-                            </LocalizationProvider>
-                        </FormControl> */}
+                            </FormControl>
+                        </Box>
                         <Button
                             type="button"
                             variant="contained"

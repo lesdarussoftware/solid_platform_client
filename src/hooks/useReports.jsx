@@ -71,7 +71,7 @@ export function useReports() {
     async function getReceiptsRows(formData) {
         setLoading(true)
         const { status, data } = await handleQuery({
-            url: WORKER_URL + `/receipts/${formData.month}/${formData.year}/${formData.fortnight}`
+            url: WORKER_URL + `/receipts/${formData.month}/${formData.year}/${formData.fortnight}${getQuery(formData)}`
         })
         if (status === STATUS_CODES.OK) {
             setReceipts(data)
