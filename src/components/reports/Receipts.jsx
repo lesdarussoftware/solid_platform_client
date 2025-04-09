@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Box, Breadcrumbs, Button, FormControl, IconButton, LinearProgress, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { Box, Breadcrumbs, Button, FormControl, IconButton, Select, InputLabel, LinearProgress, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography, MenuItem } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { es } from "date-fns/locale";
@@ -14,8 +14,11 @@ export function Receipts({ setShow }) {
 
     const { getReceiptsRows, receipts, setReceipts, printReceipts, loading, open, setOpen } = useReports();
     const [formData, setFormData] = useState({
-        from: new Date(Date.now()),
-        to: new Date(Date.now())
+        // from: new Date(Date.now()),
+        // to: new Date(Date.now())
+        month: new Date(Date.now()).getMonth(),
+        year: new Date(Date.now()).getFullYear(),
+        fortnight: 1
     })
 
     const [workOn, setWorkOn] = useState(null)
@@ -52,14 +55,32 @@ export function Receipts({ setShow }) {
                         <FormControl sx={{ width: { xs: '100%', md: '36%' } }}>
                             <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
                                 <DatePicker
-                                    label="Desde"
-                                    value={new Date(formData.from)}
-                                    name="from"
-                                    onChange={value => setFormData({ ...formData, from: new Date(value.toISOString()) })}
+                                    views={['year', 'month']}
+                                    label="Mes y año"
+                                    value={new Date(formData.year, formData.month)}
+                                    name="month"
+                                    onChange={value => setFormData({
+                                        ...formData,
+                                        month: new Date(value).getMonth(),
+                                        year: new Date(value).getFullYear()
+                                    })}
                                 />
                             </LocalizationProvider>
                         </FormControl>
                         <FormControl sx={{ width: { xs: '100%', md: '36%' } }}>
+                            <InputLabel id="fortnight-select">Quincena</InputLabel>
+                            <Select
+                                labelId="fortnight-select"
+                                label="Quincena"
+                                id="fortnight-select"
+                                value={formData.fortnight}
+                                onChange={e => setFormData({ ...formData, fortnight: parseInt(e.target.value) })}
+                            >
+                                <MenuItem value="1">1</MenuItem>
+                                <MenuItem value="2">2</MenuItem>
+                            </Select>
+                        </FormControl>
+                        {/* <FormControl sx={{ width: { xs: '100%', md: '36%' } }}>
                             <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
                                 <DatePicker
                                     label="Hasta"
@@ -68,7 +89,7 @@ export function Receipts({ setShow }) {
                                     onChange={value => setFormData({ ...formData, to: new Date(value.toISOString()) })}
                                 />
                             </LocalizationProvider>
-                        </FormControl>
+                        </FormControl> */}
                         <Button
                             type="button"
                             variant="contained"

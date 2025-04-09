@@ -135,7 +135,6 @@ export function useCategories() {
             } else {
                 setMessage(data.message)
                 setSeverity('error')
-                setDisabled(false)
             }
             if (status === STATUS_CODES.CREATED || status === STATUS_CODES.OK) {
                 setSeverity('success')

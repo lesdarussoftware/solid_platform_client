@@ -42,7 +42,7 @@ export function CategoriesAbm() {
         errors: errorsRate,
         validate: validateRate
     } = useForm({
-        defaultData: { id: '', category_id: '', rate: '', month: '', year: '' },
+        defaultData: { id: '', category_id: '', rate: '', month: '', year: '', fortnight: 1 },
         rules: {
             rate: { required: true },
             month: { required: true },
@@ -234,25 +234,25 @@ export function CategoriesAbm() {
                                                     <TableRow key={year}>
                                                         <TableCell align="center">{year}</TableCell>
                                                         {MONTHS.map(m => {
-                                                            const value = workOn.rates.find(r => r.year === year && r.month === m)
-                                                            const rate = value?.rate
+                                                            const values = workOn.rates.filter(r => r.year === year && r.month === m)
                                                             return (
                                                                 <TableCell
                                                                     align="center"
                                                                     key={`${m}-${year}`}
-                                                                    onClick={() => {
-                                                                        setNewRate(value)
-                                                                        setOpen('EDIT-RATE')
-                                                                    }}
-                                                                    sx={{
-                                                                        cursor: rate ? 'pointer' : '',
-                                                                        ':hover': {
-                                                                            color: rate ? '#FFF' : '',
-                                                                            backgroundColor: rate ? '#BDBDBD' : ''
-                                                                        }
-                                                                    }}
                                                                 >
-                                                                    {`${rate ? rate : ''}`}
+                                                                    <Box sx={{ display: 'flex', gap: 0.5 }}>
+                                                                        {values.map(value => (
+                                                                            <Button
+                                                                                key={value.id}
+                                                                                variant="outlined"
+                                                                                onClick={() => {
+                                                                                    setNewRate(value)
+                                                                                    setOpen('EDIT-RATE')
+                                                                                }}>
+                                                                                {value.fortnight}°Q. {value.rate}
+                                                                            </Button>
+                                                                        ))}
+                                                                    </Box>
                                                                 </TableCell>
                                                             )
                                                         })}
@@ -281,18 +281,18 @@ export function CategoriesAbm() {
                         }
                         <ModalComponent
                             open={open === 'NEW-RATE' || open === 'EDIT-RATE'}
-                            reduceWidth={900}
+                            reduceWidth={5000}
                             onClose={() => resetRate(setOpen)}
                         >
                             <Typography variant="h6" sx={{ marginBottom: 1, fontSize: { xs: 18, sm: 18, md: 20 } }}>
                                 {open === 'NEW-RATE' && `Nueva cotización de ${workOn?.name}`}
-                                {open === 'EDIT-RATE' && `Editar cotización de ${workOn?.name} (${newRate.month}/${newRate.year})`}
+                                {open === 'EDIT-RATE' && `Editar cotización de ${workOn?.name} - ${newRate.month} (${newRate.fortnight}°Q.) / ${newRate.year}`}
                             </Typography>
                             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-                                <Box sx={{ display: 'flex', gap: 2 }}>
+                                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                                     {open === 'NEW-RATE' &&
                                         <>
-                                            <FormControl sx={{ width: '70%' }}>
+                                            <FormControl>
                                                 <InputLabel id="month-select">Mes</InputLabel>
                                                 <Select
                                                     labelId="month-select"
@@ -313,7 +313,7 @@ export function CategoriesAbm() {
                                                     </Typography>
                                                 }
                                             </FormControl>
-                                            <FormControl sx={{ width: '70%' }}>
+                                            <FormControl>
                                                 <InputLabel htmlFor="year">Año</InputLabel>
                                                 <Input
                                                     id="year"
@@ -331,9 +331,22 @@ export function CategoriesAbm() {
                                                     </Typography>
                                                 }
                                             </FormControl>
+                                            <FormControl>
+                                                <InputLabel id="fortnight-select">Quincena</InputLabel>
+                                                <Select
+                                                    labelId="fortnight-select"
+                                                    label="Quincena"
+                                                    id="fortnight-select"
+                                                    value={newRate.fortnight}
+                                                    onChange={e => changeRate({ target: { name: 'fortnight', value: +e.target.value } })}
+                                                >
+                                                    <MenuItem value="1">1</MenuItem>
+                                                    <MenuItem value="2">2</MenuItem>
+                                                </Select>
+                                            </FormControl>
                                         </>
                                     }
-                                    <FormControl sx={{ width: '70%' }}>
+                                    <FormControl>
                                         <InputLabel htmlFor="rate">Monto</InputLabel>
                                         <Input
                                             id="rate"
