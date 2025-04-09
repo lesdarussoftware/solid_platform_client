@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { Autocomplete, Box, Breadcrumbs, Button, FormControl, IconButton, Select, InputLabel, LinearProgress, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography, MenuItem } from "@mui/material";
+import { Autocomplete, Box, Breadcrumbs, Button, FormControl, IconButton, Select, InputLabel, LinearProgress, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography, MenuItem, Input } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { es } from "date-fns/locale";
@@ -23,7 +23,8 @@ export function Receipts({ setShow }) {
         year: new Date(Date.now()).getFullYear(),
         fortnight: 1,
         worker: '',
-        site: ''
+        site: '',
+        concept: 'pago de honorarios'
     })
 
     const [workOn, setWorkOn] = useState(null)
@@ -123,15 +124,32 @@ export function Receipts({ setShow }) {
                             Calcular hs
                         </Button>
                     </Box>
-                    <Button
-                        type="button"
-                        variant="contained"
-                        sx={{ my: { xs: 1, md: 0 } }}
-                        disabled={receipts.length === 0}
-                        onClick={() => printReceipts(formData)}
-                    >
-                        Generar PDF
-                    </Button>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                        <FormControl>
+                            <InputLabel htmlFor="name">Concepto</InputLabel>
+                            <Input
+                                id="concept"
+                                type="text"
+                                name="concept"
+                                value={formData.concept}
+                                disabled={receipts.length === 0 || formData.concept.length > 55}
+                                onChange={e => setFormData({ ...formData, concept: e.target.value })}
+                            />
+                            {formData.concept.length > 55 &&
+                                <Typography variant="caption" color="red" marginTop={1}>
+                                    * Demasiado largo (máx. 55 caracteres).
+                                </Typography>
+                            }
+                        </FormControl>
+                        <Button
+                            type="button"
+                            variant="contained"
+                            disabled={receipts.length === 0}
+                            onClick={() => printReceipts(formData)}
+                        >
+                            Generar PDF
+                        </Button>
+                    </Box>
                 </Box>
                 <MainTable
                     receipts={receipts}

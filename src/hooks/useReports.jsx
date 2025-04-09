@@ -88,7 +88,7 @@ export function useReports() {
     const printReceipts = (formData) => {
         window.open(`${REPORT_URL}/recibos?token=${auth?.refresh_token}&receipts=${JSON.stringify(receipts.map(r => {
             return { id: r.id, receipt_payment: r.receipt_payment }
-        }))}&from=${formatLocalDate(formData.from)}&to=${formatLocalDate(formData.to)}`, '_blank')
+        }))}&month=${formData.month}&year=${formData.year}&fortnight=${formData.fortnight}&concept=${formData.concept}`, '_blank')
     }
 
     return {
