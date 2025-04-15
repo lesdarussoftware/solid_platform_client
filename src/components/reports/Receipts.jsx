@@ -24,7 +24,8 @@ export function Receipts({ setShow }) {
         fortnight: 1,
         worker: '',
         site: '',
-        concept: 'pago de honorarios'
+        concept: 'pago de honorarios',
+        receipt_date: new Date(Date.now())
     })
 
     const [workOn, setWorkOn] = useState(null)
@@ -124,23 +125,38 @@ export function Receipts({ setShow }) {
                             Calcular hs
                         </Button>
                     </Box>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-                        <FormControl>
-                            <InputLabel htmlFor="name">Concepto</InputLabel>
-                            <Input
-                                id="concept"
-                                type="text"
-                                name="concept"
-                                value={formData.concept}
-                                disabled={receipts.length === 0 || formData.concept.length > 55}
-                                onChange={e => setFormData({ ...formData, concept: e.target.value })}
-                            />
-                            {formData.concept.length > 55 &&
-                                <Typography variant="caption" color="red" marginTop={1}>
-                                    * Demasiado largo (máx. 55 caracteres).
-                                </Typography>
-                            }
-                        </FormControl>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, mt: { xs: 2, lg: 0 } }}>
+                        <Box sx={{ display: 'flex', gap: 1.5 }}>
+                            <FormControl>
+                                <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
+                                    <DatePicker
+                                        label="Fecha recibo"
+                                        value={formData.receipt_date}
+                                        name="receipt_date"
+                                        onChange={value => setFormData({
+                                            ...formData,
+                                            receipt_date: new Date(value)
+                                        })}
+                                    />
+                                </LocalizationProvider>
+                            </FormControl>
+                            <FormControl>
+                                <InputLabel htmlFor="name">Concepto</InputLabel>
+                                <Input
+                                    id="concept"
+                                    type="text"
+                                    name="concept"
+                                    value={formData.concept}
+                                    disabled={receipts.length === 0 || formData.concept.length > 55}
+                                    onChange={e => setFormData({ ...formData, concept: e.target.value })}
+                                />
+                                {formData.concept.length > 55 &&
+                                    <Typography variant="caption" color="red" marginTop={1}>
+                                        * Demasiado largo (máx. 55 caracteres).
+                                    </Typography>
+                                }
+                            </FormControl>
+                        </Box>
                         <Button
                             type="button"
                             variant="contained"
