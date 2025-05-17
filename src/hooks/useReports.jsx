@@ -29,6 +29,7 @@ export function useReports() {
             if (formData.site) query += `site=${formData.site}`
             if (formData.worker.toString().length > 0) query += `worker=${formData.worker}`
         }
+        if (formData.is_chief) query += `&is_chief=true`
         return query
     }
 
@@ -87,7 +88,8 @@ export function useReports() {
 
     const printReceipts = (formData) => {
         const formattedReceiptDate = formatLocalDate(formData.receipt_date).split('T')[0].split('-').reverse().join('/')
-        window.open(`${REPORT_URL}/recibos?token=${auth?.refresh_token}&receipts=${JSON.stringify(receipts.map(r => {
+        const endpoint = formData.is_chief ? 'recibos-capataces' : 'recibos-operarios'
+        window.open(`${REPORT_URL}/${endpoint}?token=${auth?.refresh_token}&receipts=${JSON.stringify(receipts.map(r => {
             return { id: r.id, receipt_payment: r.receipt_payment, receipt_hours: r.receipt_hours }
         }))}&month=${formData.month}&year=${formData.year}&fortnight=${formData.fortnight}&receipt_date=${formattedReceiptDate}&concept=${formData.concept}`, '_blank')
     }

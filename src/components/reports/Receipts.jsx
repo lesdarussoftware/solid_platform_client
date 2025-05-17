@@ -1,5 +1,5 @@
-import { useContext, useState } from "react";
-import { Autocomplete, Box, Breadcrumbs, Button, FormControl, IconButton, Select, InputLabel, LinearProgress, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography, MenuItem, Input } from "@mui/material";
+import { useContext, useEffect, useState } from "react";
+import { Autocomplete, Box, Breadcrumbs, Button, FormControl, IconButton, Select, InputLabel, LinearProgress, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography, MenuItem, Input, FormControlLabel, Checkbox } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { es } from "date-fns/locale";
@@ -17,18 +17,21 @@ export function Receipts({ setShow }) {
 
     const { getReceiptsRows, receipts, setReceipts, printReceipts, loading, open, setOpen } = useReports();
     const [formData, setFormData] = useState({
-        // from: new Date(Date.now()),
-        // to: new Date(Date.now())
         month: new Date(Date.now()).getMonth(),
         year: new Date(Date.now()).getFullYear(),
         fortnight: 1,
         worker: '',
         site: '',
         concept: 'pago de honorarios',
-        receipt_date: new Date(Date.now())
+        receipt_date: new Date(Date.now()),
+        is_chief: false
     })
 
     const [workOn, setWorkOn] = useState(null)
+
+    useEffect(() => {
+        if (formData.is_chief) setFormData({ ...formData, worker: '', site: '' })
+    }, [formData.is_chief])
 
     const handleClose = () => {
         setOpen(null)
@@ -60,7 +63,7 @@ export function Receipts({ setShow }) {
                         flexWrap: 'wrap',
                         width: { xs: '100%', md: '70%', lg: '50%' }
                     }}>
-                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, width: { xs: '100%', md: '35%' } }}>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, width: { xs: '100%', md: '32%' } }}>
                             <FormControl>
                                 <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
                                     <DatePicker
@@ -90,12 +93,15 @@ export function Receipts({ setShow }) {
                                 </Select>
                             </FormControl>
                         </Box>
-                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, width: { xs: '100%', md: '35%' } }}>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, width: { xs: '100%', md: '32%' } }}>
                             <FormControl>
                                 <Autocomplete
                                     disablePortal
                                     id="worker-autocomplete"
-                                    options={state.workers.map(w => ({ label: `${w.last_name} ${w.first_name} (${w.category.name})`, id: w.id }))}
+                                    disabled={formData.is_chief}
+                                    options={state.workers
+                                        .filter(w => !w.category.name.toLowerCase().includes('capataz'))
+                                        .map(w => ({ label: `${w.last_name} ${w.first_name} (${w.category.name})`, id: w.id }))}
                                     noOptionsText="No hay operarios disponibles."
                                     onChange={(_, value) => setFormData({ ...formData, worker: value?.id || '' })}
                                     renderInput={(params) => <TextField {...params} label="Operario" />}
@@ -111,6 +117,7 @@ export function Receipts({ setShow }) {
                             <FormControl>
                                 <Autocomplete
                                     disablePortal
+                                    disabled={formData.is_chief}
                                     id="site-autocomplete"
                                     options={state.sites.map(s => ({ label: s.name, id: s.id }))}
                                     noOptionsText="No hay obras disponibles."
@@ -121,14 +128,29 @@ export function Receipts({ setShow }) {
                                 />
                             </FormControl>
                         </Box>
-                        <Button
-                            type="button"
-                            variant="contained"
-                            sx={{ width: { xs: '100%', md: '25%' } }}
-                            onClick={() => getReceiptsRows(formData)}
-                        >
-                            Calcular hs
-                        </Button>
+                        <Box sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'space-between',
+                            height: '100%',
+                            width: { xs: '100%', md: '32%' },
+                        }}>
+                            <FormControlLabel
+                                sx={{ justifyContent: 'center' }}
+                                control={<Checkbox />}
+                                label="Capataces"
+                                checked={formData.is_chief}
+                                onChange={e => setFormData({ ...formData, is_chief: e.target.checked })}
+                            />
+                            <Button
+                                type="button"
+                                variant="contained"
+                                onClick={() => getReceiptsRows(formData)}
+                                sx={{ mt: { xs: 1, md: 4 } }}
+                            >
+                                Calcular hs
+                            </Button>
+                        </Box>
                     </Box>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, mt: { xs: 2, lg: 0 } }}>
                         <Box sx={{ display: 'flex', gap: 1.5 }}>
