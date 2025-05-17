@@ -86,11 +86,16 @@ export function HoursAmount({ setShow }) {
                             <Autocomplete
                                 disablePortal
                                 id="worker-autocomplete"
-                                options={state.workers.map(w => ({ label: `${w.last_name} ${w.first_name}`, id: w.id }))}
+                                options={state.workers.map(w => ({ label: `${w.last_name} ${w.first_name} (${w.category.name})`, id: w.id }))}
                                 noOptionsText="No hay operarios disponibles."
                                 onChange={(_, value) => hoursAmountChange({ target: { name: 'worker', value: value?.id || '' } })}
                                 renderInput={(params) => <TextField {...params} label="Operario" />}
-                                value={hoursAmountData.worker.toString().length > 0 ? `${state.workers.find(w => w.id === parseInt(hoursAmountData.worker)).last_name} ${state.workers.find(w => w.id === parseInt(hoursAmountData.worker)).first_name}` : ''}
+                                value={hoursAmountData.worker.toString().length > 0 ?
+                                    (() => {
+                                        const w = state.workers.find(w => w.id === parseInt(hoursAmountData.worker));
+                                        if (!w) return '';
+                                        return `${w.last_name} ${w.first_name} (${w.category.name})`;
+                                    })() : ''}
                                 isOptionEqualToValue={(option, value) => value.length === 0 || option.label === value}
                             />
                         </FormControl>

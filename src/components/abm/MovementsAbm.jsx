@@ -157,11 +157,16 @@ export function MovementsAbm() {
                                         <Autocomplete
                                             disablePortal
                                             id="worker-autocomplete"
-                                            options={state.workers.map(w => ({ label: `${w.last_name} ${w.first_name}`, id: w.id }))}
+                                            options={state.workers.map(w => ({ label: `${w.last_name} ${w.first_name} (${w.category.name})`, id: w.id }))}
                                             noOptionsText="No hay operarios disponibles."
                                             onChange={(_, value) => handleChange({ target: { name: 'worker_id', value: value?.id || '' } })}
                                             renderInput={(params) => <TextField {...params} label="Operario" />}
-                                            value={formData.worker_id.toString().length > 0 ? `${state.workers.find(w => w.id === parseInt(formData.worker_id)).last_name} ${state.workers.find(w => w.id === parseInt(formData.worker_id)).first_name}` : ''}
+                                            value={formData.worker_id.toString().length > 0 ?
+                                                (() => {
+                                                    const w = state.workers.find(w => w.id === parseInt(formData.worker_id));
+                                                    if (!w) return '';
+                                                    return `${w.last_name} ${w.first_name} (${w.category.name})`;
+                                                })() : ''}
                                             isOptionEqualToValue={(option, value) => value.length === 0 || option.label === value}
                                         />
                                         {errors.worker_id?.type === 'required' &&

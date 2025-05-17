@@ -32,7 +32,7 @@ export function ActivityFilter({ filter, setFilter }) {
                 <Autocomplete
                     disablePortal
                     id="worker-autocomplete"
-                    options={state.workers.map(w => `${w.last_name} ${w.first_name}`)}
+                    options={state.workers.map(w => `${w.last_name} ${w.first_name} (${w.category.name})`)}
                     noOptionsText="No hay operarios disponibles."
                     onChange={(_, value) => setFilter({ ...filter, worker: value ?? '' })}
                     renderInput={(params) => <TextField {...params} label="Operario" />}
