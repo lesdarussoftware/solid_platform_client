@@ -33,16 +33,22 @@ export function useFortnights() {
 
     function formatNewData(formData) {
         const { start_date, end_date, in_hour, out_hour } = formData
-        let sDate = new Date(start_date)
-        let eDate = new Date(end_date)
+        const now = new Date()
+
+        let sDate = start_date === '' ? now : new Date(start_date)
+        let eDate = end_date === '' ? now : new Date(end_date)
+        let iHour = in_hour === '' ? now : new Date(in_hour)
+        let oHour = out_hour === '' ? now : new Date(out_hour)
+
         sDate.setHours(0, 0, 0, 0)
         eDate.setHours(23, 59, 59, 999)
+
         return {
             ...formData,
-            start_date,
-            end_date,
-            in_hour: format(new Date(in_hour), 'HH:mm'),
-            out_hour: format(new Date(out_hour), 'HH:mm')
+            start_date: sDate,
+            end_date: eDate,
+            in_hour: format(iHour, 'HH:mm'),
+            out_hour: format(oHour, 'HH:mm')
         }
     }
 
@@ -107,7 +113,10 @@ export function useFortnights() {
         const { status, data } = await handleQuery({
             url: urls[open],
             method: open === 'NEW' ? 'POST' : open === 'EDIT' ? 'PUT' : 'GET',
-            body: JSON.stringify(formatNewData(formData))
+            body: JSON.stringify({
+                ...formatNewData(formData),
+                date: formData.date === '' ? new Date() : new Date(formData.date)
+            })
         })
         if (status === STATUS_CODES.CREATED) {
             setWorkOnFortnight({

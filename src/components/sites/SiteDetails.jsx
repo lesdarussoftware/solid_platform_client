@@ -35,7 +35,7 @@ export function SiteDetails({ site, setOpenSite, setWorkOnFortnight }) {
             in_hour: '',
             out_hour: '',
             lunch: true,
-            lunch_minutes: 60,
+            lunch_minutes: '60',
             site_id: site.id
         },
         rules: {}
@@ -54,7 +54,12 @@ export function SiteDetails({ site, setOpenSite, setWorkOnFortnight }) {
             let outHour = new Date(Date.now())
             inHour.setHours(parseInt(inH), parseInt(inM), 0, 0)
             outHour.setHours(parseInt(outH), parseInt(outM), 0, 0)
-            setFormData({ ...formData, in_hour: inHour, out_hour: outHour })
+            setFormData({
+                ...formData,
+                in_hour: inHour,
+                out_hour: outHour,
+                lunch_minutes: formData.lunch_minutes.toString()
+            })
         }
     }, [open])
 
