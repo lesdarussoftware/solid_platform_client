@@ -229,7 +229,6 @@ function MainTable({ receipts, setReceipts, loading, setWorkOn, setOpen }) {
                         <TableCell align="center">Operario</TableCell>
                         <TableCell align="center">DNI</TableCell>
                         <TableCell align="center">CUIL</TableCell>
-                        <TableCell align="center">Categoría</TableCell>
                         <TableCell align="center">Cotiz. actual</TableCell>
                         <TableCell align="center">Obra</TableCell>
                         <TableCell align="center">Horas</TableCell>
@@ -273,9 +272,6 @@ function MainTable({ receipts, setReceipts, loading, setWorkOn, setOpen }) {
                                     </TableCell>
                                     <TableCell align="center" sx={{ color }}>
                                         {r.cuil}
-                                    </TableCell>
-                                    <TableCell align="center" sx={{ color }}>
-                                        {r.category}
                                     </TableCell>
                                     <TableCell align="center" sx={{ color }}>
                                         ${r.rate}
