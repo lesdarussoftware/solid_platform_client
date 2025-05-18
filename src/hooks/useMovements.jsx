@@ -200,7 +200,7 @@ export function useMovements() {
             numeric: false,
             disablePadding: true,
             label: "Operario",
-            accessor: (row) => `${row.worker.first_name} ${row.worker.last_name}`
+            accessor: (row) => `${row.worker.first_name} ${row.worker.last_name} (${state.categories.find(c => c.id === row.worker.category_id)?.name})`
         },
         {
             id: "created_by",
@@ -223,7 +223,7 @@ export function useMovements() {
             label: "Obra",
             accessor: (row) => row.site.name
         }
-    ], []);
+    ], [state.categories, state.movements]);
 
     return {
         handleScan,

@@ -112,6 +112,7 @@ export function WorkersAbm() {
             numeric: false,
             disablePadding: true,
             label: "CUIL",
+            sorter: (row) => row.cuil,
             accessor: 'cuil'
         },
         {
@@ -119,6 +120,7 @@ export function WorkersAbm() {
             numeric: false,
             disablePadding: true,
             label: "Celular",
+            sorter: (row) => row.cell_phone,
             accessor: 'cell_phone'
         },
         {
@@ -126,6 +128,7 @@ export function WorkersAbm() {
             numeric: false,
             disablePadding: true,
             label: "Categoría",
+            disableSorting: true,
             accessor: (row) => row.category.name
         },
         {
@@ -133,6 +136,7 @@ export function WorkersAbm() {
             numeric: false,
             disablePadding: true,
             label: "Régimen",
+            disableSorting: true,
             accessor: 'regime'
         },
         {
@@ -140,6 +144,7 @@ export function WorkersAbm() {
             numeric: false,
             disablePadding: true,
             label: "QR",
+            disableSorting: true,
             accessor: (row) => {
                 if (row.qrs.length > 0) {
                     return (
@@ -156,6 +161,7 @@ export function WorkersAbm() {
             numeric: false,
             disablePadding: true,
             label: "Puede escanear",
+            disableSorting: true,
             accessor: (row) => row.can_scan ? 'Sí' : 'No'
         }
     ], [])
