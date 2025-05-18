@@ -58,8 +58,9 @@ export function DataGrid({
         })
     }
 
-    const visibleRows = useMemo(() =>
-        stableSort(rows, getComparator(order, orderBy, headCells.find(hc => hc.id === orderBy)?.sorter)),
+    const visibleRows = useMemo(() => {
+        return stableSort(rows, getComparator(order, orderBy, headCells.find(hc => hc.id === orderBy)?.sorter))
+    },
         [order, orderBy, rows, filter.page]
     );
 

@@ -147,6 +147,7 @@ export function useActivities() {
             numeric: false,
             disablePadding: true,
             label: "Monto pago ($)",
+            disableSorting: true,
             accessor: 'payment_amount'
         }
     ], []);
