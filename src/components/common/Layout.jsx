@@ -19,6 +19,8 @@ import { AuthContext } from '../../providers/AuthProvider';
 
 import { UserDropdown } from './UserDropdown';
 
+import { serverIsAboutToExpire } from '../../helpers/utils';
+
 import LogoWhite from '../../assets/logo-white.jpeg';
 import LogoBlack from '../../assets/logo-black.jpeg';
 
@@ -33,6 +35,7 @@ export function Layout({ window, children }) {
 
     const [mobileOpen, setMobileOpen] = useState(false);
     const [showUserDropdown, setShowUserDropdown] = useState(false);
+    const serverDeadLine = import.meta.env.VITE_APP_SERVER_DEADLINE;
 
     const navItems = [
         { label: 'Tarjas', pathname: '/tarjas', action: () => navigate('/tarjas') },
@@ -132,6 +135,11 @@ export function Layout({ window, children }) {
                 pr: { xs: 1, md: 3 },
                 pt: { xs: 4, sm: 8 }
             }}>
+                {serverIsAboutToExpire(serverDeadLine) &&
+                    <Box sx={{ mt: { xs: 5, sm: 2 }, backgroundColor: 'red', color: '#FFF', p: 0.5, borderRadius: 1, width: 'fit-content' }}>
+                        El servidor vence el día {serverDeadLine}. Contacte al administrador para renovarlo.
+                    </Box>
+                }
                 {children}
             </Box>
         </Box>

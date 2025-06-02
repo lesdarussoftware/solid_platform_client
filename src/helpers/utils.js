@@ -54,3 +54,11 @@ export function formatLocalDate(date) {
 
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
 }
+
+export function serverIsAboutToExpire(date) {
+    // poner esta fecha en formato americano. Por ejemplo el 10 de junio de 2025 seria 2025-06-10
+    const deadlineDate = new Date(date);
+    const today = new Date(Date.now());
+    const daysUntilDeadline = Math.ceil((deadlineDate - today) / (1000 * 60 * 60 * 24));
+    return daysUntilDeadline <= 30;
+}
