@@ -89,8 +89,10 @@ export function useReports() {
     const printReceipts = (formData) => {
         const formattedReceiptDate = formatLocalDate(formData.receipt_date).split('T')[0].split('-').reverse().join('/')
         const endpoint = formData.is_chief ? 'recibos-capataces' : 'recibos-operarios'
+        console.log(receipts)
         window.open(`${REPORT_URL}/${endpoint}?token=${auth?.refresh_token}&receipts=${JSON.stringify(receipts.map(r => {
-            return { id: r.id, receipt_payment: r.receipt_payment, receipt_hours: r.receipt_hours }
+            const { id, receipt_payment, receipt_hours, site } = r
+            return { id, receipt_payment, receipt_hours, site }
         }))}&month=${formData.month}&year=${formData.year}&fortnight=${formData.fortnight}&receipt_date=${formattedReceiptDate}&concept=${formData.concept}`, '_blank')
     }
 

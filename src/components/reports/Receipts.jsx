@@ -291,7 +291,7 @@ function MainTable({ receipts, setReceipts, loading, setWorkOn, setOpen }) {
                                                 type="number"
                                                 value={receipts.find(i => i.idx === r.idx).receipt_hours}
                                                 onChange={e => {
-                                                    const receipt_hours = parseFloat(e.target.value)
+                                                    const receipt_hours = isNaN(parseFloat(e.target.value)) ? 0 : parseFloat(e.target.value)
                                                     const receipt_payment = (receipt_hours * parseFloat(r.rate)).toFixed(2)
                                                     setReceipts([
                                                         ...receipts.filter(i => i.idx !== r.idx),
@@ -308,6 +308,7 @@ function MainTable({ receipts, setReceipts, loading, setWorkOn, setOpen }) {
                                                 InputLabelProps={{
                                                     shrink: true,
                                                 }}
+                                                disabled={r.site === 'HS EXTRA'}
                                             />
                                         </FormControl>
                                     </TableCell>
