@@ -220,6 +220,35 @@ export function Receipts({ setShow }) {
 }
 
 function MainTable({ receipts, setReceipts, loading, setWorkOn, setOpen }) {
+
+    function handleChangeHours(e, idx, name) {
+        const hours = Math.max(0, isNaN(parseFloat(e.target.value)) ? 0 : parseFloat(e.target.value))
+        const receipt = receipts.find(r => r.idx === idx)
+        if (!receipt) return
+        const totalHours = parseFloat(receipt.hours)
+        const rate = parseFloat(receipt.rate)
+        const validHours = Math.min(hours, totalHours)
+        const payment = (validHours * rate).toFixed(2)
+        const remainingHours = totalHours - validHours
+        let data = {}
+        if (name === 'counter') data = {
+            counter_hours: validHours,
+            counter_payment: payment,
+            receipt_hours: remainingHours,
+            receipt_payment: (remainingHours * rate).toFixed(2)
+        }
+        if (name === 'receipt') data = {
+            receipt_hours: validHours,
+            receipt_payment: payment,
+            counter_hours: remainingHours,
+            counter_payment: (remainingHours * rate).toFixed(2)
+        }
+        setReceipts([
+            ...receipts.filter(r => r.idx !== idx),
+            { ...receipt, ...data }
+        ].sort((a, b) => a.idx - b.idx))
+    }
+
     return (
         <TableContainer component={Paper}>
             <Table>
@@ -231,8 +260,10 @@ function MainTable({ receipts, setReceipts, loading, setWorkOn, setOpen }) {
                         <TableCell align="center">CUIL</TableCell>
                         <TableCell align="center">Cotiz. actual</TableCell>
                         <TableCell align="center">Obra</TableCell>
-                        <TableCell align="center">Horas</TableCell>
-                        <TableCell align="center">Total</TableCell>
+                        <TableCell align="center">Total hs</TableCell>
+                        <TableCell align="center">Total $</TableCell>
+                        <TableCell align="center">Hs cont.</TableCell>
+                        <TableCell align="center">Total cont.</TableCell>
                         <TableCell align="center">Hs recibo</TableCell>
                         <TableCell align="center">Total recibo</TableCell>
                         <TableCell align="center">Obs.</TableCell>
@@ -289,15 +320,31 @@ function MainTable({ receipts, setReceipts, loading, setWorkOn, setOpen }) {
                                         <FormControl sx={{ minWidth: 90 }}>
                                             <TextField
                                                 type="number"
-                                                value={receipts.find(i => i.idx === r.idx).receipt_hours}
-                                                onChange={e => {
-                                                    const receipt_hours = isNaN(parseFloat(e.target.value)) ? 0 : parseFloat(e.target.value)
-                                                    const receipt_payment = (receipt_hours * parseFloat(r.rate)).toFixed(2)
-                                                    setReceipts([
-                                                        ...receipts.filter(i => i.idx !== r.idx),
-                                                        { ...r, receipt_hours, receipt_payment }
-                                                    ].sort((a, b) => a.idx - b.idx))
+                                                value={r.counter_hours}
+                                                onChange={e => handleChangeHours(e, r.idx, 'counter')}
+                                                InputProps={{
+                                                    inputProps: {
+                                                        step: 0.5,
+                                                        min: 0,
+                                                        max: parseFloat(r.hours)
+                                                    }
                                                 }}
+                                                InputLabelProps={{
+                                                    shrink: true,
+                                                }}
+                                                disabled={r.site === 'HS EXTRA'}
+                                            />
+                                        </FormControl>
+                                    </TableCell>
+                                    <TableCell align="center" sx={{ color }}>
+                                        ${r.counter_payment}
+                                    </TableCell>
+                                    <TableCell align="center" sx={{ color }}>
+                                        <FormControl sx={{ minWidth: 90 }}>
+                                            <TextField
+                                                type="number"
+                                                value={r.receipt_hours}
+                                                onChange={e => handleChangeHours(e, r.idx, 'receipt')}
                                                 InputProps={{
                                                     inputProps: {
                                                         step: 0.5,
