@@ -200,6 +200,7 @@ export function Receipts({ setShow }) {
                     loading={loading}
                     setWorkOn={setWorkOn}
                     setOpen={setOpen}
+                    isChief={formData.is_chief}
                 />
                 <ModalComponent open={open === 'VIEW'} onClose={handleClose}>
                     <DetailsTables workOn={workOn} />
@@ -219,34 +220,45 @@ export function Receipts({ setShow }) {
     );
 }
 
-function MainTable({ receipts, setReceipts, loading, setWorkOn, setOpen }) {
+function MainTable({ receipts, setReceipts, loading, setWorkOn, setOpen, isChief }) {
 
     function handleChangeHours(e, idx, name) {
-        const hours = Math.max(0, isNaN(parseFloat(e.target.value)) ? 0 : parseFloat(e.target.value))
-        const receipt = receipts.find(r => r.idx === idx)
-        if (!receipt) return
-        const totalHours = parseFloat(receipt.hours)
-        const rate = parseFloat(receipt.rate)
-        const validHours = Math.min(hours, totalHours)
-        const payment = (validHours * rate).toFixed(2)
-        const remainingHours = totalHours - validHours
-        let data = {}
-        if (name === 'counter') data = {
-            counter_hours: validHours,
-            counter_payment: payment,
-            receipt_hours: remainingHours,
-            receipt_payment: (remainingHours * rate).toFixed(2)
+        const input = parseFloat(e.target.value);
+        const hours = Math.max(0, isNaN(input) ? 0 : input);
+        const receipt = receipts.find(r => r.idx === idx);
+        if (!receipt) return;
+
+        const totalHours = parseFloat(receipt.hours);
+        const rate = parseFloat(receipt.rate);
+        const isFreeEdit = isChief && receipt.site === "EXTRA POR DESEMPEÑO";
+
+        let counter_hours = receipt.counter_hours;
+        let receipt_hours = receipt.receipt_hours;
+
+        if (name === 'counter') {
+            counter_hours = hours;
+            receipt_hours = isFreeEdit ? receipt.receipt_hours : totalHours - counter_hours;
         }
-        if (name === 'receipt') data = {
-            receipt_hours: validHours,
-            receipt_payment: payment,
-            counter_hours: remainingHours,
-            counter_payment: (remainingHours * rate).toFixed(2)
+
+        if (name === 'receipt') {
+            receipt_hours = hours;
+            counter_hours = isFreeEdit ? receipt.counter_hours : totalHours - receipt_hours;
         }
+
+        // Asegurarse de que la suma sea válida si no se permite edición libre
+        if (!isFreeEdit && counter_hours + receipt_hours !== totalHours) return;
+
+        const data = {
+            counter_hours,
+            receipt_hours,
+            counter_payment: (counter_hours * rate).toFixed(2),
+            receipt_payment: (receipt_hours * rate).toFixed(2)
+        };
+
         setReceipts([
             ...receipts.filter(r => r.idx !== idx),
             { ...receipt, ...data }
-        ].sort((a, b) => a.idx - b.idx))
+        ].sort((a, b) => a.idx - b.idx));
     }
 
     return (
