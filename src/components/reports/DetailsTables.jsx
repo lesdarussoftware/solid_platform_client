@@ -30,18 +30,18 @@ export function DetailsTables({ workOn }) {
                             </TableHead>
                             <TableBody>
                                 {inc.map((i, idx) => {
-                                    const c = out.find(o => format(new Date(o.date), 'dd/MM/yyyy') === format(new Date(i.date), 'dd/MM/yyyy'))
+                                    const c = out.find((_, odx) => idx === odx)
                                     const cDate = c ? format(new Date(c.date), 'dd/MM/yyyy HH:mm') : ''
-                                    const totalHs = workOn?.hours_by_date.find(h => h.date.split('-').reverse().join('/') === cDate.split(' ')[0])?.hours ?? 0
+                                    const totalHs = c ? workOn?.hours_by_date.find((_, hdx) => idx === hdx)?.hours ?? '' : ''
                                     return (
                                         <TableRow key={i.id}>
                                             <TableCell align="center">{idx + 1}</TableCell>
                                             <TableCell align="center">{i.type}</TableCell>
                                             <TableCell align="center">{format(new Date(i.date), 'dd/MM/yyyy HH:mm')}</TableCell>
                                             <TableCell align="center">{i.observations}</TableCell>
-                                            <TableCell align="center">{c?.type}</TableCell>
+                                            <TableCell align="center">{c?.type ?? ''}</TableCell>
                                             <TableCell align="center">{cDate}</TableCell>
-                                            <TableCell align="center">{c?.observations}</TableCell>
+                                            <TableCell align="center">{c?.observations ?? ''}</TableCell>
                                             <TableCell align="center">{totalHs}</TableCell>
                                         </TableRow>
                                     )
