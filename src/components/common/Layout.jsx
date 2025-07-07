@@ -137,7 +137,7 @@ export function Layout({ window, children }) {
             }}>
                 {serverIsAboutToExpire(serverDeadLine) &&
                     <Box sx={{ mt: { xs: 5, sm: 2 }, backgroundColor: 'red', color: '#FFF', p: 0.5, borderRadius: 1, width: 'fit-content' }}>
-                        El servidor vence el día {serverDeadLine}. Contacte al administrador para renovarlo.
+                        El servidor vence el día {serverDeadLine.split('-').reverse().join('-')}. Contacte al administrador para renovarlo.
                     </Box>
                 }
                 {children}
