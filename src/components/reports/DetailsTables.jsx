@@ -32,7 +32,7 @@ export function DetailsTables({ workOn }) {
                                 {inc.map((i, idx) => {
                                     const c = out.find((_, odx) => idx === odx)
                                     const cDate = c ? format(new Date(c.date), 'dd/MM/yyyy HH:mm') : ''
-                                    const totalHs = c ? workOn?.hours_by_date.find((_, hdx) => idx === hdx)?.hours ?? '' : ''
+                                    const totalHs = c ? workOn?.hours_by_date.find((hbd) => hbd.date === cDate.split(' ')[0].split('/').reverse().join('-'))?.hours ?? '' : ''
                                     return (
                                         <TableRow key={i.id}>
                                             <TableCell align="center">{idx + 1}</TableCell>
